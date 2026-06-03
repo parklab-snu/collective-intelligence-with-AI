@@ -11,18 +11,13 @@ compute_payoff_one <- function(i, players, cluster_sum, cluster_count, cluster_m
   
   if (payoff_type == "Expert") {
     -((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2)
-  } 
-  
-  else if (payoff_type == "Niche expert") {
+  } else if (payoff_type == "Niche expert") {
     rho_i <- cluster_count[k] / N
     -rho_i * ((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2 + C_const)
-  } 
-  
-  else if (payoff_type == "Feedback") {
+  } else if (payoff_type == "Feedback") {
     if (agg_type == "clustering") {
       mu_e <- cluster_mean[k]
-    }
-    else if (agg_type == "averaging"){
+    } else if (agg_type == "averaging"){
       mu_e <- cluster_sum[k] / N
     }
     belief_i * (alpha_e - mu_e) * sigma_e^2
@@ -43,8 +38,7 @@ update_cluster_inplace <- function(state, k, delta_count, delta_sum, alpha, sigm
   
   if (agg_type == "clustering") {
     old_mean <- if (old_count > 0) old_sum / old_count else 0
-  } 
-  else if (agg_type == "averaging") {
+  } else if (agg_type == "averaging") {
     old_mean <- old_sum / N
   }
   old_err_term <- (alpha[k] - old_mean)^2 * sigma[k]^2
@@ -62,8 +56,7 @@ update_cluster_inplace <- function(state, k, delta_count, delta_sum, alpha, sigm
   
   if (agg_type == "clustering") {
     new_mean <- if (new_count > 0) new_sum / new_count else 0
-  }
-  else if (agg_type == "averaging") {
+  } else if (agg_type == "averaging") {
     new_mean <- new_sum / N
   }
   # compute error
@@ -84,8 +77,7 @@ resync_state <- function(state, players, m, N, alpha, sigma, agg_type, eps) {
   state$cluster_sum <- sum_b
   if (agg_type == "clustering") {
     state$cluster_mean <- ifelse(state$cluster_count > 0, state$cluster_sum / pmax(state$cluster_count, 1), 0)
-  } 
-  else if (agg_type == "aggregation") {
+  } else if (agg_type == "aggregation") {
     state$cluster_mean <- state$cluster_sum / N
   }
   state$error_part <- sum((alpha - state$cluster_mean)^2 * sigma^2)
@@ -164,15 +156,13 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
         if (k_old == k_new) {
           # if two players are in the same cluster (same interest), cluster count doesn't change, cluster sum changes with value (b_new - b_old) 
           update_cluster_inplace(state, k_old, 0L, b_new - b_old, alpha, sigma, agg_type, N, eps)
-        } 
-        else {
+        } else {
           # if two players are in the different cluster, we should update both of them
           update_cluster_inplace(state, k_old, -1L, -b_old, alpha, sigma, agg_type, N, eps)
           update_cluster_inplace(state, k_new, +1L,  b_new, alpha, sigma, agg_type, N, eps)
         }
       }
-    } 
-    else { #with mutation
+    } else { #with mutation
       # sample new interest and belief
       new_interest <- sample(0:m, 1)
       new_belief   <- rnorm(1, mean = 0, sd = 5)
@@ -188,8 +178,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
       if (k_old == k_new) {
         # if original player and mutated interest are same, cluster count doesn't change, cluster sum changes with value (b_new - b_old) 
         update_cluster_inplace(state, k_old, 0L, b_new - b_old, alpha, sigma, agg_type, N, eps)
-      }
-      else {
+      } else {
         # if mutated interest is different from the original, we should update both of them
         update_cluster_inplace(state, k_old, -1L, -b_old, alpha, sigma, agg_type, N, eps)
         update_cluster_inplace(state, k_new, +1L,  b_new, alpha, sigma, agg_type, N, eps)
