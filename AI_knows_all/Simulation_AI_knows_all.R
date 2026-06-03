@@ -120,12 +120,15 @@ update_state_inplace <- function(state, k_old, k_new, cA_old, cA_new, beta_old, 
     new_error <- (alpha[k_old] - new_mean)^2 * sigma[k_old]^2
     state$human_error <- state$human_error - old_error + new_error
   }
+  # update gamma
   state$gamma[k_old] <- state$gamma[k_old] - cA_old * (1 - beta_old) / N
   state$gamma[k_new] <- state$gamma[k_new] + cA_new * (1 - beta_new) / N
+  # update beta sum and beta square sum
   state$sum_beta  <- state$sum_beta  + beta_new - beta_old
   state$sum_beta2 <- state$sum_beta2 + beta_new^2 - beta_old^2
 }
 
+# Because incremental update could make small errors based on floating point error, we resynchronize state values by computing the state value as a whole occasionally.
 resync_state <- function(state, players, m, N, eps, alpha, sigma) {
   state$cluster_count <- tabulate(players[, 1] + 1, nbins = m + 1)
   grp <- factor(players[, 1], levels = 0:m)
@@ -139,7 +142,7 @@ resync_state <- function(state, players, m, N, eps, alpha, sigma) {
   ratios <- state$cluster_count / N
   state$entropy_sum <- sum(ratios * log(ratios + eps))
   
-  #human
+  # resynchronize cluster sum and cluster mean, human error for human accuracy tracking 
   sum_b <- as.numeric(tapply(players[, 2], grp, sum))
   sum_b[is.na(sum_b)] <- 0
   state$cluster_sum <- sum_b
@@ -147,39 +150,44 @@ resync_state <- function(state, players, m, N, eps, alpha, sigma) {
   state$human_error <- sum((alpha - state$cluster_mean)^2 * sigma^2)
 }
 
-main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias,
-                     payoff_type = "Niche expert",
-                     s = 50, mu = 0, eps = 1e-12,
+# main simulation
+main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = "Niche expert", s = 50, mu = 0, eps = 1e-12,
                      resync_every = 1000, lambda) {
-  denom   <- sum((alpha[-1] * sigma[-1])^2)
+  # initialize tracking metrics and constants
+  denom <- sum((alpha[-1] * sigma[-1])^2)
   C_const <- sum((alpha * sigma)^2)
   
-  C_AI       <- sum((bias_c * sigma)^2) + 2 * bias_c[1] * bias + bias^2 + AI_error_sd^2
+  C_AI <- sum((bias_c * sigma)^2) + 2 * bias_c[1] * bias + bias^2 + AI_error_sd^2
   S_alpha_bc <- sum(alpha * bias_c * sigma^2)
   
-  accuracy           <- numeric(G)
-  median_AI_belief   <- numeric(G)
+  accuracy <- numeric(G)
+  median_AI_belief <- numeric(G)
   interest_diversity <- numeric(G)
-  players_intime     <- array(0, dim = c(G %/% 1000, N, 3))
-  bias_sq               <- numeric(G)
-  variance           <- numeric(G)
+  players_intime <- array(0, dim = c(G %/% 1000, N, 3))
+  bias_sq <- numeric(G)
+  variance <- numeric(G)
+  
   state <- new.env()
   state$cluster_count <- numeric(m + 1)
-  state$gamma         <- numeric(m + 1)
-  state$sum_beta      <- 0
-  state$sum_beta2     <- 0
-  state$entropy_sum   <- 0
+  state$gamma <- numeric(m + 1)
+  state$sum_beta <- 0
+  state$sum_beta2 <- 0
+  state$entropy_sum <- 0
   
-  #only human error tracking
-  state$cluster_sum  <- numeric(m + 1)
+  # for human error tracking
+  state$cluster_sum <- numeric(m + 1)
   state$cluster_mean <- numeric(m + 1)
   state$human_error <- 0
   human_accuracy <- numeric(G)
   
-  
+  # initialize with resync_state
   resync_state(state, players, m, N, eps, alpha, sigma)
+  # initialize median AI belief
   current_median <- median(players[, 3])
+  
+  # main loop for G generations
   for (g in 1:G) {
+    # Record first, imitate later
     beta_mean <- state$sum_beta / N
     delta <- alpha - beta_mean * alpha_AI - state$gamma
     delta[1] <- delta[1] - beta_mean * bias
@@ -189,62 +197,10 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
     variance[g] <- error - bias_sq[g]
     accuracy[g] <- 1 - error / denom
     
-    #only human accuracy
+    # only for human accuracy
     human_error <- state$human_error
     human_accuracy[g] <- 1 - human_error/denom
     
-    
-    if (payoff_type == "Feedback" || payoff_type == "Disadvantage AI Feedback" || payoff_type == "Advantage AI Feedback") {
-      feedback_global <- (alpha_AI[1] + bias) * delta[1] +
-        sum(alpha_AI[-1] * delta[-1] * sigma[-1]^2)
-    } else {
-      feedback_global <- 0
-    }
-    A <- sample.int(N, 1)
-    B <- sample.int(N, 1)
-    while (B == A) B <- sample.int(N, 1)
-    r1 <- runif(1)
-    state_changed <- FALSE
-    if (r1 >= mu) {
-      payoff_A <- compute_payoff_one(A, players, state$cluster_count, alpha, alpha_AI, sigma,
-                                     AI_error_sd, bias, delta, feedback_global,
-                                     C_const, C_AI, S_alpha_bc, N, payoff_type, lambda)
-      payoff_B <- compute_payoff_one(B, players, state$cluster_count, alpha, alpha_AI, sigma,
-                                     AI_error_sd, bias, delta, feedback_global,
-                                     C_const, C_AI, S_alpha_bc, N, payoff_type, lambda)
-      
-      p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
-      r2 <- runif(1)
-      if (r2 < p_imitate) {
-        k_old    <- players[A, 1] + 1
-        k_new    <- players[B, 1] + 1
-        cA_old   <- players[A, 2]
-        cA_new   <- players[B, 2]
-        beta_old <- players[A, 3]
-        beta_new <- players[B, 3]
-        players[A, ] <- players[B, ]
-        update_state_inplace(state, k_old, k_new,
-                             cA_old, cA_new, beta_old, beta_new, N, eps, alpha, sigma)
-        state_changed <- TRUE
-      }
-    } else {
-      new_interest <- sample(0:m, 1)
-      new_belief   <- rnorm(1, mean = 0, sd = 5)
-      new_AI       <- runif(1, 0, 1)
-      k_old    <- players[A, 1] + 1
-      k_new    <- new_interest + 1
-      cA_old   <- players[A, 2]
-      cA_new   <- new_belief
-      beta_old <- players[A, 3]
-      beta_new <- new_AI
-      players[A, ] <- c(new_interest, new_belief, new_AI)
-      update_state_inplace(state, k_old, k_new,
-                           cA_old, cA_new, beta_old, beta_new, N, eps, alpha, sigma)
-      state_changed <- TRUE
-    }
-    if (state_changed) {
-      current_median <- median(players[, 3])
-    }
     median_AI_belief[g] <- current_median
     interest_diversity[g] <- exp(-state$entropy_sum)
     if (g %% 1000 == 0) {
@@ -255,6 +211,70 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
       # cat("Accuracy:",           sprintf("%.2f", accuracy[g]),           "\n")
       # cat("\n")
     }
+    
+    if (payoff_type == "Feedback" || payoff_type == "Disadvantage AI Feedback" || payoff_type == "Advantage AI Feedback") {
+      feedback_global <- (alpha_AI[1] + bias) * delta[1] +
+        sum(alpha_AI[-1] * delta[-1] * sigma[-1]^2)
+    } else {
+      feedback_global <- 0
+    }
+    
+    # sample two players
+    A <- sample.int(N, 1)
+    B <- sample.int(N, 1)
+    while (B == A) B <- sample.int(N, 1)
+    
+    r1 <- runif(1)
+    state_changed <- FALSE
+    if (r1 >= mu) {
+      # compute payoff of two players
+      payoff_A <- compute_payoff_one(A, players, state$cluster_count, alpha, alpha_AI, sigma, AI_error_sd, bias, delta, feedback_global, C_const, C_AI, S_alpha_bc, N, payoff_type, lambda)
+      payoff_B <- compute_payoff_one(B, players, state$cluster_count, alpha, alpha_AI, sigma, AI_error_sd, bias, delta, feedback_global, C_const, C_AI, S_alpha_bc, N, payoff_type, lambda)
+      
+      p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
+      r2 <- runif(1)
+      if (r2 < p_imitate) {
+        # save old and new interest number
+        k_old <- players[A, 1] + 1
+        k_new <- players[B, 1] + 1
+        # save old and new belief value
+        cA_old <- players[A, 2]
+        cA_new <- players[B, 2]
+        # save old and new AI belief value
+        beta_old <- players[A, 3]
+        beta_new <- players[B, 3]
+        # Imitate
+        players[A, ] <- players[B, ]
+        
+        # update state
+        update_state_inplace(state, k_old, k_new, cA_old, cA_new, beta_old, beta_new, N, eps, alpha, sigma)
+        state_changed <- TRUE
+      }
+    } else { # with mutation
+      # sample new interest and belief
+      new_interest <- sample(0:m, 1)
+      new_belief <- rnorm(1, mean = 0, sd = 5)
+      new_AI <- runif(1, 0, 1)
+      
+      # save old and new values
+      k_old <- players[A, 1] + 1
+      k_new <- new_interest + 1
+      cA_old <- players[A, 2]
+      cA_new <- new_belief
+      beta_old <- players[A, 3]
+      beta_new <- new_AI
+      
+      # mutate
+      players[A, ] <- c(new_interest, new_belief, new_AI)
+      # update state
+      update_state_inplace(state, k_old, k_new, cA_old, cA_new, beta_old, beta_new, N, eps, alpha, sigma)
+      state_changed <- TRUE
+    }
+    if (state_changed) { # when state is updated, recompute the AI belief median
+      current_median <- median(players[, 3])
+    }
+    
+    # resync for accuracy
     if (g %% resync_every == 0) {
       resync_state(state, players, m, N, eps, alpha, sigma)
     }
@@ -315,125 +335,56 @@ for(i in 0:8){
   }
 }
 
-set.seed(42)  
+# sample the environment
+set.seed(42)
+# number of factors
 m <- 50
+# make coef
 alpha <- runif(m+1, min = -5, max = 5)
-alpha
 #alpha <- alpha <- seq(-5, 5, length.out = m+1)
 #sigma <- rep(1, m+1)
+# sample sigma
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
 
+# build players
+# number of players
 N <- 10000
 G <- 160000
+# sample initial belief (Sample from normal distribution)
 belief <- rnorm(N, mean = 0, sd = 100)
 #Sample initial interest (SRS form 0 to 50)
 interest <- sample(0:m, size = N, replace = TRUE)
 #Sample initial AI belief
 AI_belief <- runif(N, min = 0, max = 1)
 #AI_belief <- rep(1, N)
-#Build player
+# build players
 players <- cbind(interest, belief, AI_belief)
 
+# coefficient bias
 bias_c <- rep(0.0, m+1)
+# intercept bias
 bias_i <- rep(0.8, m+1)
+# intercept bias sum
 bias <- sum(bias_i)
 
+# error
 AI_error_sd <- 0.3
 
 alpha_AI <- alpha + bias_c
-#corr<- cor(alpha, bias, method = "pearson")
 denom <- sum((alpha[-1]*sigma[-1])^2)
 AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*bias + bias^2 + AI_error_sd^2)/denom
 cat("Accuracy:", AI_accuracy, "\n")
 
-lambda <- 1000
+# lambda for Advantage AI / Disadvantage AI payoffs
+lambda <- 100
 
+# run simulation
+# agg_type = "clustering"
+# payoff_type = "Expert" / Niche expert" / "Feedback" / "Advantage AI Niche" / Disadvantage AI Niche" / "Advantage AI Feedback" / "Disadvantage AI Feedback"
 Result <- main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Advantage AI Feedback', lambda = lambda)
 
 filename <- sprintf("avg_feedback_Acc70_bias18.5.RData")
 filepath <- file.path(out_dir, filename)
 
 save(bias, AI_error_sd, AI_accuracy, Result, file = filepath)
-
-acc_inf <- function(alpha, sigma, bias_c, bias) {
-  C_const    <- sum((alpha * sigma)^2)              # ||alpha||^2  (incl. j=0)
-  denom      <- sum((alpha[-1] * sigma[-1])^2)      # ||alpha||^2 excl. intercept
-  
-  S_alpha_bc <- sum(alpha * bias_c * sigma^2)
-  S_ab       <- S_alpha_bc + alpha[1] * bias        # <alpha, b>,  b_j = bias_c_j + B*1{j=0}
-  S_bb       <- sum((bias_c * sigma)^2) +           # ||b||^2
-    2 * bias_c[1] * bias + bias^2
-  
-  num <- C_const * S_bb - S_ab^2                    # ||a||^2||b||^2 - <a,b>^2  (>= 0)
-  D   <- C_const + 2 * S_ab + S_bb                  # ||alpha + b||^2
-  
-  mse_inf <- num / D
-  1 - mse_inf / denom
-}
-
-acc_inf(alpha, sigma, bias_c, bias)
-
-
-library(ggplot2)
-library(tidyr)
-library(dplyr)
-
-#Main visualization
-accuracy <- Result$accuracy
-median_AI_belief <- Result$median_AI_belief
-interest_diversity <- Result$interest_diversity
-
-df <- data.frame(
-  Generation = seq_along(accuracy),
-  Accuracy = accuracy,
-  Diversity = interest_diversity,
-  AI_belief = median_AI_belief,
-  source = "clustering_feedback_AI"
-)
-
-df_long <- pivot_longer(
-  df,
-  cols = c(Accuracy, Diversity, AI_belief),
-  names_to = "metric",
-  values_to = "value"
-)
-
-plot <- ggplot(df_long,
-               aes(x = Generation,
-                   y = value,
-                   color = metric,
-                   linetype = metric)) +
-  geom_line(linewidth = 1) +
-  facet_wrap(~metric, scales = "free_y", ncol = 1) +
-  scale_color_manual(values = c(
-    "Accuracy" = "blue",
-    "Diversity" = "red",
-    "AI_belief" = "green"
-  )) +
-  scale_linetype_manual(values = c(
-    "Accuracy" = "solid",
-    "Diversity" = "dashed",
-    "AI_belief" = "solid"
-  ))+
-  labs(title = "Clustering Feedback AI")
-plot
-
-players_intime <- Result$players_intime
-
-belief <- players_intime[160,,]
-
-df_cl_fe_sc <- as.data.frame(belief)
-cl_fe_sc <- ggplot(df_cl_fe_sc, aes(x = V1, y = V3))+
-  geom_point(
-    size = 2,
-    color = "red",
-    alpha = 0.2 
-  )+
-  labs(x = "Interest", y = "Belief")
-cl_fe_sc
-
-alpha
-
-cluster_counts_full <- tabulate(belief[,1] + 1, nbins = m + 1)
-cluster_counts_full

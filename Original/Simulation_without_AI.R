@@ -162,7 +162,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
           update_cluster_inplace(state, k_new, +1L,  b_new, alpha, sigma, agg_type, N, eps)
         }
       }
-    } else { #with mutation
+    } else { # with mutation
       # sample new interest and belief
       new_interest <- sample(0:m, 1)
       new_belief   <- rnorm(1, mean = 0, sd = 5)
@@ -187,7 +187,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
     
   }
   
-  # Resync for accuracy
+  # resync for accuracy
   if (g %% resync_every == 0) {
       resync_state(state, players, m, N, alpha, sigma, agg_type, eps)
   }
