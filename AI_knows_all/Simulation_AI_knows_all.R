@@ -11,13 +11,13 @@
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
 compute_payoff_one <- function(i, players, cluster_count, alpha, alpha_AI, sigma, AI_error_sd, bias, delta, feedback_global,
                                C_const, C_AI, S_alpha_bc, N, payoff_type, lambda) {
-  k        <- players[i, 1] + 1
-  alpha_e  <- alpha[k]
-  bias_c_e  <- alpha_AI[k] - alpha[k]
-  sigma_e  <- sigma[k]
-  cA_i     <- players[i, 2]
-  beta_i   <- players[i, 3]
-  omq      <- 1 - beta_i
+  k <- players[i, 1] + 1
+  alpha_e <- alpha[k]
+  bias_c_e <- alpha_AI[k] - alpha[k]
+  sigma_e <- sigma[k]
+  cA_i <- players[i, 2]
+  beta_i <- players[i, 3]
+  omq <- 1 - beta_i
   
   
   if (payoff_type == "Feedback") {
@@ -124,7 +124,7 @@ update_state_inplace <- function(state, k_old, k_new, cA_old, cA_new, beta_old, 
   state$gamma[k_old] <- state$gamma[k_old] - cA_old * (1 - beta_old) / N
   state$gamma[k_new] <- state$gamma[k_new] + cA_new * (1 - beta_new) / N
   # update beta sum and beta square sum
-  state$sum_beta  <- state$sum_beta  + beta_new - beta_old
+  state$sum_beta <- state$sum_beta  + beta_new - beta_old
   state$sum_beta2 <- state$sum_beta2 + beta_new^2 - beta_old^2
 }
 
@@ -193,7 +193,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
     delta[1] <- delta[1] - beta_mean * bias
     var_nu_mean <- (AI_error_sd^2 / N^2) * state$sum_beta2
     error <- sum(delta^2 * sigma^2) + var_nu_mean
-    bias_sq[g]     <- (delta[1])^2
+    bias_sq[g] <- (delta[1])^2
     variance[g] <- error - bias_sq[g]
     accuracy[g] <- 1 - error / denom
     
@@ -279,9 +279,9 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
       resync_state(state, players, m, N, eps, alpha, sigma)
     }
   }
-  list(accuracy           = accuracy,
-       players_intime     = players_intime,
-       median_AI_belief   = median_AI_belief,
+  list(accuracy = accuracy,
+       players_intime = players_intime,
+       median_AI_belief = median_AI_belief,
        interest_diversity = interest_diversity,
        bias_sq = bias_sq,
        variance = variance,

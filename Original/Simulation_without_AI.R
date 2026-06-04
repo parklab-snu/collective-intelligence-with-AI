@@ -89,21 +89,21 @@ resync_state <- function(state, players, m, N, alpha, sigma, agg_type, eps) {
 # main simulation
 main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", payoff_type = "Feedback", s = 50, mu = 0, eps = 1e-12, resync_every = 1000) {
   # initialize tracking metrics and constants
-  denom   <- sum((alpha[-1] * sigma[-1])^2)
+  denom <- sum((alpha[-1] * sigma[-1])^2)
   C_const <- sum(alpha^2 * sigma^2)
-  accuracy           <- numeric(G)
+  accuracy <- numeric(G)
   interest_diversity <- numeric(G)
-  players_intime     <- array(0, dim = c(G %/% 1000, N, 2))
+  players_intime <- array(0, dim = c(G %/% 1000, N, 2))
   bias_sq <- numeric(G)
   variance <- numeric(G)
   
   # initialize state
   state <- new.env()
-  state$cluster_sum   <- numeric(m + 1)
+  state$cluster_sum <- numeric(m + 1)
   state$cluster_count <- numeric(m + 1)
-  state$cluster_mean  <- numeric(m + 1)
-  state$error_part    <- 0
-  state$entropy_sum   <- 0
+  state$cluster_mean <- numeric(m + 1)
+  state$error_part <- 0
+  state$entropy_sum <- 0
   
   # initialize with resync_state
   resync_state(state, players, m, N, alpha, sigma, agg_type, eps)
@@ -165,7 +165,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
     } else { # with mutation
       # sample new interest and belief
       new_interest <- sample(0:m, 1)
-      new_belief   <- rnorm(1, mean = 0, sd = 5)
+      new_belief <- rnorm(1, mean = 0, sd = 5)
       # save old and new values
       k_old <- players[A, 1] + 1
       k_new <- new_interest + 1
