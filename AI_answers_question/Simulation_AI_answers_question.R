@@ -1,3 +1,10 @@
+# Collective intelligence simulation with AI_knows_all model
+# All players share same AI assistent
+# AI has two kinds of innate bias: coefficient bias (b^c) and intercept bias (b^i)
+# AI has random error with zero mean, tau s.d.
+# AI answers prediction based on the players' interest
+
+
 compute_p_revised_vec <- function(interest, belief, AI_belief, alpha_AI) {
   AI_belief * alpha_AI[interest + 1] + (1 - AI_belief) * belief
 }

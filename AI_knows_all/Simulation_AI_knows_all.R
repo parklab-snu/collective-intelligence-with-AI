@@ -5,7 +5,7 @@
 # AI answers with the whole prediction accounting all interests(0 to m) regardless of the player's interest
 
 # Compute the payoff of the single player.
-# only supports clustering aggregation.
+# only supports averaging aggregation.
 # supports Expert, Niche expert, Disadvantage AI Niche, Advantage AI Niche, Feedback, Disadvantage AI Feedback, and Advantage AI Feedback payoffs
 # Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
@@ -380,7 +380,6 @@ cat("Accuracy:", AI_accuracy, "\n")
 lambda <- 100
 
 # run simulation
-# agg_type = "clustering"
 # payoff_type = "Expert" / Niche expert" / "Feedback" / "Advantage AI Niche" / Disadvantage AI Niche" / "Advantage AI Feedback" / "Disadvantage AI Feedback"
 Result <- main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Advantage AI Feedback', lambda = lambda)
 
