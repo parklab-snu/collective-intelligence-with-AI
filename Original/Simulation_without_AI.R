@@ -234,20 +234,25 @@ filepath <- file.path(out_dir, filename)
 
 save(Result, file = filepath)
 
+library(ggplot2)
+library(tidyr)
+library(dplyr)
 # exploratory visualization
 accuracy <- Result$accuracy
-interest_diversity <- averaging_niche$interest_diversity
+interest_diversity <- Result$interest_diversity
+median_AI_belief <- Result$median_AI_belief
 
 df <- data.frame(
   Generation = seq_along(accuracy),
   Accuracy = accuracy,
   Diversity = interest_diversity,
+  AI_belief = median_AI_belief,
   source = "clustering_feedback_AI"
 )
 
 df_long <- pivot_longer(
   df,
-  cols = c(Accuracy, Diversity),
+  cols = c(Accuracy, Diversity, AI_belief),
   names_to = "metric",
   values_to = "value"
 )
@@ -257,18 +262,20 @@ plot <- ggplot(df_long, aes(x = Generation, y = value, color = metric, linetype 
   facet_wrap(~metric, scales = "free_y", ncol = 1) +
   scale_color_manual(values = c(
     "Accuracy" = "blue",
-    "Diversity" = "red"
+    "Diversity" = "red",
+    "AI_belief" = "green"
   )) +
   scale_linetype_manual(values = c(
     "Accuracy" = "solid",
-    "Diversity" = "dashed"
+    "Diversity" = "dashed",
+    "AI_belief" = "solid"
   ))+
   labs(title = "Clustering Feedback AI")
 plot
 
-averaging_niche_players_intime <- averaging_niche$players_intime
+averaging_niche_players_intime <- Result$players_intime
 
-belief <- averaging_niche_players_intime[160,,]
+belief <- averaging_niche_players_intime[100,,]
 
 df_cl_fe_sc <- as.data.frame(belief)
 cl_fe_sc <- ggplot(df_cl_fe_sc, aes(x = V1, y = V2))+

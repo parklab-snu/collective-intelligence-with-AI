@@ -14,7 +14,7 @@ compute_p_revised_vec <- function(interest, belief, AI_belief, alpha_AI) {
 # Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
 compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, B_bar, alpha, sigma, bias, AI_error_sd,
-                               payoff_type, agg_type, C_const, N, lambda) {
+                               payoff_type, agg_type, C_const, N, lambda, alpha_AI) {
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
   sigma_e <- sigma[k]
@@ -55,7 +55,7 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
       first_term <- p_i * (alpha_e - mu_e) * sigma_e^2
     }
     if(payoff_type == "Feedback"){
-      first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e 
+      first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e
     } else if(payoff_type == "Advantage AI Feedback"){
       first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e + lambda * beta_i
     } else if (payoff_type == "Disadvantage AI Feedback"){
@@ -74,7 +74,19 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
         expr <- expr - 2 * alpha[1] * beta_i * bias_e
       }
       
-      (1-lambda)*(-rho_i * expr) + lambda*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
+      #(1-lambda)*(-rho_i * expr) + lambda*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
+      #(1 / rho_i*50) * (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
+      (-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
+      
+    } else if (payoff_type == "AI Feedback collective") {
+      q     <- p_i - alpha_AI[k]               # p - alpha_AI,e
+      gamma <- 1 - beta_i                       # 1 - beta
+      if (k == 1) {
+        ft <- q * delta_0 * sigma_e^2           # sigma_1^2 = 1
+      } else {
+        ft <- q * (alpha_e - mu_e) * sigma_e^2
+      }
+      ft - gamma * bias_e * delta_0 + beta_i * gamma * AI_error_sd^2 / count_e
     }
   }
 }
@@ -252,9 +264,9 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
     if (r1 >= mu) {
       # compute payoff of two players
       payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
-                                     payoff_type, agg_type, C_const, N, lambda)
+                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI)
       payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
-                                     payoff_type, agg_type, C_const, N, lambda)
+                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI)
       
       p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
       r2 <- runif(1)
@@ -325,10 +337,14 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
        human_accuracy = human_accuracy)
 }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective intelligence/0520/Balanced"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Nicheexpert_biassweep"
 
-for(i in -8:8){
-  for(j in -8:8){
+#lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
+#bias_list <- list(-0.4, -0.2, 0.2, 0.4)
+lambda_list <- c(0)
+bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+for(i in lambda_list){
+  for(j in bias_list){
     set.seed(42)  
     m <- 50
     alpha <- runif(m+1, min = -5, max = 5)
@@ -337,46 +353,51 @@ for(i in -8:8){
     sigma <- runif(m, min = 0, max = 3)
     sigma <- c(1, sigma)
     
-    N <- 10000
-    G <- 160000
-    belief <- rnorm(N, mean = 0, sd = 5)
-    #Sample initial interest (SRS form 0 to 50)
-    interest <- sample(0:m, size = N, replace = TRUE)
-    #Sample initial AI belief
-    AI_belief <- runif(N, min = 0, max = 1)
-    #AI_belief <- rep(1, N)
-    #Build player
-    players <- cbind(interest, belief, AI_belief)
-    
-    bias_c <- rep(i/5, m+1)
-    bias_i <- rep(j/20, m+1)
-    alpha_AI <- alpha + bias_c
-    AI_error_sd <- 0.3
-    
-    lambda <- 0.5
-    
-    #corr<- cor(alpha, bias, method = "pearson")
-    denom <- sum((alpha[-1]*sigma[-1])^2)
-    AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
-    cat("Accuracy:", AI_accuracy, "\n")
-    
-    Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda)
-    
-    filename <- sprintf("balanced_i%02d_j%02d.RData", i, j)
-    filepath <- file.path(out_dir, filename)
-    
-    save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+    for(k in 1:1){
+      set.seed(k)
+      N <- 10000
+      G <- 200000
+      belief <- rnorm(N, mean = 0, sd = 5)
+      #Sample initial interest (SRS form 0 to 50)
+      interest <- sample(0:m, size = N, replace = TRUE)
+      #Sample initial AI belief
+      AI_belief <- runif(N, min = 0, max = 1)
+      #AI_belief <- rep(1, N)
+      #Build player
+      players <- cbind(interest, belief, AI_belief)
+      
+      bias_c <- rep(0, m+1)
+      bias_i <- rep(j, m+1)
+      alpha_AI <- alpha + bias_c
+      AI_error_sd <- 0.3
+      
+      lambda <- i
+      
+      #corr<- cor(alpha, bias, method = "pearson")
+      denom <- sum((alpha[-1]*sigma[-1])^2)
+      AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+      cat("Accuracy:", AI_accuracy, "\n")
+      
+      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
+      
+      filename <- sprintf("adv_niche_k%02d_i%03d_j%02f.RData", k, i, j)
+      filepath <- file.path(out_dir, filename)
+      
+      save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+    }
   }
 }
 
 set.seed(42)  
 m <- 50
 alpha <- runif(m+1, min = -5, max = 5)
+sum(sapply(alpha, function(x) x < 0))
+alpha[1] <- -3
 #sigma <- rep(1, m+1)
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
-N <- 50000
-G <- 500000
+N <- 10000
+G <- 200000
 belief <- rnorm(N, mean = 0, sd = 5)
 #Sample initial interest (SRS form 0 to 50)
 interest <- sample(0:m, size = N, replace = TRUE)
@@ -386,9 +407,9 @@ AI_belief <- runif(N, min = 0, max = 1)
 #Build player
 players <- cbind(interest, belief, AI_belief)
 
-bias_c <- rep(0.2, m+1)
-bias_i <- runif(m+1, min = -1.0, max = 1.0)
-#bias_i <- rep(-0.2, m+1)
+bias_c <- rep(0, m+1)
+#bias_i <- runif(m+1, min = -1.0, max = 1.0)
+bias_i <- rep(-0.4, m+1)
 alpha_AI <- alpha + bias_c
 AI_error_sd <- 0.3
 #corr<- cor(alpha, bias, method = "pearson")
@@ -396,9 +417,9 @@ denom <- sum((alpha[-1]*sigma[-1])^2)
 AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
 cat("Accuracy:", AI_accuracy, "\n")
 
-lambda <- 0.5
+lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
 
 filename <- sprintf("clu_niche_Acc70_biasc0.8_biasi_0.3.RData")
 filepath <- file.path(out_dir, filename)
