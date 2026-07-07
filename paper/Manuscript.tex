@@ -93,12 +93,12 @@
 \begin{flushleft}{
 	\Large
 	\textbf\newline{
-	  Interplay between climate and childhood mixing can explain a sudden shift in RSV seasonality in Japan
+	  Personalized AI assistants could either promote or hinder the emergence of collective intelligence
 	}
 }
 \newline
 \\
-Sang Woo Park\textsuperscript{1,2,3,*}, Inga Holmdahl\textsuperscript{3,4}, Emily Howerton\textsuperscript{3}, Wenchang Yang\textsuperscript{5}, Rachel E. Baker\textsuperscript{6}, Gabriel A. Vecchi\textsuperscript{4,5,7}, Sarah Cobey\textsuperscript{2}, C. Jessica E. Metcalf\textsuperscript{3,4,8}, Bryan T. Grenfell\textsuperscript{3,4,8}
+Jaeseung Kim\textsuperscript{1} Sang Woo Park\textsuperscript{1,2,3,*}
 \\
 \bigskip
 \textbf{1} School of Biological Sciences, Seoul National University, Seoul, Korea
@@ -106,16 +106,6 @@ Sang Woo Park\textsuperscript{1,2,3,*}, Inga Holmdahl\textsuperscript{3,4}, Emil
 \textbf{2} Department of Ecology and Evolution, University of Chicago, Chicago, IL, USA
 \\
 \textbf{3} Department of Ecology and Evolutionary Biology, Princeton University, Princeton, NJ, USA
-\\
-\textbf{4} High Meadows Environmental Institute, Princeton University, Princeton, NJ, USA
-\\
-\textbf{5} Department of Geosciences, Princeton University, Princeton, NJ, USA
-\\
-\textbf{6} Department of Epidemiology, Brown School of Public Health, Brown University, Providence, Rhode Island, USA
-\\
-\textbf{7} Program in Atmospheric and Oceanic Sciences, Princeton University, Princeton, NJ, USA
-\\
-\textbf{8} Princeton School of Public and International Affairs, Princeton, NJ, USA
 \bigskip
 
 *Corresponding author: sangwoopark@snu.ac.kr
@@ -123,38 +113,37 @@ Sang Woo Park\textsuperscript{1,2,3,*}, Inga Holmdahl\textsuperscript{3,4}, Emil
 
 \section*{Abstract}
 
-Titrating the importance of endogenous and exogenous drivers for host-pathogen systems remains an important research frontier towards predicting future outbreaks.
-In Japan, respiratory syncytial virus (RSV), a major childhood respiratory pathogen, displayed a sudden, dramatic shift in outbreak seasonality (from winter to fall) in 2016. 
-We use mathematical models to identify processes that could lead to this outcome.
-In line with previous analyses, we identify a robust quadratic relationship between transmission against mean specific humidity and mean temperature, with maximum transmission occurring at low and high humidity as well as low and high temperature.
-This drives semiannual patterns of seasonal transmission rates that peak in summer and winter.
-Under this transmission regime, a subtle increase in population-level susceptibility or transmission can cause a sudden shift in seasonality, where the degree of shift is primarily determined by the interval between the two peaks of seasonal transmission rate.
-We hypothesize that an increase in children attending childcare facilities may have contributed to the increase in the overall RSV transmission through increased contact rates between susceptible and infected hosts.
-Our analysis underscores the power of studying infectious disease dynamics to titrate the roles of underlying drivers of dynamical transitions in ecology.
-
+Advances in artificial intelligence (AI) have enabled the wide use of personalized assistance for cognitive tasks, which enhanced individual performance on various fields.
+However, the impact of AI assistance on collective intelligence remains poorly understood. AI assistance may undermine the emergence of collective intelligence by reducing the individual diversity or introducing structured biases into a population. 
+Here, we develop a human-AI collective prediction model mediated by social learning based on incentive structure by extending the existing works on collective intelligence.
+Our model uncovers that emergence of collective intelligence is depend on how human and AI interact. 
+When AI works as if it is omniscient and gives assistance regardless of users' interests, collective intelligence will be promoted.
+However, when AI works as a chat-bot and gives assistance only based on users' interests, collective intelligence could be hindered due to diversity loss and overconfidence on AI.
+We showed that, to promote collective intelligence, penalizing or incentivizing AI usage is not reliable. Instead, elaborating more diversity-aware incentives could be the key to promote and maintain the collective intelligence.
 \pagebreak
 
 \section*{Introduction}
 
-Characterizing the drivers of dynamical transitions is a fundamental challenge in ecology \citep{earn2000simple,hastings2004transients,hastings2018transient}.
-However, time series data from ecological systems are rare, and, where they do exist, sparse; reducing our ability to tease apart the relative roles of endogenous (e.g., density-dependent responses) and exogenous (e.g., climate variables) factors in driving dynamical transitions \citep{hunter1998cycles,lundberg2000population,hernandez2012fluctuations}.
-There is one important exception: detailed spatiotemporal surveillance data are available for many epidemiological systems, providing a unique platform for answering broader questions in ecology and population biology \citep{levin1997mathematical,anderson1991infectious,grenfell2001travelling,he2010plug}.
+Collective intelligence (CI) describes a phenomenon in which a group’s ability to solve problems, make decisions, or adapt to changing environments exceeds each member’s ability \cite{galton1907vox,woolley2010evidence,yaniv2007using,hommes2005coordination,lorge1958survey}.
+This phenomenon, also referred to as wisdom of crowds, has thus served as a central mechanism underlying the success of diverse organizations, ranging from animal groups \cite{dreyer2025comparing,simons2004many,berdahl2013emergent} and human societies \cite{woolley2010evidence, riedl2021quantifying} to machine-learning systems \cite{breiman1996bagging,breiman2001random}.
+Understanding the conditions that promote and  maintain CI therefore remains a fundamental question across social sciences \cite{mann2017optimal}, evolutionary biology \cite{wang2025individual}, and computer science \cite{werfel2026fluid}.
+Addressing this question has become particularly timely as artificial intelligence (AI) has begun to reshape how individuals acquire information, make decisions, and contribute to collective outcomes \cite{cui2024ai}.
 
-Respiratory syncytial virus (RSV) is a common childhood respiratory pathogen that infects nearly all children by the age of two, and is also an important risk factor for asthma and allergy development \citep{sigurs1995asthma,sigurs2010asthma,edwards2012microbiology}.
-RSV outbreaks typically exhibit annual or biennial patterns with relatively consistent seasonal incidence across years in many countries, including Canada \citep{paramo2023respiratory}, Korea \citep{kim2020investigation}, and the US \citep{pitzer2015environmental,baker2019epidemic}.
-Previous studies showed that climate-driven transmission plays a major role in driving RSV epidemic dynamics \citep{pitzer2015environmental,baker2019epidemic}.
-In particular, \cite{baker2019epidemic} demonstrated a quadratic relationship between specific humidity and RSV transmission with maximum transmission occurring at low and high humidity.
+The recent emergence of generative AIs and large language models (LLMs) has changed the way individuals engage in various cognitive tasks, ranging from simple everyday tasks to more complex tasks, including scientific discovery \cite{lu2026towards} and creative writing \cite{doshi2024generative}.
+In particular, while the use of personal AI models, such as ChatGPT, has been rapidly increasing \cite{sajadieh2026artificial}, the potential long-term impact of personal AI services on human society, especially the CI, remains uncertain.
+Some argue that AI can promote CI by enhancing individual expertise \cite{vaccaro2024combinations}, and opinion aggregation \cite{burton2024large}.
+Conversely, empirical evidence indicate that the use of AIs can limit the diversity of opinions \cite{doshi2024generative,meincke2025chatgpt, fugener2021will}, a key requirement for the emergence of CI \cite{lorenz2011social,aplin2014individual,hong2004groups}.
 
-RSV in Japan presents a unique case study relative to other countries: In contrast to stable seasonal incidence generally observed, a sudden, dramatic transition from winter to fall RSV outbreaks was observed in Japan in 2016, where the altered dynamics persisted until the emergence of COVID-19 \citep{miyama2021seasonal,wagatsuma2021shifts}.
-To our knowledge, this change was not observed in other countries, including Australia \citep{nazareno2022modelled}, Canada \citep{canada-report}, China \citep{luo2022comparison,li2023defining,li2024characterising}, Korea \citep{kim2023molecular}, and the US \citep{rose2018respiratory,hansen2022mortality}.
-\cite{wagatsuma2021shifts} hypothesized that changes in climate and an increase in inbound overseas travelers may be jointly responsible for this shift in seasonality.
-However, their conclusion relied on correlational analyses, and many other mechanisms may have contributed to the sudden shift in RSV outbreak seasonality.
-Understanding the sudden shift in RSV seasonality is a necessary step for predicting future RSV outbreaks, as well as for timely deployment of monoclonal antibodies and vaccination \citep{mazur2023respiratory}.
+Our ability to predict the long-term impact of personal AI services on human CI is hampered by the apparent discrepancy in the incentives that shape AI uses.
+On one hand, many industrial sectors are pushing towards increased AI usages, where the number of "tokens" used is often perceived as a proxy for productivity \cite{bousquette2026tokenmaxxing,keary2026cult}.
+On the other hand, many academic institutions appear to discourage, and even penalize, AI use, reflecting concerns about plagiarism, misinformation, and limited independnce \cite{chawla2026researchers,thorp2023chatgpt}.
+Such discrepancy raises a question about whether directly penalizing or incentivizing AI usage will benefit or harm human CI.
+These observations further highlight the importance of indentifying a robust incentive structure that can promote CI in the presence of AI, which can retain the benefits of AIs while preventing potential risk such as preserving the diversity of individual opinions.
 
-Here, we analyzed the time series of RSV cases from Japan (\fref{fig1}) to identify the drivers of a sudden shift in seasonality between 2016 and 2017. 
-We combined a parsimonious model of disease transmission with a Bayesian statistical framework to infer RSV transmission dynamics across different islands.
-We used inferred transmission patterns to explore how changes in susceptibility and transmission can lead to a sudden shift in seasonality.
-Our analysis offers novel insights into drivers of dynamical transition in seasonal respiratory epidemics.
+To address these questions, we extended previous approaches for modeling CI, where each individual makes independent predictions for the outcome from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
+We allowed each individual to independently consult with personal AIs and revise their predictions accordingly.
+Across different assumptions about the AI model's ability and underlying incentive structures, we investigate the robustness of human CIs.
+
 
 \section*{Results}
 
@@ -498,275 +487,7 @@ All data are stored in a publicly available GitHub repository (\url{https://gith
 
 All code are stored in a publicly available GitHub repository (\url{https://github.com/parksw3/perturbation}) \citep{perturbationzenodo}.
 
-\begin{thebibliography}{10}
-
-\bibitem{earn2000simple}
-David~JD Earn, Pejman Rohani, Benjamin~M Bolker, and Bryan~T Grenfell.
-\newblock A simple model for complex dynamical transitions in epidemics.
-\newblock {\em Science}, 287(5453):667--670, 2000.
-
-\bibitem{hastings2004transients}
-Alan Hastings.
-\newblock Transients: the key to long-term ecological understanding?
-\newblock {\em Trends in ecology \& evolution}, 19(1):39--45, 2004.
-
-\bibitem{hastings2018transient}
-Alan Hastings, Karen~C Abbott, Kim Cuddington, Tessa Francis, Gabriel Gellner, Ying-Cheng Lai, Andrew Morozov, Sergei Petrovskii, Katherine Scranton, and Mary~Lou Zeeman.
-\newblock Transient phenomena in ecology.
-\newblock {\em Science}, 361(6406):eaat6412, 2018.
-
-\bibitem{hunter1998cycles}
-Mark~D Hunter and Peter~W Price.
-\newblock Cycles in insect populations: delayed density dependence or exogenous driving variables?
-\newblock {\em Ecological Entomology}, 23(2):216--222, 1998.
-
-\bibitem{lundberg2000population}
-Per Lundberg, Esa Ranta, J{\"o}rgen Ripa, and Veijo Kaitala.
-\newblock Population variability in space and time.
-\newblock {\em Trends in Ecology \& Evolution}, 15(11):460--464, 2000.
-
-\bibitem{hernandez2012fluctuations}
-Eva Hernandez~Plaza, Luis Navarrete, Carlos Lacasta, and Jos{\'e}~Luis Gonz{\'a}lez-Andujar.
-\newblock Fluctuations in plant populations: role of exogenous and endogenous factors.
-\newblock {\em Journal of Vegetation Science}, 23(4):640--646, 2012.
-
-\bibitem{levin1997mathematical}
-Simon~A Levin, Bryan Grenfell, Alan Hastings, and Alan~S Perelson.
-\newblock Mathematical and computational challenges in population biology and ecosystems science.
-\newblock {\em Science}, 275(5298):334--343, 1997.
-
-\bibitem{anderson1991infectious}
-Roy~M Anderson and Robert~M May.
-\newblock {\em Infectious diseases of humans: dynamics and control}.
-\newblock Oxford university press, 1991.
-
-\bibitem{grenfell2001travelling}
-Bryan~T Grenfell, Ottar~N Bj{\o}rnstad, and Jens Kappey.
-\newblock Travelling waves and spatial hierarchies in measles epidemics.
-\newblock {\em Nature}, 414(6865):716--723, 2001.
-
-\bibitem{he2010plug}
-Daihai He, Edward~L Ionides, and Aaron~A King.
-\newblock Plug-and-play inference for disease dynamics: measles in large and small populations as a case study.
-\newblock {\em Journal of the Royal Society Interface}, 7(43):271--283, 2010.
-
-\bibitem{sigurs1995asthma}
-N~Sigurs, R~Bjarnason, F~Sigurbergsson, B~Kjellman, and B~Bjorksten.
-\newblock {Asthma and immunoglobulin E antibodies after respiratory syncytial virus bronchiolitis: a prospective cohort study with matched controls}.
-\newblock {\em Pediatrics}, 95(4):500--505, 1995.
-
-\bibitem{sigurs2010asthma}
-Nele Sigurs, Fatma Aljassim, Bengt Kjellman, Paul~D Robinson, Fridrik Sigurbergsson, Ragnar Bjarnason, and Per~M Gustafsson.
-\newblock {Asthma and allergy patterns over 18 years after severe RSV bronchiolitis in the first year of life}.
-\newblock {\em Thorax}, 65(12):1045--1052, 2010.
-
-\bibitem{edwards2012microbiology}
-Michael~R Edwards, Nathan~W Bartlett, Tracy Hussell, Peter Openshaw, and Sebastian~L Johnston.
-\newblock The microbiology of asthma.
-\newblock {\em Nature Reviews Microbiology}, 10(7):459--471, 2012.
-
-\bibitem{paramo2023respiratory}
-Marina~Vi{\~n}eta Paramo, Lilian~PL Ngo, Bahaa Abu-Raya, Frederic Reicherz, Rui~Yang Xu, Jeffrey~N Bone, Jocelyn~A Srigley, Alfonso Solimano, David~M Goldfarb, Danuta~M Skowronski, et~al.
-\newblock {Respiratory syncytial virus epidemiology and clinical severity before and during the COVID-19 pandemic in British Columbia, Canada: a retrospective observational study}.
-\newblock {\em The Lancet Regional Health--Americas}, 25:100582, 2023.
-
-\bibitem{kim2020investigation}
-Ga-Yeon Kim, Insoo Rheem, You~Hyun Joung, and Jae~Kyung Kim.
-\newblock {Investigation of occurrence patterns of respiratory syncytial virus A and B in infected-patients from Cheonan, Korea}.
-\newblock {\em Respiratory Research}, 21(1):191, 2020.
-
-\bibitem{pitzer2015environmental}
-Virginia~E Pitzer, C{\'e}cile Viboud, Wladimir~J Alonso, Tanya Wilcox, C~Jessica Metcalf, Claudia~A Steiner, Amber~K Haynes, and Bryan~T Grenfell.
-\newblock {Environmental drivers of the spatiotemporal dynamics of respiratory syncytial virus in the United States}.
-\newblock {\em PLoS Pathogens}, 11(1):e1004591, 2015.
-
-\bibitem{baker2019epidemic}
-Rachel~E Baker, Ayesha~S Mahmud, Caroline~E Wagner, Wenchang Yang, Virginia~E Pitzer, Cecile Viboud, Gabriel~A Vecchi, C~Jessica~E Metcalf, and Bryan~T Grenfell.
-\newblock Epidemic dynamics of respiratory syncytial virus in current and future climates.
-\newblock {\em Nature Communications}, 10(1):1--8, 2019.
-
-\bibitem{miyama2021seasonal}
-Takeshi Miyama, Nobuhiro Iritani, Takayuki Nishio, Tomohiko Ukai, Yuka Satsuki, Hiromi Miyata, Ayumi Shintani, Satoshi Hiroi, Kazushi Motomura, and Kazuo Kobayashi.
-\newblock {Seasonal shift in epidemics of respiratory syncytial virus infection in Japan}.
-\newblock {\em Epidemiology \& Infection}, 149:e55, 2021.
-
-\bibitem{wagatsuma2021shifts}
-Keita Wagatsuma, Iain~S Koolhof, Yugo Shobugawa, and Reiko Saito.
-\newblock {Shifts in the epidemic season of human respiratory syncytial virus associated with inbound overseas travelers and meteorological conditions in Japan, 2014--2017: An ecological study}.
-\newblock {\em PLoS One}, 16(3):e0248932, 2021.
-
-\bibitem{nazareno2022modelled}
-Allen~L Nazareno, David~J Muscatello, Robin~M Turner, James~G Wood, Hannah~C Moore, and Anthony~T Newall.
-\newblock {Modelled estimates of hospitalisations attributable to respiratory syncytial virus and influenza in Australia, 2009--2017}.
-\newblock {\em Influenza and other respiratory viruses}, 16(6):1082--1090, 2022.
-
-\bibitem{canada-report}
-{Public Health Agency of Canada}.
-\newblock {Respiratory virus detections in Canada}, 2024.
-\newblock https://www.canada.ca/en/public-health/services/surveillance/respiratory-virus-detections-canada.html.
-
-\bibitem{luo2022comparison}
-Ming Luo, Cheng Gong, Yan Zhang, Xue Wang, Yang Liu, Qing Luo, Maozhong Li, Aihua Li, Yiting Wang, Mei Dong, et~al.
-\newblock {Comparison of infections with respiratory syncytial virus between children and adults: a multicenter surveillance from 2015 to 2019 in Beijing, China}.
-\newblock {\em European Journal of Clinical Microbiology \& Infectious Diseases}, 41(12):1387--1397, 2022.
-
-\bibitem{li2023defining}
-Taoyu Li, Heping Fang, Xiangyu Liu, Yu~Deng, Na~Zang, Jun Xie, Xiaohong Xie, Zhengxiu Luo, Jian Luo, Yulin Liu, et~al.
-\newblock {Defining RSV epidemic season in southwest China and assessing the relationship between birth month and RSV infection: a 10-year retrospective study from June 2009 to May 2019}.
-\newblock {\em Journal of Medical Virology}, 95(7):e28928, 2023.
-
-\bibitem{li2024characterising}
-Maozhong Li, Bingbing Cong, Xiaofeng Wei, Yiting Wang, Lu~Kang, Cheng Gong, Qi~Huang, Xin Wang, You Li, and Fang Huang.
-\newblock {Characterising the changes in RSV epidemiology in Beijing, China during 2015--2023: results from a prospective, multi-centre, hospital-based surveillance and serology study}.
-\newblock {\em The Lancet Regional Health--Western Pacific}, 45, 2024.
-
-\bibitem{kim2023molecular}
-Ha~Nui Kim, Jinha Hwang, Soo-Young Yoon, Chae~Seung Lim, Yunjung Cho, Chang-Kyu Lee, and Myung-Hyun Nam.
-\newblock {Molecular characterization of human respiratory syncytial virus in Seoul, South Korea, during 10 consecutive years, 2010--2019}.
-\newblock {\em PLoS One}, 18(4):e0283873, 2023.
-
-\bibitem{rose2018respiratory}
-Erica~Billig Rose.
-\newblock {Respiratory syncytial virus seasonality—United States, 2014--2017}.
-\newblock {\em MMWR. Morbidity and mortality weekly report}, 67, 2018.
-
-\bibitem{hansen2022mortality}
-Chelsea~L Hansen, Sandra~S Chaves, Clarisse Demont, and C{\'e}cile Viboud.
-\newblock {Mortality associated with influenza and respiratory syncytial virus in the US, 1999-2018}.
-\newblock {\em JAMA Network Open}, 5(2):e220527--e220527, 2022.
-
-\bibitem{mazur2023respiratory}
-Natalie~I Mazur, Jonne Terstappen, Ranju Baral, Azucena Bardaj{\'\i}, Philippe Beutels, Ursula~J Buchholz, Cheryl Cohen, James~E Crowe, Clare~L Cutland, Linda Eckert, et~al.
-\newblock Respiratory syncytial virus prevention within reach: the vaccine and monoclonal antibody landscape.
-\newblock {\em The Lancet Infectious Diseases}, 23(1):e2--e21, 2023.
-
-\bibitem{matsumura2025epidemiology}
-Yasufumi Matsumura, Masaki Yamamoto, Yusuke Tsuda, Koh Shinohara, Yasuhiro Tsuchido, Satomi Yukawa, Taro Noguchi, Kazuo Takayama, and Miki Nagao.
-\newblock {Epidemiology of respiratory viruses according to age group, 2023--24 winter season, Kyoto, Japan}.
-\newblock {\em Scientific Reports}, 15(1):924, 2025.
-
-\bibitem{dehaan2024age}
-Laurel~L DeHaan, Charles~D Copeland, Jennifer~A Burney, Yosikazu Nakamura, Mayumi Yashiro, Chisato Shimizu, Koichi Miyata, Jane~C Burns, and Daniel~R Cayan.
-\newblock {Age-dependent variations in Kawasaki disease incidence in Japan}.
-\newblock {\em JAMA Network Open}, 7(2):e2355001--e2355001, 2024.
-
-\bibitem{lowen2007influenza}
-Anice~C Lowen, Samira Mubareka, John Steel, and Peter Palese.
-\newblock Influenza virus transmission is dependent on relative humidity and temperature.
-\newblock {\em PLoS Pathogens}, 3(10):e151, 2007.
-
-\bibitem{shaman2009absolute}
-Jeffrey Shaman and Melvin Kohn.
-\newblock Absolute humidity modulates influenza survival, transmission, and seasonality.
-\newblock {\em Proceedings of the National Academy of Sciences}, 106(9):3243--3248, 2009.
-
-\bibitem{shaman2010absolute}
-Jeffrey Shaman, Virginia~E Pitzer, C{\'e}cile Viboud, Bryan~T Grenfell, and Marc Lipsitch.
-\newblock {Absolute humidity and the seasonal onset of influenza in the continental United States}.
-\newblock {\em PLoS Biology}, 8(2):e1000316, 2010.
-
-\bibitem{tamerius2013environmental}
-James~D Tamerius, Jeffrey Shaman, Wladmir~J Alonso, Kimberly Bloom-Feshbach, Christopher~K Uejio, Andrew Comrie, and C{\'e}cile Viboud.
-\newblock Environmental predictors of seasonal influenza epidemics across temperate and tropical climates.
-\newblock {\em PLoS Pathogens}, 9(3):e1003194, 2013.
-
-\bibitem{lowen2014roles}
-Anice~C Lowen and John Steel.
-\newblock Roles of humidity and temperature in shaping influenza seasonality.
-\newblock {\em Journal of virology}, 88(14):7692--7695, 2014.
-
-\bibitem{munasinghe2019quantifying}
-Lankeshwara Munasinghe, Yusuke Asai, and Hiroshi Nishiura.
-\newblock Quantifying heterogeneous contact patterns in japan: a social contact survey.
-\newblock {\em Theoretical biology and medical modelling}, 16(1):6, 2019.
-
-\bibitem{okabe2024amino}
-Hisao Okabe, Koichi Hashimoto, Sakurako Norito, Yuichiro Asano, Masatoki Sato, Yohei Kume, Mina Chishiki, Hajime Maeda, Fumi Mashiyama, Aya Takeyama, et~al.
-\newblock {Amino acid substitutions in the fusion protein of respiratory syncytial virus in Fukushima, Japan during 2008--2023 and their effects}.
-\newblock {\em The Journal of Infectious Diseases}, 231(6):jiae636, 2024.
-
-\bibitem{nakajo2023age}
-K~Nakajo and H~Nishiura.
-\newblock Age-dependent risk of respiratory syncytial virus infection: a systematic review and hazard modeling from serological data.
-\newblock {\em The Journal of Infectious Diseases}, 228(10):1400--1409, 2023.
-
-\bibitem{andeweg2021population}
-Stijn~P Andeweg, Rutger~M Schepp, Jan van~de Kassteele, Liesbeth Mollema, Guy~AM Berbers, and Michiel van Boven.
-\newblock {Population-based serology reveals risk factors for RSV infection in children younger than 5 years}.
-\newblock {\em Scientific reports}, 11(1):8953, 2021.
-
-\bibitem{berbers2021antibody}
-Guy Berbers, Liesbeth Mollema, Fiona van~der Klis, Gerco den Hartog, and Rutger Schepp.
-\newblock {Antibody responses to respiratory syncytial virus: a cross-sectional serosurveillance study in the Dutch population focusing on infants younger than 2 years}.
-\newblock {\em The Journal of infectious diseases}, 224(2):269--278, 2021.
-
-\bibitem{shoji2025factors}
-Kensuke Shoji, Masaki Yamada, Michi Hisano, Yusuke Okubo, Erika Obikane, and Koushi Yamaguchi.
-\newblock Factors associated with respiratory syncytial virus-neutralizing antibody titers in adults.
-\newblock {\em Journal of Infection and Chemotherapy}, 31(10):102801, 2025.
-
-\bibitem{baker2020impact}
-Rachel~E Baker, Sang~Woo Park, Wenchang Yang, Gabriel~A Vecchi, C~Jessica~E Metcalf, and Bryan~T Grenfell.
-\newblock {The impact of COVID-19 nonpharmaceutical interventions on the future dynamics of endemic infections}.
-\newblock {\em Proceedings of the National Academy of Sciences}, 117(48):30547--30553, 2020.
-
-\bibitem{eden2022off}
-John-Sebastian Eden, Chisha Sikazwe, Ruopeng Xie, Yi-Mo Deng, Sheena~G Sullivan, Alice Michie, Avram Levy, Elena Cutmore, Christopher~C Blyth, Philip~N Britton, et~al.
-\newblock {Off-season RSV epidemics in Australia after easing of COVID-19 restrictions}.
-\newblock {\em Nature Communications}, 13(1):2884, 2022.
-
-\bibitem{chen2024covid}
-Zhiyuan Chen, Joseph L-H Tsui, Bernardo Gutierrez, Simon Busch~Moreno, Louis du~Plessis, Xiaowei Deng, Jun Cai, Sumali Bajaj, Marc~A Suchard, Oliver~G Pybus, et~al.
-\newblock {COVID-19 pandemic interventions reshaped the global dispersal of seasonal influenza viruses}.
-\newblock {\em Science}, 386(6722):eadq3003, 2024.
-
-\bibitem{park2024predicting}
-Sang~Woo Park, Kevin Messacar, Daniel~C Douek, Alicen~B Spaulding, C~Jessica~E Metcalf, and Bryan~T Grenfell.
-\newblock {Predicting the impact of COVID-19 non-pharmaceutical intervention on short-and medium-term dynamics of enterovirus D68 in the US}.
-\newblock {\em Epidemics}, 46:100736, 2024.
-
-\bibitem{white2005transmission}
-LJ~White, M~Waris, PA~Cane, D~James Nokes, and GF~Medley.
-\newblock {The transmission dynamics of groups A and B human respiratory syncytial virus (hRSV) in England \& Wales and Finland: seasonality and cross-protection}.
-\newblock {\em Epidemiology \& Infection}, 133(2):279--289, 2005.
-
-\bibitem{holmdahl2024differential}
-Inga Holmdahl, Samantha~J Bents, Rachel~E Baker, Jean-Sebastien Casalegno, N{\'\i}dia~Sequeira Trov{\~a}o, Sang~Woo Park, Jessica~E Metcalf, C{\'e}cile Viboud, and Bryan Grenfell.
-\newblock {Differential impact of COVID-19 non-pharmaceutical interventions on the epidemiological dynamics of respiratory syncytial virus subtypes A and B}.
-\newblock {\em Scientific reports}, 14(1):14527, 2024.
-
-\bibitem{bhattacharyya2015cross}
-Samit Bhattacharyya, Per~H Gesteland, Kent Korgenski, Ottar~N Bj{\o}rnstad, and Frederick~R Adler.
-\newblock Cross-immunity between strains explains the dynamical pattern of paramyxoviruses.
-\newblock {\em Proceedings of the National Academy of Sciences}, 112(43):13396--13400, 2015.
-
-\bibitem{yamagami2019detection}
-Hidetomi Yamagami, Hirokazu Kimura, Takafumi Hashimoto, Isao Kusakawa, and Satoshi Kusuda.
-\newblock {Detection of the onset of the epidemic period of respiratory syncytial virus infection in Japan}.
-\newblock {\em Frontiers in Public Health}, 7:39, 2019.
-
-\bibitem{hersbach2020era5}
-Hans Hersbach, Bill Bell, Paul Berrisford, Shoji Hirahara, Andr{\'a}s Hor{\'a}nyi, Joaqu{\'\i}n Mu{\~n}oz-Sabater, Julien Nicolas, Carole Peubey, Raluca Radu, Dinand Schepers, et~al.
-\newblock {The ERA5 global reanalysis}.
-\newblock {\em Quarterly Journal of the Royal Meteorological Society}, 146(730):1999--2049, 2020.
-
-\bibitem{park2024myco}
-Sang~Woo Park, Brooklyn Noble, Emily Howerton, Bjarke~F Nielsen, Sarah Lentz, Lilliam Ambroggio, Samuel Dominguez, Kevin Messacar, and Bryan~T Grenfell.
-\newblock {Predicting the impact of non-pharmaceutical interventions against COVID-19 on Mycoplasma pneumoniae in the United States}.
-\newblock {\em Epidemics}, 49:100808, 2024.
-
-\bibitem{carpenter2017stan}
-Bob Carpenter, Andrew Gelman, Matthew~D Hoffman, Daniel Lee, Ben Goodrich, Michael Betancourt, Marcus~A Brubaker, Jiqiang Guo, Peter Li, and Allen Riddell.
-\newblock {Stan: A probabilistic programming language}.
-\newblock {\em Journal of statistical software}, 76, 2017.
-
-\bibitem{perturbationzenodo}
-S.W. Park, I.~Holmdahl, E.~Howerton, W.~Yang, R.E. Baker, G.A. Vecchi, S.~Cobey, C.J.E. Metcalf, and B.T. Grenfell.
-\newblock {parksw3/perturbation: archive, Version v1.0.0}.
-\newblock {\em Zenodo}, 2025.
-\newblock https://doi.org/10.5281/zenodo.17396085.
-
-\end{thebibliography}
+\bibliography{references}
 
 \pagebreak
 

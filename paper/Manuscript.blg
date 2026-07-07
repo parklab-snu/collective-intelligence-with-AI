@@ -1,0 +1,77 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Manuscript.aux
+Reallocating 'name_of_file' (item size: 1) to 6 items.
+The style file: unsrt.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Database file #1: references.bib
+Warning--I didn't find a database entry for "baker2019epidemic"
+Warning--I didn't find a database entry for "pitzer2015environmental"
+Warning--I didn't find a database entry for "wagatsuma2021shifts"
+Warning--I didn't find a database entry for "matsumura2025epidemiology"
+Warning--I didn't find a database entry for "dehaan2024age"
+Warning--I didn't find a database entry for "lowen2007influenza"
+Warning--I didn't find a database entry for "shaman2009absolute"
+Warning--I didn't find a database entry for "shaman2010absolute"
+Warning--I didn't find a database entry for "tamerius2013environmental"
+Warning--I didn't find a database entry for "lowen2014roles"
+Warning--I didn't find a database entry for "munasinghe2019quantifying"
+Warning--I didn't find a database entry for "okabe2024amino"
+Warning--I didn't find a database entry for "nakajo2023age"
+Warning--I didn't find a database entry for "andeweg2021population"
+Warning--I didn't find a database entry for "berbers2021antibody"
+Warning--I didn't find a database entry for "shoji2025factors"
+Warning--I didn't find a database entry for "baker2020impact"
+Warning--I didn't find a database entry for "eden2022off"
+Warning--I didn't find a database entry for "chen2024covid"
+Warning--I didn't find a database entry for "park2024predicting"
+Warning--I didn't find a database entry for "white2005transmission"
+Warning--I didn't find a database entry for "holmdahl2024differential"
+Warning--I didn't find a database entry for "bhattacharyya2015cross"
+Warning--I didn't find a database entry for "yamagami2019detection"
+Warning--I didn't find a database entry for "hersbach2020era5"
+Warning--I didn't find a database entry for "park2024myco"
+Warning--I didn't find a database entry for "carpenter2017stan"
+Warning--I didn't find a database entry for "perturbationzenodo"
+You've used 30 entries,
+            1791 wiz_defined-function locations,
+            679 strings with 9576 characters,
+and the built_in function-call counts, 7480 in all, are:
+= -- 658
+> -- 360
+< -- 0
++ -- 133
+- -- 103
+* -- 629
+:= -- 1214
+add.period$ -- 91
+call.type$ -- 30
+change.case$ -- 30
+chr.to.int$ -- 0
+cite$ -- 30
+duplicate$ -- 257
+empty$ -- 715
+format.name$ -- 103
+if$ -- 1589
+int.to.chr$ -- 0
+int.to.str$ -- 30
+missing$ -- 27
+newline$ -- 154
+num.names$ -- 30
+pop$ -- 48
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 93
+stack$ -- 0
+substring$ -- 688
+swap$ -- 30
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 75
+width$ -- 32
+write$ -- 330
+(There were 28 warnings)
