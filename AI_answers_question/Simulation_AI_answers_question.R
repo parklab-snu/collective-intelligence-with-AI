@@ -390,9 +390,8 @@ for(i in lambda_list){
 
 set.seed(42)  
 m <- 50
-alpha <- runif(m+1, min = -5, max = 5)
-sum(sapply(alpha, function(x) x < 0))
-alpha[1] <- -3
+#alpha <- runif(m+1, min = -5, max = 5)
+alpha <- seq(-5, 5, length = 51)
 #sigma <- rep(1, m+1)
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)

@@ -39,6 +39,14 @@
 \usepackage{amsfonts}
 \usepackage[utf8]{inputenc} % make sure fancy dashes etc. don't get dropped
 
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
 \usepackage{lineno}
 \linenumbers
 
@@ -147,19 +155,136 @@ Across different assumptions about the AI model's ability and underlying incenti
 
 \section*{Results}
 
-\subsection*{Observed dynamics in RSV outbreaks}
+\subsection*{Model}
 
-A sudden change in RSV seasonality from winter to fall outbreaks was observed in nearly all prefectures between 2016 and 2017 (\fref{fig1}A).
-To quantify changes in seasonality, we calculated the center of gravity (i.e., the mean timing of an epidemic) for each outbreak season at every prefecture and found a consistent decrease in the center of gravity (\fref{fig1}B; Supplementary Figure S1; Methods).
-We also found that these changes were associated with the inter-epidemic troughs becoming shallower (i.e., bigger minimum) (\fref{fig1}C).
+To model CI, we start with an abstract model that assumes the prediction target is the result of multiple causal factors \cite{wang2025individual}.
+Specifically, the prediction target $Y$ is modeled as a linear combination of $M$ independent factors ($x_1, x_2, ..., x_m$) and $M+1$ coefficients ($\alpha_0, \alpha_1, ..., \alpha_m$), where $\alpha_0$ denotes the global offset (Fig. 1A).
+The $M$ factors are randomly drawn from normal distributions with mean $X_i$ and standard deviation $\sigma_i$ in each generation.
 
-We found considerable heterogeneity in the observed outbreak dynamics across the major islands, especially following the changes in seasonality (\fref{fig1}D; see Supplementary Figure S2 for the map of Japan).
-For example, annual RSV outbreaks in Hokkaido island became more persistent, causing high numbers of cases throughout the year.
-Semiannual RSV outbreaks Kyushu island became more annual with higher intensity, leading to sharper epidemics.
-Finally, in contrast to all other islands, RSV outbreaks in Ryukyu island exhibited summer outbreaks, which also became more intense leading up to 2020.
-We note that Hokkaido and Ryukyu each consist of one prefecture, Hokkaido and Okinawa, respectively, 
-which correspond to top and bottom rows in \fref{fig1}A;
-therefore, the observed RSV dynamics in Honshu, Shikoku, and Kyushu islands represent the majority of RSV transmission in Japan.
+Among a population of $N$ individuals, each individual can observe a single factor and make a prediction based on the observed value and their own belief.
+In particular, individual $A$'s prediction is modeled as:
+
+\begin{equation}
+Y_{A} = c_A x_{e_A}
+\end{equation}
+
+where $c_A$ represents individual $A$'s personal belief, $e_A$ represents the factor that $A$ observes (interest), and $x_{e_A}$ represents the realized value of $A$'s interest.
+Individuals can also choose not to observe any factor, which represents stubborn individuals who make predictions only based on their own belief.
+For notational convenience, we assume that stubborn individuals have interest $0$, and let $x_0$ always be 1.
+
+Next, we model AI as a prediction system that has learned the true coefficients with bias and error (Fig. 1B).
+For each factor $i \in [0, M]$, AI knows the exact coefficient $\alpha_i$ and has a fixed bias $b_i$, resulting in a prediction of $\alpha_i x_i + b_i$.
+In terms of human-AI interaction, we model two contrasting modes of AI: the “AI knows all” model and the “AI answers question” model.
+In the AI knows all model, AI acts as an omniscient system and gives an answer regardless of the individual’s interest, accounting for all factors related to the task.
+Thus, AI predicts as follows:
+
+\begin{equation}
+Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon
+\end{equation}
+
+In contrast, the AI answers question model acts as a chatbot and gives an answer only based on the individual’s interest.
+Thus, given the individual’s interest, $e_A$, AI predicts as follows:
+
+\begin{equation}
+Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon
+\end{equation}
+
+In both models, $\epsilon \sim N(0, \sigma_{e}^{2})$ represents random error arising from the stochastic generative process of the AI model.
+
+AI works as a personalized assistant for each individual, such that each individual receives assistance by incorporating the AI’s prediction.
+However, even with the same opportunity to receive AI assistance, reliance on AI can vary substantially across individuals.
+To model this, we assume that the revised prediction is a weighted sum of the individual’s own prediction and the AI’s prediction by introducing AI belief $\beta_A$ as a weighting coefficient.
+The revised prediction of individual $A$ can be written as:
+
+\begin{equation}
+Y_{A}^{revised} = \beta_{A}Y_{A}^{AI} + (1 - \beta_{A})Y_{A}
+\end{equation}
+
+The revised predictions of individuals are aggregated by two different mechanisms, depending on the mode of AI.
+In the AI knows all model, even if an individual can observe only a single factor, their revised prediction contains information about all factors through interaction with AI.
+Therefore, we use simple averaging of revised predictions as the collective prediction.
+In contrast, in the AI answers question model, each individual gives a prediction based only on a single factor even after revising their prediction with AI assistance.
+Therefore, we use clustering aggregation to obtain the collective prediction, which is performed by clustering individuals based on interest and summing the average values of each cluster.
+
+For each generation, each individual is rewarded with a payoff based on the given incentive structure (Fig. 1C).
+We adopt two incentive structures, “feedback” and “niche expert,” which were proposed by Wang et al. \cite{wang2025individual} and promote collective intelligence when prediction is performed without AI.
+The feedback incentive gives higher payoff to individuals who can push the collective prediction toward the true value, regardless of their individual performance.
+Given individual $A$’s revised prediction $Y_{A}^{revised}$ and the collective prediction $\hat{Y}^{revised}$, it can be expressed as:
+
+\begin{equation}
+\pi_{A} = Y_{A}^{revised}(Y - \hat Y^{revised})
+\end{equation}
+
+The niche expert incentive gives higher payoff to individuals who have both better individual performance and a minority interest.
+Specifically, the niche expert payoff is expressed as the product of the proportion of individuals who observe the same factor as individual $A$, $\rho_{e_A}$, and individual accuracy.
+Given individual $A$’s revised prediction $Y_{A}^{revised}$, it can be expressed as:
+
+\begin{equation}
+\pi_{A} = - \rho_{e_A}(Y_{A}^{revised} - Y)^2
+\end{equation}
+
+These two incentive structures were shown to achieve nearly perfect collective intelligence through social learning (except for the niche expert incentive with simple averaging aggregation) by promoting individual expertise while maintaining collective diversity.
+Therefore, we use these incentive structures as a baseline to understand how AI affects the emergence of collective intelligence.
+Moreover, we modify the two baseline incentives in a later section to understand the consequences of direct incentives and penalties for AI usage.
+
+Throughout the simulation, individuals engage in social learning by imitating other individuals who receive higher payoffs.
+We assume that prediction events occur more frequently than social learning events within the population, such that individual payoff can be computed as an expected payoff.
+The imitation process is performed for at most one pair in each generation.
+By sampling two random individuals, $A$ and $B$, imitation is performed with probability:
+
+\begin{equation}
+\frac{1}{1 + \exp(s(\mathbb{E}[\pi_A] - \mathbb{E}[\pi_B]))}
+\end{equation}
+
+where $s$ denotes the strength of social learning.
+When imitation occurs, $A$ imitates all three strategies of $B$: interest, belief, and AI belief.
+
+To evaluate and analyze the dynamics of collective prediction, we define six summary metrics: collective accuracy, collective bias, collective variance, human accuracy, interest diversity, and median AI belief.
+These metrics capture the accuracy of the revised collective prediction, its bias–variance decomposition, the predictive performance without AI, the diversity of individual interests, and median AI belief in the population (Table 1).
+
+\begin{table}[htbp]
+\centering
+\caption{Evaluation metrics used to analyze collective prediction dynamics.}
+\label{tab:evaluation_metrics}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{0.23\textwidth} C{0.30\textwidth} Y@{}}
+\toprule
+Metric & Definition & Interpretation \\
+\midrule
+
+Collective accuracy &
+$\displaystyle 1 - \frac{\mathbb{E}[(Y - \hat{Y}^{\mathrm{revised}})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}$ &
+Accuracy of the revised collective prediction relative to the baseline prediction $\alpha_0$. \\
+\addlinespace
+
+Collective bias &
+$\displaystyle \left(\mathbb{E}[Y - \hat{Y}^{\mathrm{revised}}]\right)^2$ &
+Squared systematic deviation of the revised collective prediction from the true value. \\
+\addlinespace
+
+Collective variance &
+$\displaystyle \operatorname{Var}(Y - \hat{Y}^{\mathrm{revised}})$ &
+Variability of the revised collective prediction error across prediction events. \\
+\addlinespace
+
+Human accuracy &
+$\displaystyle 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}$ &
+Accuracy of the human-only collective prediction relative to the baseline prediction $\alpha_0$. \\
+\addlinespace
+
+Interest diversity &
+$\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i \ln \rho_i\right)$ &
+Effective number of interests represented in the population. \\
+\addlinespace
+
+Median AI belief &
+$\displaystyle \operatorname{median}_{A \in N}(\beta_A)$ &
+Median value of AI belief $\beta_A$ in the population. \\
+
+
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection*{A parsimonious model for RSV epidemics}
 
