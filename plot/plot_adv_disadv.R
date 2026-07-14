@@ -3,7 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Adv_feedback_70"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Adv_niche"
 
 lambda_list <- c(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 bias_list <- c(-0.4, -0.2, 0.2, 0.4)
@@ -12,7 +12,7 @@ grid <- expand.grid(i = lambda_list, j = bias_list)
 
 df <- do.call(rbind, lapply(seq_len(nrow(grid)), function(k) {
   i <- grid$i[k]; j <- grid$j[k]
-  fp <- file.path(save_path, sprintf("adv_feedback_i%03d_j%02f.RData", i, j))
+  fp <- file.path(save_path, sprintf("adv_niche_i%03d_j%02f.RData", i, j))
   if (!file.exists(fp)) { warning(paste("Missing:", fp)); return(NULL) }
   env <- new.env(); load(fp, envir = env)
   R <- env$Result
@@ -28,7 +28,7 @@ df <- do.call(rbind, lapply(seq_len(nrow(grid)), function(k) {
 }))
 
 stationary <- df %>%
-  filter(Generation >= 90000, Generation <= 100000) %>%
+  filter(Generation >= 170000, Generation <= 180000) %>%
   group_by(lambda, bias_i) %>%
   summarise(
     accuracy         = mean(accuracy),
@@ -121,7 +121,7 @@ p_accuracy <- ggplot(
   )+
   scale_color_manual(values = bias_colors, name = "Bias") +
   x_scale +
-  coord_cartesian(ylim = c(-0.35, 1)) +
+  coord_cartesian(ylim = c(0.35, 1)) +
   labs(
     x = expression(lambda),
     y = "Accuracy"
@@ -175,7 +175,7 @@ p_combined <- (p_accuracy | p_belief) +
   )
 
 ggsave(
-  file.path(save_path, "Adv_niche_Stationary_vs_Lambda_accuracy_belief_by_bias_6.png"),
+  file.path(save_path, "Adv_niche_Stationary_vs_Lambda_accuracy_belief_by_bias_17_18.png"),
   p_combined,
   width = 10,
   height = 4,

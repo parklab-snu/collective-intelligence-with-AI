@@ -145,7 +145,7 @@ Conversely, empirical evidence indicate that the use of AIs can limit the divers
 Our ability to predict the long-term impact of personal AI services on human CI is hampered by the apparent discrepancy in the incentives that shape AI uses.
 On one hand, many industrial sectors are pushing towards increased AI usages, where the number of ``tokens'' used is often perceived as a proxy for productivity \cite{bousquette2026tokenmaxxing,keary2026cult}.
 On the other hand, many academic institutions appear to discourage, and even penalize, AI use, reflecting concerns about plagiarism, misinformation, and limited independnce \cite{chawla2026researchers,thorp2023chatgpt}.
-Such discrepancy raises a question about whether directly penalizing or incentivizing AI usage will benefit or harm human CI.
+Such discrepancy raises a question about whether directly incentivizing or penalizing AI usage will benefit or harm human CI.
 These observations further highlight the importance of indentifying a robust incentive structure that can promote CI in the presence of AI, which can retain the benefits of AIs while preventing potential risk such as preserving the diversity of individual opinions.
 
 To address these questions, we extended previous approaches for modeling CI, where each individual makes independent predictions for the outcome from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
@@ -155,7 +155,7 @@ Across different assumptions about the AI model's ability and underlying incenti
 \section*{Main}
 \subsection*{Model}
 
-We began by extending previous models of CI in which a group of players makes collective predictions by gathering information and aggregating individual predictions in a decentralized manner \cite{hong2012incentives, mann2017optimal,wang2025individual}.
+We begin by extending previous models of CI in which a group of players makes collective predictions by gathering information and aggregating individual predictions in a decentralized manner \cite{hong2012incentives, mann2017optimal,wang2025individual}.
 In the previous approach, among $M$ different factors $(x_i)$ that affect the outcome $(Y)$, each individual makes a prediction based on their factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
 Here, we assume each individual can independently consult AI and revise their prediction based on their reliance on AI ($\beta_A$): $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$.
 
@@ -164,31 +164,35 @@ Specifically, AI predictions include factor-specific bias $(b_i)$ and stochastic
 We then consider two extreme modes of AI response, which differ in the amount of information AI uses when consulting an individual user.
 The first is the ``AI knows all'' model, in which AI predicts the outcome based on all factors regardless of the user's interest:
 $Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$
-, where $\alpha_i$ represents the true coefficient of the causal factor.
+, where $\alpha_i$ represents the true coefficient of the factor.
 The second is the ``AI answers question'' model, in which AI predicts the outcome based only on the user's interest:
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
 
 After the prediction, each individual is rewarded by the expected value of their payoff under the incentive structure.
 We adopt two incentive structures, ``feedback'' and ``niche expert'' from Wang et al. \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy without AI (except averaging aggregation with niche expert incentive).
 The feedback incentive gives higher payoff to individuals who can push the collective prediction toward the true outcome, regardless of their individual predictive accuracy.
-By contrast, the niche expert incentive gives higher payoff to individuals who have both better individual predictive accuracy and a minority interest.
+By contrast, the niche expert incentive gives higher payoff to individuals who have both better predictive accuracy and a minority interest.
 
-For each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference in expected payoff.
+Through time, the group evolves by imitating the peers who got better payoff.
+Specifically, for each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference in expected payoff.
 Individual predictions are aggregated into a collective prediction by simple averaging in the AI knows all model, or by clustering in the AI answers question model, depending on the mode of AI.
 
 \subsection*{AI can both promote or prevent the emergence of CI}
-To understand how AI could affect the emergence of CI, we first compare collective dynamics with and without AI assistance.
-We adopt two simple incentive structures, ``feedback'' and ``niche expert'' from Wang et al. \cite{wang2025individual} as a baseline, have been shown to promote near-perfect collective accuracy without AI (except averaging aggregation with niche expert incentive).
-The AI was parameterized to have moderate predictive performance, approximately 0.7.
-
+To understand how AI could affect the emergence of CI, we compare collective dynamics with and without AI assistance.
 We find that AI affects CI in qualitatively different ways depending on the mode of AI.
-In the AI knows all model, AI promotes CI by increasing the speed at which CI emerges or the resulting collective accuracy (Fig. 2A).
-When the population can achieve near-perfect CI without AI (feedback incentive), AI accelerates its emergence by raising the initial collective accuracy to the level of AI accuracy.
-By contrast, when the population cannot achieve CI without AI (niche expert incentive), AI enables moderately accurate CI that is more accurate than either the AI or the human population can achieve alone.
 
-However, In the AI answers question model, AI prevents the emergence and maintenance of CI (Fig. 2B).
-Under the feedback incentive, the population initially achieves near-perfect CI. However, as interest diversity rapidly decreases, collective accuracy breaks down with an increase in collective variance.
-Under the niche expert incentive, the initial increase in collective accuracy peaks before near-perfect CI is achieved, and then plateaus with a slight decrease as collective bias increases.
+In the AI knows all model, AI promotes CI by increasing either the speed at which CI emerges or the resulting collective accuracy (Fig. 2A).
+When the population can achieve near-perfect CI without AI (feedback incentive), AI accelerates its emergence by raising the initial collective accuracy to the level of AI accuracy.
+By contrast, when the population cannot achieve CI without AI (niche expert incentive), AI enables moderately accurate CI that exceeds the accuracy achievable by either AI or the human population alone.
+These trends are robust across different levels of AI accuracy and can be shown mathematically by assuming a sufficiently large population of players (see Supplementary Information).
+
+
+In contrast, In the AI answers question model, AI prevents the emergence and maintenance of CI (Fig. 2B).
+Under the feedback incentive, the population initially achieves near-perfect CI. 
+However, as interest diversity rapidly decreases, the population fails to capture variation in minor factors, leading to increased collective variance and a breakdown of collective accuracy.
+Under the niche expert incentive, collective accuracy initially increases but peaks before near-perfect CI is achieved, and then plateaus with a slight decline.
+This trend is mediated by increased reliance on AI: individuals with higher reliance on AI obtain higher payoffs, causing the population to become increasingly reliant on AI and the collective prediction to inherit AI bias.
+
 
 \subsection*{Directly incentivizing or penalizing AI usage}
 

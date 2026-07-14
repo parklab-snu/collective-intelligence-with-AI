@@ -337,12 +337,12 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
        human_accuracy = human_accuracy)
 }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Nicheexpert_biassweep"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Adv_niche_50"
 
-#lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
-#bias_list <- list(-0.4, -0.2, 0.2, 0.4)
-lambda_list <- c(0)
-bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
+bias_list <- list(-0.4, -0.2, 0.2, 0.4)
+#lambda_list <- c(0)
+#bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
 for(i in lambda_list){
   for(j in bias_list){
     set.seed(42)  
@@ -356,7 +356,7 @@ for(i in lambda_list){
     for(k in 1:1){
       set.seed(k)
       N <- 10000
-      G <- 200000
+      G <- 500000
       belief <- rnorm(N, mean = 0, sd = 5)
       #Sample initial interest (SRS form 0 to 50)
       interest <- sample(0:m, size = N, replace = TRUE)
@@ -390,13 +390,14 @@ for(i in lambda_list){
 
 set.seed(42)  
 m <- 50
-#alpha <- runif(m+1, min = -5, max = 5)
-alpha <- seq(-5, 5, length = 51)
+alpha <- runif(m+1, min = -5, max = 5)
+alpha[1] <- 0
+#alpha <- seq(-5, 5, length = 51)
 #sigma <- rep(1, m+1)
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
 N <- 10000
-G <- 200000
+G <- 500000
 belief <- rnorm(N, mean = 0, sd = 5)
 #Sample initial interest (SRS form 0 to 50)
 interest <- sample(0:m, size = N, replace = TRUE)
@@ -408,7 +409,7 @@ players <- cbind(interest, belief, AI_belief)
 
 bias_c <- rep(0, m+1)
 #bias_i <- runif(m+1, min = -1.0, max = 1.0)
-bias_i <- rep(-0.4, m+1)
+bias_i <- rep(0.4, m+1)
 alpha_AI <- alpha + bias_c
 AI_error_sd <- 0.3
 #corr<- cor(alpha, bias, method = "pearson")
@@ -418,7 +419,7 @@ cat("Accuracy:", AI_accuracy, "\n")
 
 lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
 
 filename <- sprintf("clu_niche_Acc70_biasc0.8_biasi_0.3.RData")
 filepath <- file.path(out_dir, filename)

@@ -228,7 +228,7 @@ plot_strategy_3d_payoff(
   snapshot_id = 30,
   payoff_type = "Feedback",
   lambda = 0,
-  q = 0.7
+  q = 0.1
 )
 
 
