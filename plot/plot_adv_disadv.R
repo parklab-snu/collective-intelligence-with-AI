@@ -28,7 +28,7 @@ df <- do.call(rbind, lapply(seq_len(nrow(grid)), function(k) {
 }))
 
 stationary <- df %>%
-  filter(Generation >= 490000, Generation <= 500000) %>%
+  filter(Generation >= 190000, Generation <= 200000) %>%
   group_by(lambda, bias_i) %>%
   summarise(
     accuracy         = mean(accuracy),
@@ -175,7 +175,7 @@ p_combined <- (p_accuracy | p_belief) +
   )
 
 ggsave(
-  file.path(save_path, "Adv_niche_Stationary_vs_Lambda_accuracy_belief_by_bias_50.png"),
+  file.path(save_path, "Adv_niche_Stationary_vs_Lambda_accuracy_belief_by_bias_30.png"),
   p_combined,
   width = 10,
   height = 4,
