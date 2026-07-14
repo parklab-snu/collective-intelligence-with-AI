@@ -378,7 +378,7 @@ for(i in lambda_list){
       AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
       cat("Accuracy:", AI_accuracy, "\n")
       
-      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
+      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Advantage AI Niche', lambda = lambda)
       
       filename <- sprintf("adv_niche_k%02d_i%03d_j%02f.RData", k, i, j)
       filepath <- file.path(out_dir, filename)
