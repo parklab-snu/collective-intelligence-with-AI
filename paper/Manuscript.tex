@@ -216,20 +216,20 @@ Focusing on the AI answers question model, in which both incentive structures fa
 Here, we propose a ``balanced'' incentive, defined as the simple average of the feedback and niche expert incentives.
 
 The core idea of the balanced incentive is to maintain both within- and between-interest diversity.
-The feedback incentive can strongly maintain within-interest diversity, defined as diversity of strategy (beleif, reliance on AI) among individuals with the same interest.
-However, between-interest diversity, which we denoted as interest diversity in the previous sections, can be hindered when AI assistance is present.
+The feedback incentive can strongly maintain within-interest diversity, defined as diversity in strategies (belief and reliance on AI), among individuals with the same factor of interest.
+However, between-interest diversity, which we denoted as ``interest diversity'' in the previous sections, can be hindered when AI assistance is present.
 This occurs because revising individual predictions with AI predictions compresses the belief distribution of the group.
-Although the initial belief distribution is shifted toward the true value, the compressed distribution makes it harder for the group to achieve near-perfect predictions through social learning for important factors (factors with large absolute coefficients).
-This eventually leads to a strong flow of players from relatively less important factors to more important factors, causing a loss of between-interest diversity.
+Although the initial belief distribution is shifted toward the true value, the compressed distribution makes it harder for the group to achieve near-perfect predictions through social learning for factors with large absolute coefficients.
+This eventually leads to a strong flow of players from factors with relatively small coefficient to factors with larger coeffificent, causing a loss of between-interest diversity.
 
-By contrast, the niche expert incentive can maintain between-interest diversity, because it directly incentivizes minority interests. 
-However, it cannot maintain within-interest diversity because, within the same interest, individuals are rewarded only according to their individual predictive performance.
+By contrast, the niche expert incentive can maintain between-interest diversity because it directly incentivizes minority interests.
+However, it cannot maintain within-interest diversity because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance.
 This leads to strong selection for either high or low reliance on AI, which in turn results in lower collective accuracy.
 
 The balanced incentive can promote near-perfect CI by maintaining both within- and between-interest diversity, regardless of AI accuracy.
 Reliance on AI decreases as AI accuracy decreases, reflecting the effective use of AI assistance.
-However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved. 
-This suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the group may need to rebuild CI through further adaptation when AI assistance is inaccessible.
+However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved.
+This suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the group may need to rebuild CI through further adaptation when AI assistance become inaccessible.
 
 \section*{Discussion}
 
