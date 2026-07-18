@@ -177,7 +177,7 @@ Through time, the group evolves by imitating the peers who got better payoff.
 Specifically, for each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference in expected payoff.
 Individual predictions are aggregated into a collective prediction by simple averaging in the AI knows all model, or by clustering in the AI answers question model, depending on the mode of AI.
 
-\subsection*{AI can either promote or prevent CI}
+\subsection*{AI can either promote or prevent the emergence of CI}
 To understand how AI could affect the emergence of CI, we first compare collective dynamics with and without AI assistance.
 We find that AI affects CI in qualitatively different ways depending on the mode of AI.
 
@@ -217,12 +217,12 @@ Here, we propose a ``balanced'' incentive, defined as the simple average of the 
 
 The core idea of the balanced incentive is to maintain both within- and between-interest diversity.
 The feedback incentive can strongly maintain within-interest diversity, defined as diversity of strategy (beleif, reliance on AI) among individuals with the same interest.
-However, between-interest diversity can be hindered when AI assistance is present.
+However, between-interest diversity, which we denoted as interest diversity in the previous sections, can be hindered when AI assistance is present.
 This occurs because revising individual predictions with AI predictions compresses the belief distribution of the group.
 Although the initial belief distribution is shifted toward the true value, the compressed distribution makes it harder for the group to achieve near-perfect predictions through social learning for important factors (factors with large absolute coefficients).
 This eventually leads to a strong flow of players from relatively less important factors to more important factors, causing a loss of between-interest diversity.
 
-By contrast, the niche expert incentive can maintain between-interest diversity, which we denoted as interest diversity in the previous section, because it directly incentivizes minority interests. 
+By contrast, the niche expert incentive can maintain between-interest diversity, because it directly incentivizes minority interests. 
 However, it cannot maintain within-interest diversity because, within the same interest, individuals are rewarded only according to their individual predictive performance.
 This leads to strong selection for either high or low reliance on AI, which in turn results in lower collective accuracy.
 
