@@ -278,7 +278,7 @@ averaging_niche_players_intime <- Result$players_intime
 belief <- averaging_niche_players_intime[100,,]
 
 df_cl_fe_sc <- as.data.frame(belief)
-cl_fe_sc <- ggplot(df_cl_fe_sc, aes(x = V1, y = V2))+
+cl_fe_sc <- ggplot(df_cl_fe_sc, aes(x = V1, y = V3))+
   geom_point(
     size = 2,
     color = "red",

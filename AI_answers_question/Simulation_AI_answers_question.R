@@ -337,7 +337,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
        human_accuracy = human_accuracy)
 }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Adv_niche_50_42"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Adv_niche_50_7"
 
 lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 bias_list <- list(-0.4, -0.2, 0.2, 0.4)
@@ -353,8 +353,8 @@ for(i in lambda_list){
     sigma <- runif(m, min = 0, max = 3)
     sigma <- c(1, sigma)
     
-    for(k in 42:42){
-      set.seed(42)
+    for(k in 7:7){
+      set.seed(7)
       N <- 10000
       G <- 500000
       belief <- rnorm(N, mean = 0, sd = 5)

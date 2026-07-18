@@ -289,7 +289,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
 }
 
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective intelligence/0520/Adv_Disadv/AI_knows_all/Disadv_feedback"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective intelligence/0520/Adv_Disadv/AI_knows_all/Adv_niche_50"
 
 
 for(i in 0:8){
@@ -335,13 +335,13 @@ for(i in 0:8){
   }
 }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_knows_all/Nicheexpert_repeat"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_knows_all/Adv_niche_50"
 
-# lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
-# bias_list <- list(-0.4, -0.2, 0.2, 0.4)
+lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
+bias_list <- list(-0.4, -0.2, 0.2, 0.4)
 
-lambda_list <- c(0)
-bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+#lambda_list <- c(0)
+#bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
 
 for(i in lambda_list){
   for(j in bias_list){
@@ -354,9 +354,9 @@ for(i in lambda_list){
     sigma <- c(1, sigma)
     
     for(k in 1:1){
-      #set.seed(k)
+      set.seed(42)
       N <- 10000
-      G <- 200000
+      G <- 500000
       belief <- rnorm(N, mean = 0, sd = 100)
       #Sample initial interest (SRS form 0 to 50)
       interest <- sample(0:m, size = N, replace = TRUE)
@@ -381,7 +381,7 @@ for(i in lambda_list){
       
       Result <- main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Niche expert', lambda = lambda)
       
-      filename <- sprintf("adv_feedback_k%02d_i%03d_j%02f.RData", k, i, j)
+      filename <- sprintf("adv_expert_k%02d_i%03d_j%02f.RData", k, i, j)
       filepath <- file.path(out_dir, filename)
       
       save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
@@ -416,7 +416,7 @@ AI_belief <- runif(N, min = 0, max = 1)
 players <- cbind(interest, belief, AI_belief)
 
 # coefficient bias
-bias_c <- rep(0.8, m+1)
+bias_c <- rep(0.0, m+1)
 # intercept bias
 bias_i <- rep(0.4, m+1)
 # intercept bias sum

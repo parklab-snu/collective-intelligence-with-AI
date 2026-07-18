@@ -156,7 +156,7 @@ Across different assumptions about the AI model's ability and underlying incenti
 \subsection*{Model}
 
 We begin by extending previous models of CI in which a group of players makes collective predictions by gathering information and aggregating individual predictions in a decentralized manner \cite{hong2012incentives, mann2017optimal,wang2025individual}.
-In the previous approach, among $M$ different factors $(x_i)$ that affect the outcome $(Y)$, each individual makes a prediction based on their factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
+In the previous approach, among $M$ different factors $(x_i)$ that affect the outcome $(Y)$, an individual ($A$) makes a prediction based on their factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
 Here, we assume each individual can independently consult AI and revise their prediction based on their reliance on AI ($\beta_A$): $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$.
 
 To specify how individuals consult AI, we model the AI prediction $(Y_A^{AI})$ as a noisy and biased estimate of the target outcome.
@@ -177,8 +177,8 @@ Through time, the group evolves by imitating the peers who got better payoff.
 Specifically, for each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference in expected payoff.
 Individual predictions are aggregated into a collective prediction by simple averaging in the AI knows all model, or by clustering in the AI answers question model, depending on the mode of AI.
 
-\subsection*{AI can both promote or prevent the emergence of CI}
-To understand how AI could affect the emergence of CI, we compare collective dynamics with and without AI assistance.
+\subsection*{AI can either promote or prevent CI}
+To understand how AI could affect the emergence of CI, we first compare collective dynamics with and without AI assistance.
 We find that AI affects CI in qualitatively different ways depending on the mode of AI.
 
 In the AI knows all model, AI promotes CI by increasing either the speed at which CI emerges or the resulting collective accuracy (Fig. 2A).
@@ -195,41 +195,41 @@ This trend is mediated by increased reliance on AI: individuals with higher reli
 However, the niche expert incentive can also drive reliance on AI toward zero, depending on the relationship between the true coefficient and AI bias.
 In this case, the group excludes AI assistance and builds CI on its own, which largely delays the emergence of CI (see SI).
 
-\subsection*{Directly incentivizing or penalizing AI usage}
-Because AI use can strongly influence group performance, one possible intervention is to directly incentivize or penalize AI use itself.
+\subsection*{Directly incentivizing or penalizing AI use can harm CI}
+Given the strong influence of AI use on collective outcomes, a straightforward intervention is to directly incentivize or penalize AI use itself.
 To investigate whether such direct incentives or penalties improve CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
-
 \begin{equation}
 \mathrm{Feedback /} \mathrm{Niche\ expert} + \lambda \beta_A
 \end{equation}
-
 where $\lambda$ represent the strength of incentive ($\lambda > 0$) or penalty ($\lambda < 0$).
-Except in the AI knows all model under the feedback incentive, where near-perfect CI can be achieved regardless of the incentive structure, directly incentivizing or penalizing AI use generally leads to lower collective accuracy than the original incentive structures (Fig. 3).
+Except in the AI knows all model under the feedback incentive, directly incentivizing or penalizing AI use fails to promote near-perfect CI.
+Moreover, in most cases, directly incentivizing or penalizing leads to lower collective accuracy than the original incentive structures (Fig. 3).
 
 When AI use is directly incentivized, reliance on AI evolves toward full reliance ($\beta_A = 1$), reducing collective accuracy as the collective prediction inherits AI bias. 
-By contrast, when AI use is directly penalized, collective accuracy decreases with the strength of the penalty.
+By contrast, when AI use is directly penalized, group evolves toward no reliance on AI ($\beta_A = 0$), where collective accuracy decreases with the strength of the penalty.
 In some cases, when AI bias is relatively large and the penalty is weak, penalizing AI use can achieve higher collective accuracy than the original incentive structure.
 However, in most cases, penalizing AI use imposes strong selection against AI reliance, pushing the group toward lower stationary collective accuracy.
 Although the AI answers question model under the feedback incentive already shows stochastic breakdown of CI due to the loss of interest diversity, incentivizing or penalizing AI use further strengthens the breakdown.
 
 \subsection*{Balanced incentives mitigate AI-induced failures of CI}
 Focusing on the AI answers question model, in which both incentive structures fail to promote accurate CI, we investigate whether a better incentive structure can overcome the risks introduced by AI.
-We propose a ``balanced'' incentive, defined as the simple average of the feedback and niche expert incentives.
+Here, we propose a ``balanced'' incentive, defined as the simple average of the feedback and niche expert incentives.
 
 The core idea of the balanced incentive is to maintain both within- and between-interest diversity.
-The feedback incentive can strongly maintain within-interest diversity, defined as diversity in belief among individuals with the same factor of interest.
+The feedback incentive can strongly maintain within-interest diversity, defined as diversity of strategy (beleif, reliance on AI) among individuals with the same interest.
 However, between-interest diversity can be hindered when AI assistance is present.
 This occurs because revising individual predictions with AI predictions compresses the belief distribution of the group.
 Although the initial belief distribution is shifted toward the true value, the compressed distribution makes it harder for the group to achieve near-perfect predictions through social learning for important factors (factors with large absolute coefficients).
 This eventually leads to a strong flow of players from relatively less important factors to more important factors, causing a loss of between-interest diversity.
 
-By contrast, the niche expert incentive can maintain between-interest diversity because it directly incentivizes minority interests. 
+By contrast, the niche expert incentive can maintain between-interest diversity, which we denoted as interest diversity in the previous section, because it directly incentivizes minority interests. 
 However, it cannot maintain within-interest diversity because, within the same interest, individuals are rewarded only according to their individual predictive performance.
 This leads to strong selection for either high or low reliance on AI, which in turn results in lower collective accuracy.
 
-The balanced incentive can promote near-perfect CI by maintaining both within- and between-interest diversity, regardless of AI accuracy. 
-Reliance on AI decreases as AI accuracy decreases, reflecting the effective use of AI assistance. 
-However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved without AI.
+The balanced incentive can promote near-perfect CI by maintaining both within- and between-interest diversity, regardless of AI accuracy.
+Reliance on AI decreases as AI accuracy decreases, reflecting the effective use of AI assistance.
+However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved. 
+This suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the group may need to rebuild CI through further adaptation when AI assistance is inaccessible.
 
 \section*{Discussion}
 
