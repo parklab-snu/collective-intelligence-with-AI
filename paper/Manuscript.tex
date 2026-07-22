@@ -110,10 +110,6 @@ Jaeseung Kim\textsuperscript{1} Sang Woo Park\textsuperscript{1,2,3,*}
 \\
 \bigskip
 \textbf{1} School of Biological Sciences, Seoul National University, Seoul, Korea
-\\
-\textbf{2} Department of Ecology and Evolution, University of Chicago, Chicago, IL, USA
-\\
-\textbf{3} Department of Ecology and Evolutionary Biology, Princeton University, Princeton, NJ, USA
 \bigskip
 
 *Corresponding author: sangwoopark@snu.ac.kr
@@ -148,34 +144,47 @@ On the other hand, many academic institutions appear to discourage, and even pen
 Such discrepancy raises a question about whether directly incentivizing or penalizing AI usage will benefit or harm human CI.
 These observations further highlight the importance of indentifying a robust incentive structure that can promote CI in the presence of AI, which can retain the benefits of AIs while preventing potential risk such as preserving the diversity of individual opinions.
 
-To address these questions, we extended previous approaches for modeling CI, where each individual makes independent predictions for the outcome from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
-We allowed each individual to independently consult with personal AIs and revise their predictions accordingly.
+To address these questions, we extend previous approaches for modeling CI, where each individual makes independent predictions for the outcome from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
+We allow each individual to independently consult with personal AIs and revise their predictions accordingly.
 Across different assumptions about the AI model's ability and underlying incentive structures, we investigate the robustness of human CIs.
 
 \section*{Main}
 \subsection*{Model}
 
-We begin by extending previous models of CI in which a group of players makes collective predictions by gathering information and aggregating individual predictions in a decentralized manner \cite{hong2012incentives, mann2017optimal,wang2025individual}.
+\swp{unclear what is meant by decentralized manner.}
+\swp{how about something like this: We begin by extending previously established models of CI in which a group of players participates in a prediction task from partial/independent observations of underlying causal factors and aggregates their predictions...}
+We begin by extending previously established models of CI in which a group of players makes collective predictions by gathering information and aggregating individual predictions in a decentralized manner \cite{hong2012incentives, mann2017optimal,wang2025individual}.
+\swp{I would first describe Y and then each individual's prediction. I think we can also leave out ``in the previous approach''.}
 In the previous approach, among $M$ different factors $(x_i)$ that affect the outcome $(Y)$, an individual ($A$) makes a prediction based on their factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
 Here, we assume each individual can independently consult AI and revise their prediction based on their reliance on AI ($\beta_A$): $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$.
+\swp{We need to say that this revised prediction now contributes to the collective outcome.}
 
+\swp{I would first describe what AI does biologically. Noise and bias are secondary information and can be added towards the end.
+For example: To model AI prediction, we consider a scenario where AI has already been trained on this prediction task and therefore has information about the effect of each causal factor.
+Every time a player consults with AI, it will make predictions based on the known information, which can include factor-specific bias and stochastic error.
+}
 To specify how individuals consult AI, we model the AI prediction $(Y_A^{AI})$ as a noisy and biased estimate of the target outcome.
 Specifically, AI predictions include factor-specific bias $(b_i)$ and stochastic error $(\epsilon)$.
-We then consider two extreme modes of AI response, which differ in the amount of information AI uses when consulting an individual user.
+We then consider two extreme modes of AI response, which differ in the amount of information AI uses when consulting an individual user \swp{when making prediction?}.
 The first is the ``AI knows all'' model, in which AI predicts the outcome based on all factors regardless of the user's interest:
 $Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$
 , where $\alpha_i$ represents the true coefficient of the factor.
 The second is the ``AI answers question'' model, in which AI predicts the outcome based only on the user's interest:
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
 
-After the prediction, each individual is rewarded by the expected value of their payoff under the incentive structure.
-We adopt two incentive structures, ``feedback'' and ``niche expert'' from Wang et al. \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy without AI (except averaging aggregation with niche expert incentive).
-The feedback incentive gives higher payoff to individuals who can push the collective prediction toward the true outcome, regardless of their individual predictive accuracy.
-By contrast, the niche expert incentive gives higher payoff to individuals who have both better predictive accuracy and a minority interest.
+\swp{After every round of prediction task?}
+After the prediction, each individual receives payoff under the assumed incentive structure.
+We considere two incentive structures, ``feedback'' and ``niche expert'' \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy in the absence of AI (except averaging aggregation with niche expert incentive).
+The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true outcome, regardless of their individual predictive accuracy.
+In contrast, the niche expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest.
 
+\swp{Need to say something about each round vs each generation... I think one generation consists of several rounds but we're making some kind of equilibrium assumption?}
 Through time, the group evolves by imitating the peers who got better payoff.
 Specifically, for each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference in expected payoff.
 Individual predictions are aggregated into a collective prediction by simple averaging in the AI knows all model, or by clustering in the AI answers question model, depending on the mode of AI.
+
+\swp{I think we need a brief paragraph about what our goals are to make the next sections flow better.
+For example: this model now allows us to explore the impact of AI on }
 
 \subsection*{AI can either promote or prevent the emergence of CI}
 To understand how AI could affect the emergence of CI, we first compare collective dynamics with and without AI assistance.
