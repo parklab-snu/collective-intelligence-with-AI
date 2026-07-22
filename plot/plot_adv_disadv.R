@@ -19,20 +19,20 @@ df <- do.call(rbind, lapply(seq_len(nrow(grid)), function(k) {
   
   data.frame(
     lambda = i, bias_i = j,
-    AI_accuracy      = env$AI_accuracy,
-    Generation       = seq_along(R$accuracy),
-    accuracy         = R$accuracy,
-    human_accuracy   = R$human_accuracy,
+    AI_accuracy = env$AI_accuracy,
+    Generation = seq_along(R$accuracy),
+    accuracy = R$accuracy,
+    human_accuracy = R$human_accuracy,
     median_AI_belief = R$median_AI_belief
   )
 }))
 
 stationary <- df %>%
-  filter(Generation >= 490000, Generation <= 500000) %>%
+  filter(Generation >= 290000, Generation <= 300000) %>%
   group_by(lambda, bias_i) %>%
   summarise(
-    accuracy         = mean(accuracy),
-    human_accuracy   = mean(human_accuracy),
+    accuracy = mean(accuracy),
+    human_accuracy = mean(human_accuracy),
     median_AI_belief = mean(median_AI_belief),
     .groups = "drop"
   ) %>%
@@ -42,10 +42,6 @@ stationary <- df %>%
 line_width  <- 1.2
 box_width   <- 1.0
 font_family <- "Arial"
-
-library(ggplot2)
-library(dplyr)
-library(patchwork)
 
 # ---- Factor for line groups ----
 stationary_plot <- stationary %>%
@@ -67,20 +63,20 @@ bias_colors <- c(
 
 single_theme <- theme_classic(base_family = font_family) +
   theme(
-    panel.grid          = element_blank(),
-    panel.background    = element_blank(),
-    plot.background     = element_blank(),
-    legend.background   = element_blank(),
-    legend.key          = element_blank(),
-    panel.border        = element_rect(color = "black", fill = NA, linewidth = box_width),
-    axis.title          = element_text(size = 20, family = font_family),
-    axis.text           = element_text(size = 16, family = font_family),
-    axis.title.x.top    = element_text(margin = margin(b = 8)),
+    panel.grid = element_blank(),
+    panel.background = element_blank(),
+    plot.background = element_blank(),
+    legend.background = element_blank(),
+    legend.key = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = box_width),
+    axis.title = element_text(size = 20, family = font_family),
+    axis.text = element_text(size = 16, family = font_family),
+    axis.title.x.top = element_text(margin = margin(b = 8)),
     axis.title.x.bottom = element_text(margin = margin(t = 8)),
-    legend.title        = element_text(size = 18, family = font_family),
-    legend.text         = element_text(size = 15, family = font_family),
-    legend.key.height   = unit(0.7, "cm"),
-    plot.title          = element_text(size = 18, family = font_family, hjust = 0.5)
+    legend.title = element_text(size = 18, family = font_family),
+    legend.text = element_text(size = 15, family = font_family),
+    legend.key.height = unit(0.7, "cm"),
+    plot.title = element_text(size = 18, family = font_family, hjust = 0.5)
   )
 
 # ---- Optional x scale ----
@@ -121,7 +117,7 @@ p_accuracy <- ggplot(
   )+
   scale_color_manual(values = bias_colors, name = "Bias") +
   x_scale +
-  coord_cartesian(ylim = c(0.35, 1)) +
+  coord_cartesian(ylim = c(0.0, 1)) +
   labs(
     x = expression(lambda),
     y = "Accuracy"
@@ -175,7 +171,7 @@ p_combined <- (p_accuracy | p_belief) +
   )
 
 ggsave(
-  file.path(save_path, "Adv_niche_Stationary_vs_Lambda_accuracy_belief_by_bias_50.png"),
+  file.path(save_path, "Adv_niche_Stationary_vs_Lambda_accuracy_belief_by_bias_30.png"),
   p_combined,
   width = 10,
   height = 4,

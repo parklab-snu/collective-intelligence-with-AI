@@ -1,0 +1,39 @@
+set.seed(42)  
+m <- 50
+#alpha <- runif(m+1, min = -5, max = 5)
+#alpha[1] <- 0
+alpha <- seq(5, -5, length = 51)
+#sigma <- rep(1, m+1)
+sigma <- runif(m, min = 0, max = 3)
+sigma <- c(1, sigma)
+N <- 10000
+G <- 200000
+belief <- rnorm(N, mean = 0, sd = 5)
+#Sample initial interest (SRS form 0 to 50)
+interest <- sample(0:m, size = N, replace = TRUE)
+#Sample initial AI belief
+AI_belief <- runif(N, min = 0, max = 1)
+#AI_belief <- rep(1, N)
+#Build player
+players <- cbind(interest, belief, AI_belief)
+
+bias_c <- rep(0, m+1)
+#bias_i <- runif(m+1, min = -1.0, max = 1.0)
+bias_i <- rep(0.4, m+1)
+alpha_AI <- alpha + bias_c
+AI_error_sd <- 0.3
+#corr<- cor(alpha, bias, method = "pearson")
+denom <- sum((alpha[-1]*sigma[-1])^2)
+AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+cat("Accuracy:", AI_accuracy, "\n")
+
+lambda <- 0
+
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda)
+
+filename <- sprintf("Balanced_sequential_reversed.RData")
+filepath <- file.path(out_dir, filename)
+
+save(Result, file = filepath)
+
+

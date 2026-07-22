@@ -76,7 +76,7 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
       
       #(1-lambda)*(-rho_i * expr) + lambda*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
       #(1 / rho_i*50) * (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
-      (-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
+      {(-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/2
       
     } else if (payoff_type == "AI Feedback collective") {
       q     <- p_i - alpha_AI[k]               # p - alpha_AI,e
@@ -203,6 +203,8 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
   accuracy <- numeric(G)
   median_AI_belief <- numeric(G)
   interest_diversity <- numeric(G)
+  beleif_diversity <- numeric(G)
+  reliance_diversity <- numeric(G)
   players_intime <- array(0, dim = c(G %/% 1000, N, 3))
   bias_sq <- numeric(G)
   variance <- numeric(G)
@@ -243,6 +245,9 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
     
     median_AI_belief[g] <- current_median
     interest_diversity[g] <- exp(-state$entropy_sum)
+    beleif_diversity[g] <- mean(tapply(players[, 2], players[, 1], var), na.rm = TRUE)
+    reliance_diversity[g] <- mean(tapply(players[, 3], players[, 1], var), na.rm = TRUE)
+    
     if (g %% 1000 == 0) {
       players_intime[g %/% 1000, , ] <- players
       # cat("Generation:", g, "\n")
@@ -334,14 +339,318 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
        interest_diversity = interest_diversity,
        bias_sq = bias_sq,
        variance = variance,
-       human_accuracy = human_accuracy)
+       human_accuracy = human_accuracy,
+       belief_diversity = belief_diversity,
+       reliance_diversity = reliance_diversity)
 }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Adv_niche_50_7"
 
-lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
-bias_list <- list(-0.4, -0.2, 0.2, 0.4)
-#lambda_list <- c(0)
+# main simulation
+# main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd, agg_type = "clustering", payoff_type = "Feedback", s = 50, mu = 0, eps = 1e-12,
+#                      resync_every = 1000, lambda) {
+#   # compute constants and initialize state values
+#   denom <- sum((alpha[-1] * sigma[-1])^2)
+#   C_const <- sum(alpha^2 * sigma^2)
+#   accuracy <- numeric(10000)
+#   median_AI_belief <- numeric(10000)
+#   interest_diversity <- numeric(10000)
+#   belief_diversity <- numeric(10000)
+#   reliance_diversity <- numeric(10000)
+#   players_intime <- array(0, dim = c(G %/% 1000, N, 3))
+#   bias_sq <- numeric(10000)
+#   variance <- numeric(10000)
+#   state <- new.env()
+#   state$cluster_sum <- numeric(m + 1)
+#   state$cluster_count <- numeric(m + 1)
+#   state$cluster_beta2_sum <- numeric(m + 1)
+#   state$cluster_beta_sum <- numeric(m + 1)
+#   state$cluster_mean <- numeric(m + 1)
+#   state$B_bar <- 0
+#   state$error_part <- 0
+#   state$var_nu_mean <- 0
+#   state$entropy_sum <- 0
+#   state$total_beta2 <- 0
+#   
+#   # state values for human error
+#   state$cluster_human_mean <- numeric(m + 1)
+#   state$human_error <- 0
+#   human_accuracy <- numeric(10000)
+#   
+#   # compute p_revised. only need to compute once (unless mutation happens)
+#   p_revised <- compute_p_revised_vec(players[, 1], players[, 2], players[, 3], alpha_AI)
+#   # initialize with resync_state
+#   resync_state(state, players, p_revised, m, N, alpha, sigma, bias, AI_error_sd, agg_type, eps)
+#   
+#   total_beta2_sum <- state$total_beta2
+#   current_median <- median(players[, 3])
+#   
+#   for (g in 1:G) {
+#     # Record first, imitate later
+#     if(g > 190000){
+#       r <- g - 190000
+#       error <- state$error_part + state$var_nu_mean
+#       bias_sq[r] <- (alpha[1] - state$cluster_mean[1] - state$B_bar)^2
+#       variance[r] <- error - bias_sq[r]
+#       accuracy[r] <- 1 - error / denom
+#       
+#       # human accuracy
+#       human_accuracy[r] <- 1- state$human_error / denom
+#       
+#       median_AI_belief[r] <- current_median
+#       interest_diversity[r] <- exp(-state$entropy_sum)
+#       belief_diversity[r] <- mean(tapply(players[, 2], players[, 1], var), na.rm = TRUE)
+#       reliance_diversity[r] <- mean(tapply(players[, 3], players[, 1], var), na.rm = TRUE)
+#     }  
+#     if (g %% 1000 == 0) {
+#       players_intime[g %/% 1000, , ] <- players
+#       # cat("Generation:", g, "\n")
+#       # cat("Interest diversity:", sprintf("%.2f", interest_diversity[g]), "\n")
+#       # cat("Median AI belief:",   sprintf("%.2f", median_AI_belief[g]),   "\n")
+#       # cat("Accuracy:",           sprintf("%.2f", accuracy[g]),           "\n")
+#       # cat("Bias:",               sprintf("%.2f", bias[g]),               "\n")
+#       # cat("Variance:",           sprintf("%.2f", variance[g]),           "\n")
+#       # cat("\n")
+#     }
+#     
+#     # sample two players
+#     A <- sample.int(N, 1)
+#     B <- sample.int(N, 1)
+#     while (B == A) B <- sample.int(N, 1)
+#     
+#     r1 <- runif(1)
+#     state_changed <- FALSE
+#     if (r1 >= mu) {
+#       # compute payoff of two players
+#       payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
+#                                      payoff_type, agg_type, C_const, N, lambda, alpha_AI)
+#       payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
+#                                      payoff_type, agg_type, C_const, N, lambda, alpha_AI)
+#       
+#       p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
+#       r2 <- runif(1)
+#       if (r2 < p_imitate) {
+#         k_old <- players[A, 1] + 1
+#         k_new <- players[B, 1] + 1
+#         p_old <- p_revised[A]
+#         p_new <- p_revised[B]
+#         human_old <- players[A, 2]
+#         human_new <- players[B, 2]
+#         beta_old <- players[A, 3]
+#         beta_new <- players[B, 3]
+#         players[A, ] <- players[B, ]
+#         p_revised[A] <- p_new
+#         if (k_old == k_new) {
+#           update_cluster_inplace(state, k_old, 0L, p_new - p_old, beta_new^2 - beta_old^2, beta_new - beta_old,
+#                                  alpha, sigma, bias, AI_error_sd, agg_type, N, eps, human_new - human_old)
+#         } else {
+#           update_cluster_inplace(state, k_old, -1L, -p_old, -beta_old^2, -beta_old,
+#                                  alpha, sigma, bias, AI_error_sd, agg_type, N, eps, -human_old)
+#           update_cluster_inplace(state, k_new, +1L,  p_new,  beta_new^2, beta_new,
+#                                  alpha, sigma, bias, AI_error_sd, agg_type, N, eps, +human_new)
+#         }
+#         state_changed <- TRUE
+#       }
+#     } else {
+#       new_interest <- sample(0:m, 1)
+#       new_belief <- rnorm(1, mean = 0, sd = 5)
+#       new_AI_belief <- runif(1, 0, 1)
+#       k_old <- players[A, 1] + 1
+#       k_new <- new_interest + 1
+#       human_old <- players[A, 2]
+#       human_new <- new_belief
+#       p_old <- p_revised[A]
+#       p_new <- new_AI_belief * alpha_AI[k_new] + (1 - new_AI_belief) * new_belief
+#       beta_old <- players[A, 3]
+#       beta_new <- new_AI_belief
+#       players[A, ] <- c(new_interest, new_belief, new_AI_belief)
+#       p_revised[A] <- p_new
+#       
+#       if (k_old == k_new) {
+#         update_cluster_inplace(state, k_old, 0L, p_new - p_old, beta_new^2 - beta_old^2, beta_new - beta_old,
+#                                alpha, sigma, bias, AI_error_sd, agg_type, N, eps, human_new - human_old)
+#       } else {
+#         update_cluster_inplace(state, k_old, -1L, -p_old, -beta_old^2, -beta_old,
+#                                alpha, sigma, bias, AI_error_sd, agg_type, N, eps, -human_old)
+#         update_cluster_inplace(state, k_new, +1L,  p_new,  beta_new^2, beta_new,
+#                                alpha, sigma, bias, AI_error_sd, agg_type, N, eps, +human_new)
+#       }
+#       
+#       state_changed <- TRUE
+#     }
+#     if (state_changed) {
+#       current_median <- median(players[, 3])
+#     }
+#     
+#     if (g %% resync_every == 0) {
+#       resync_state(state, players, p_revised, m, N, alpha, sigma, bias, AI_error_sd, agg_type, eps)
+#       total_beta2_sum <- state$total_beta2
+#     }
+#   }
+#   list(accuracy = accuracy,
+#        players_intime = players_intime,
+#        median_AI_belief = median_AI_belief,
+#        interest_diversity = interest_diversity,
+#        bias_sq = bias_sq,
+#        variance = variance,
+#        human_accuracy = human_accuracy,
+#        belief_diversity = belief_diversity,
+#        reliance_diversity = reliance_diversity)
+# }
+
+main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd, agg_type = "clustering", payoff_type = "Feedback", s = 50, mu = 0, eps = 1e-12,
+                     resync_every = 1000, lambda) {
+  # compute constants and initialize state values
+  denom <- sum((alpha[-1] * sigma[-1])^2)
+  C_const <- sum(alpha^2 * sigma^2)
+  accuracy <- numeric(G %/% 1000)
+  median_AI_belief <- numeric(G %/% 1000)
+  interest_diversity <- numeric(G %/% 1000)
+  belief_diversity <- numeric(G %/% 1000)
+  reliance_diversity <- numeric(G %/% 1000)
+  players_intime <- array(0, dim = c(G %/% 1000, N, 3))
+  bias_sq <- numeric(G %/% 1000)
+  variance <- numeric(G %/% 1000)
+  state <- new.env()
+  state$cluster_sum <- numeric(m + 1)
+  state$cluster_count <- numeric(m + 1)
+  state$cluster_beta2_sum <- numeric(m + 1)
+  state$cluster_beta_sum <- numeric(m + 1)
+  state$cluster_mean <- numeric(m + 1)
+  state$B_bar <- 0
+  state$error_part <- 0
+  state$var_nu_mean <- 0
+  state$entropy_sum <- 0
+  state$total_beta2 <- 0
+  
+  # state values for human error
+  state$cluster_human_mean <- numeric(m + 1)
+  state$human_error <- 0
+  human_accuracy <- numeric(G %/% 1000)
+  
+  # compute p_revised. only need to compute once (unless mutation happens)
+  p_revised <- compute_p_revised_vec(players[, 1], players[, 2], players[, 3], alpha_AI)
+  # initialize with resync_state
+  resync_state(state, players, p_revised, m, N, alpha, sigma, bias, AI_error_sd, agg_type, eps)
+  
+  total_beta2_sum <- state$total_beta2
+  current_median <- median(players[, 3])
+  
+  for (g in 1:G) {
+    # Record first, imitate later  
+    if (g %% 1000 == 0) {
+      r <- g %/% 1000
+      players_intime[r, , ] <- players
+      error <- state$error_part + state$var_nu_mean
+      bias_sq[r] <- (alpha[1] - state$cluster_mean[1] - state$B_bar)^2
+      variance[r] <- error - bias_sq[r]
+      accuracy[r] <- 1 - error / denom
+      
+      # human accuracy
+      human_accuracy[r] <- 1- state$human_error / denom
+      
+      median_AI_belief[r] <- current_median
+      interest_diversity[r] <- exp(-state$entropy_sum)
+      belief_diversity[r] <- mean(tapply(players[, 2], players[, 1], var), na.rm = TRUE)
+      reliance_diversity[r] <- mean(tapply(players[, 3], players[, 1], var), na.rm = TRUE)
+      # cat("Generation:", g, "\n")
+      # cat("Interest diversity:", sprintf("%.2f", interest_diversity[g]), "\n")
+      # cat("Median AI belief:",   sprintf("%.2f", median_AI_belief[g]),   "\n")
+      # cat("Accuracy:",           sprintf("%.2f", accuracy[g]),           "\n")
+      # cat("Bias:",               sprintf("%.2f", bias[g]),               "\n")
+      # cat("Variance:",           sprintf("%.2f", variance[g]),           "\n")
+      # cat("\n")
+    }
+    
+    # sample two players
+    A <- sample.int(N, 1)
+    B <- sample.int(N, 1)
+    while (B == A) B <- sample.int(N, 1)
+    
+    r1 <- runif(1)
+    state_changed <- FALSE
+    if (r1 >= mu) {
+      # compute payoff of two players
+      payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
+                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI)
+      payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
+                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI)
+      
+      p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
+      r2 <- runif(1)
+      if (r2 < p_imitate) {
+        k_old <- players[A, 1] + 1
+        k_new <- players[B, 1] + 1
+        p_old <- p_revised[A]
+        p_new <- p_revised[B]
+        human_old <- players[A, 2]
+        human_new <- players[B, 2]
+        beta_old <- players[A, 3]
+        beta_new <- players[B, 3]
+        players[A, ] <- players[B, ]
+        p_revised[A] <- p_new
+        if (k_old == k_new) {
+          update_cluster_inplace(state, k_old, 0L, p_new - p_old, beta_new^2 - beta_old^2, beta_new - beta_old,
+                                 alpha, sigma, bias, AI_error_sd, agg_type, N, eps, human_new - human_old)
+        } else {
+          update_cluster_inplace(state, k_old, -1L, -p_old, -beta_old^2, -beta_old,
+                                 alpha, sigma, bias, AI_error_sd, agg_type, N, eps, -human_old)
+          update_cluster_inplace(state, k_new, +1L,  p_new,  beta_new^2, beta_new,
+                                 alpha, sigma, bias, AI_error_sd, agg_type, N, eps, +human_new)
+        }
+        state_changed <- TRUE
+      }
+    } else {
+      new_interest <- sample(0:m, 1)
+      new_belief <- rnorm(1, mean = 0, sd = 5)
+      new_AI_belief <- runif(1, 0, 1)
+      k_old <- players[A, 1] + 1
+      k_new <- new_interest + 1
+      human_old <- players[A, 2]
+      human_new <- new_belief
+      p_old <- p_revised[A]
+      p_new <- new_AI_belief * alpha_AI[k_new] + (1 - new_AI_belief) * new_belief
+      beta_old <- players[A, 3]
+      beta_new <- new_AI_belief
+      players[A, ] <- c(new_interest, new_belief, new_AI_belief)
+      p_revised[A] <- p_new
+      
+      if (k_old == k_new) {
+        update_cluster_inplace(state, k_old, 0L, p_new - p_old, beta_new^2 - beta_old^2, beta_new - beta_old,
+                               alpha, sigma, bias, AI_error_sd, agg_type, N, eps, human_new - human_old)
+      } else {
+        update_cluster_inplace(state, k_old, -1L, -p_old, -beta_old^2, -beta_old,
+                               alpha, sigma, bias, AI_error_sd, agg_type, N, eps, -human_old)
+        update_cluster_inplace(state, k_new, +1L,  p_new,  beta_new^2, beta_new,
+                               alpha, sigma, bias, AI_error_sd, agg_type, N, eps, +human_new)
+      }
+      
+      state_changed <- TRUE
+    }
+    if (state_changed) {
+      current_median <- median(players[, 3])
+    }
+    
+    if (g %% resync_every == 0) {
+      resync_state(state, players, p_revised, m, N, alpha, sigma, bias, AI_error_sd, agg_type, eps)
+      total_beta2_sum <- state$total_beta2
+    }
+  }
+  list(accuracy = accuracy,
+       players_intime = players_intime,
+       median_AI_belief = median_AI_belief,
+       interest_diversity = interest_diversity,
+       bias_sq = bias_sq,
+       variance = variance,
+       human_accuracy = human_accuracy,
+       belief_diversity = belief_diversity,
+       reliance_diversity = reliance_diversity)
+}
+
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Figure4"
+
+#lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
+bias_list <- list(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
+lambda_list <- c(0)
 #bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
 for(i in lambda_list){
   for(j in bias_list){
@@ -353,10 +662,10 @@ for(i in lambda_list){
     sigma <- runif(m, min = 0, max = 3)
     sigma <- c(1, sigma)
     
-    for(k in 7:7){
-      set.seed(7)
+    for(k in 1:1){
+      set.seed(1)
       N <- 10000
-      G <- 500000
+      G <- 200000
       belief <- rnorm(N, mean = 0, sd = 5)
       #Sample initial interest (SRS form 0 to 50)
       interest <- sample(0:m, size = N, replace = TRUE)
@@ -378,9 +687,9 @@ for(i in lambda_list){
       AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
       cat("Accuracy:", AI_accuracy, "\n")
       
-      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Advantage AI Niche', lambda = lambda)
+      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
       
-      filename <- sprintf("adv_niche_k%02d_i%03d_j%02f.RData", k, i, j)
+      filename <- sprintf("balanced_k%02d_i%03d_j%02f.RData", k, i, j)
       filepath <- file.path(out_dir, filename)
       
       save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
@@ -388,16 +697,21 @@ for(i in lambda_list){
   }
 }
 
+Result$human_accuracy
+Result$reliance_diversity
+
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Figure4"
+
 set.seed(42)  
 m <- 50
-alpha <- runif(m+1, min = -5, max = 5)
-alpha[1] <- 0
-#alpha <- seq(-5, 5, length = 51)
+#alpha <- runif(m+1, min = -5, max = 5)
+#alpha[1] <- 0
+alpha <- seq(5, -5, length = 51)
 #sigma <- rep(1, m+1)
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
 N <- 10000
-G <- 500000
+G <- 200000
 belief <- rnorm(N, mean = 0, sd = 5)
 #Sample initial interest (SRS form 0 to 50)
 interest <- sample(0:m, size = N, replace = TRUE)
@@ -419,9 +733,11 @@ cat("Accuracy:", AI_accuracy, "\n")
 
 lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda)
 
-filename <- sprintf("clu_niche_Acc70_biasc0.8_biasi_0.3.RData")
+filename <- sprintf("Balanced_sequential_reversed.RData")
 filepath <- file.path(out_dir, filename)
 
-save(bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+save(Result, file = filepath)
+
+

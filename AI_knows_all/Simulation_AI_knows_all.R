@@ -335,7 +335,7 @@ for(i in 0:8){
   }
 }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_knows_all/Adv_niche_50"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_knows_all/Adv_niche_50_66"
 
 lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 bias_list <- list(-0.4, -0.2, 0.2, 0.4)
@@ -354,7 +354,7 @@ for(i in lambda_list){
     sigma <- c(1, sigma)
     
     for(k in 1:1){
-      set.seed(42)
+      set.seed(66)
       N <- 10000
       G <- 500000
       belief <- rnorm(N, mean = 0, sd = 100)
@@ -389,8 +389,15 @@ for(i in lambda_list){
   }
 }
 
+
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_knows_all"
+
+set.seed(7)
+AI_belief <- runif(10000, min = 0, max = 1)
 # sample the environment
-set.seed(42)
+
+
+set.seed(7)
 # number of factors
 m <- 50
 # make coef
@@ -404,13 +411,13 @@ sigma <- c(1, sigma)
 # build players
 # number of players
 N <- 10000
-G <- 160000
+G <- 500000
 # sample initial belief (Sample from normal distribution)
 belief <- rnorm(N, mean = 0, sd = 100)
 #Sample initial interest (SRS form 0 to 50)
 interest <- sample(0:m, size = N, replace = TRUE)
 #Sample initial AI belief
-AI_belief <- runif(N, min = 0, max = 1)
+
 #AI_belief <- rep(1, N)
 # build players
 players <- cbind(interest, belief, AI_belief)
@@ -418,7 +425,7 @@ players <- cbind(interest, belief, AI_belief)
 # coefficient bias
 bias_c <- rep(0.0, m+1)
 # intercept bias
-bias_i <- rep(0.4, m+1)
+bias_i <- rep(0.36, m+1)
 # intercept bias sum
 bias <- sum(bias_i)
 
@@ -431,13 +438,13 @@ AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*bias + bias^2 + AI_error_
 cat("Accuracy:", AI_accuracy, "\n")
 
 # lambda for Advantage AI / Disadvantage AI payoffs
-lambda <- 100
+lambda <- 0
 
 # run simulation
 # payoff_type = "Expert" / Niche expert" / "Feedback" / "Advantage AI Niche" / Disadvantage AI Niche" / "Advantage AI Feedback" / "Disadvantage AI Feedback"
-Result <- main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Expert', lambda = lambda)
+Result <- main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Feedback', lambda = lambda) 
 
-filename <- sprintf("avg_feedback_Acc70_bias18.5.RData")
+filename <- sprintf("avg_feedback_Acc70_bias0.36_error0.3.RData")
 filepath <- file.path(out_dir, filename)
 
-save(bias, AI_error_sd, AI_accuracy, Result, file = filepath)
+save(Result, file = filepath)

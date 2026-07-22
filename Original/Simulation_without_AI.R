@@ -184,14 +184,13 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
         update_cluster_inplace(state, k_new, +1L,  b_new, alpha, sigma, agg_type, N, eps)
       }
     }
-    
+     # resync for accuracy
+    if (g %% resync_every == 0) {
+        resync_state(state, players, m, N, alpha, sigma, agg_type, eps)
+    }
   }
   
-  # resync for accuracy
-  if (g %% resync_every == 0) {
-      resync_state(state, players, m, N, alpha, sigma, agg_type, eps)
-  }
-  
+ 
   # Return recordings
   list(accuracy = accuracy,
        players_intime = players_intime,
@@ -201,7 +200,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
 }
 
 # sample the environment
-set.seed(42)
+set.seed(7)
 # number of factors
 m <- 50
 # make coef
@@ -222,12 +221,13 @@ interest <- sample(0:m, size = N, replace = TRUE)
 players <- cbind(interest, belief)
 
 # run simulation
-G <- 160000
+G <- 500000
 
 # agg_type = "clustering" / "averaging"
 # payoff_type = "Expert" / Niche expert" / "Feedback"
 Result <- main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert')
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective intelligence/0520/Original"
+
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Original"
 
 filename <- sprintf("clu_niche.RData")
 filepath <- file.path(out_dir, filename)
@@ -246,13 +246,13 @@ df <- data.frame(
   Generation = seq_along(accuracy),
   Accuracy = accuracy,
   Diversity = interest_diversity,
-  AI_belief = median_AI_belief,
+  #AI_belief = median_AI_belief,
   source = "clustering_feedback_AI"
 )
 
 df_long <- pivot_longer(
   df,
-  cols = c(Accuracy, Diversity, AI_belief),
+  cols = c(Accuracy, Diversity),
   names_to = "metric",
   values_to = "value"
 )
@@ -262,13 +262,13 @@ plot <- ggplot(df_long, aes(x = Generation, y = value, color = metric, linetype 
   facet_wrap(~metric, scales = "free_y", ncol = 1) +
   scale_color_manual(values = c(
     "Accuracy" = "blue",
-    "Diversity" = "red",
-    "AI_belief" = "green"
+    "Diversity" = "red"
+    #"AI_belief" = "green"
   )) +
   scale_linetype_manual(values = c(
     "Accuracy" = "solid",
-    "Diversity" = "dashed",
-    "AI_belief" = "solid"
+    "Diversity" = "dashed"
+    #"AI_belief" = "solid"
   ))+
   labs(title = "Clustering Feedback AI")
 plot
