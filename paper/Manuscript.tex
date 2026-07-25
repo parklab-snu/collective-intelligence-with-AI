@@ -280,64 +280,6 @@ This result suggests that, although an appropriate incentive structure can promo
 
 \section*{Discussion}
 
-We present an epidemiological analysis of RSV outbreaks in Japan combining spatiotemporal observations with dynamical disease modeling.
-Our analysis revealed semiannual cycles in seasonal RSV transmission in four major islands (Honshu, Shikoku, Kyushu, and Ryukyu), which correlate with specific humidity and temperature.
-We found that these semiannual cycles allowed a sudden shift in the seasonality of RSV outbreaks in response to an increase in RSV transmission---this increase could be captured by either through changes in susceptibility or transmissibility.
-We hypothesize that an increase in childcare capacity through Comprehensive Support System for Children and Childcare may have contributed to the increase in RSV transmission \citep{dehaan2024age}.
-
-Our analysis revealed considerable heterogeneity in epidemic dynamics across major islands in Japan.
-We showed that these differences could be explained by the differences in underlying seasonal transmission.
-Notably, we found a robust, quadratic relationship between the estimated transmission rates against mean specific humidity and mean temperature across four major islands (Honshu, Shikoku, Kyushu, and Ryukyu), indicating low transmission at intermediate levels of specific humidity.
-These findings echo earlier studies that demonstrated similar relationships for RSV \citep{baker2019epidemic} and influenza \citep{lowen2007influenza,shaman2009absolute,shaman2010absolute,tamerius2013environmental,lowen2014roles}.
-However, given strong correlation between specific humidity and temperature, we were unable to identify the primary environmental driver from the current study.
-Their relative contributions may be separated from data spanning a wider geographical region with more climate variability as well as epidemiological variability \citep{baker2019epidemic}.
-
-The robustness of this quadratic relationship across islands exhibiting different climate conditions also suggests a possibility that climate-driven transmission may be, in part, facilitated by human behavior: for example, an increase in time spent indoors during low and high humidity seasons can contribute to increased transmission.
-Further investigation is needed to establish the underlying mechanism behind how climate conditions affect the transmission of respiratory pathogens, especially across different environmental contexts (e.g., indoor vs outdoor).
-We note that this relationship is correlational, rather than causal, and therefore any other climate variables (e.g., rainfall) or seasonal variation in human behavior (e.g., school terms) that correlate with seasonal variation in specific humidity and temperature will be implicitly captured by this relationship.
-Understanding why the relationship between RSV transmission and humidity in Hokkaido island differs from other locations remains to be answered.
-
-We hypothesized that the Comprehensive Support System for Children and Childcare may have contributed to the increase in RSV transmission, but other mechanisms may have also contributed.
-For example, an increase in inbound overseas travelers may have led to an increased exposure to RSV among adults thereby increasing the total amount of transmission \citep{wagatsuma2021shifts}.
-However, RSV typically infects young children \citep{matsumura2025epidemiology} and contact rates among young children and adolescents (5--19) are much higher than than among older adults in Japan \citep{munasinghe2019quantifying}, suggesting that an increase in inbound overseas travelers may have smaller effects than an increase in childcare attendance on overall RSV dynamics.
-Another competing hypothesis that could lead to an increase in transmission would be strain evolution:
-for example, one study noted that L172Q/S173L mutant strains of RSV B that became dominant around 2016 had reduced susceptibility against monoclonal antibodies \citep{okabe2024amino}.
-However, it is not yet clear how this mutation translates to susceptibility against infection-derived antibodies.
-While our findings are consistent with those by \cite{dehaan2024age}, who also pointed out the association between an increase in childcare attendance and a large change in the seasonality of Kawasaki disease in Japan, we cannot rule out the possibility that other factors, such as increase in air travel \citep{wagatsuma2021shifts} or strain evolution \citep{okabe2024amino}, could have contributed to the increase in overall transmission.
-
-Our sensitivity analysis revealed that an increase in transmissibility, rather than an increase in susceptibility, can also explain a sudden shift in seasonality in RSV outbreaks.
-In fact, both models provide evidence for increased contact rates.
-Specifically, the total rate of RSV transmission can be written as $\hat{\beta} c S I/N$, where $\hat{\beta}$ represents the rate of transmission per contact, $c$ represents the contact rate, $S$ represents the number of susceptible individuals, $I$ represents the number of infected individuals, and $N$ represents the total population size.
-Then, an increase in contact rate $c$ can be captured by either increase in $S$ (the original model) and $\hat{\beta}$ (the sensitivity analysis).
-Therefore, conclusions from both models are consistent with our hypothesis that an increase in contact rates, especially among children, contributed to the sudden change in RSV seasonality.
-Detailed age structured surveillance data, alongside age structured model, will be needed to properly assess the relative contribution of potential mechanisms, such as increase in childhood mixing patterns or increase in inbound overseas travelers.
-
-Our model-based estimate of the initial susceptible fraction range between 8\%--11\%.
-However this estimate must be interpreted with care as it represents effective changes in population-level susceptibility, which can depend on many factors such as immunological and behavioral changes, rather than an actual susceptible fraction.
-Therefore, these estimates are not directly comparable to serological estimates of proportion seronegative.
-For example, \cite{nakajo2023age} recently estimated that >90\% of individuals above 3 years of age have been infected at least once by analyzing anti-pre-F protein antibody concentration data from the Netherlands \citep{andeweg2021population,berbers2021antibody}, but individuals with RSV antibodies can still permit reinfection.
-A cross-section serological assay from healthcare and non-healthcare workers at a pediatric medical facility in Japan found that >95\% of the participants were seropositive but only 63.5\% had greater than 8 fold neutralizing antibody titers \citep{shoji2025factors}, suggesting challenges in translating serological data to susceptible fraction.
-While our estimates are not inconsistent with these data, detailed age structured serological data and model are needed to accurately estimate changes in population-level susceptibility against RSV.
-
-Interventions to slow the transmission of COVID-19 have disrupted the circulation of many pathogens \citep{baker2020impact,eden2022off,chen2024covid,park2024predicting}, including RSV epidemics in Japan.
-This disruption has added major challenges to predicting future outbreaks, which prevented us from making long-term predictions.
-Continued analysis of RSV dynamics in the post-COVID period, particularly with regard to whether RSV outbreaks in Japan return to fall or winter outbreaks, may help further validate our models.
-
-Our analysis relied on several simplifying assumptions.
-For example, our model assumed that the waning of immunity can render previously infected individual to become fully susceptible to reinfections; this approximation allowed us to reconstruct the dynamics of susceptible hosts more easily.
-In practice, immunity is likely more complex with secondary infections being less susceptible and transmissible than primary infections \citep{pitzer2015environmental}.
-Other studies have also suggested the importance of interaction between RSV A and B \citep{white2005transmission,holmdahl2024differential} as well as competition between RSV and human metapneumovirus \citep{bhattacharyya2015cross}; 
-our model did not account for such strain dynamics.
-We also did not account for explicit spatial structure or underlying stochasticity of the system.
-Therefore, our estimates of transmission rates must be interpreted with caution as they may implicitly capture factors that we did not account for explicitly, including strain dynamics, spatial structure, and exogenous transmission.
-Our analyses also primarily focused on three major islands (Honshu, Shikoku, and Kyushu), necessitating a better understanding of RSV dynamics in Hokkaido and Ryukyu islands;
-however, we note that these three islands make up $>95\%$ of the population in Japan, meaning that our analyses capture the majority of RSV transmission in Japan.
-Despite these limitations, our model likely represents a parsimonious approximation of the complex host-pathogen interactions, allowing us to draw general conclusions about how interactions between endogenous (contact rates) and exogenous (climate-driven factors) factors can give rise to a sudden dynamical transition.
-
-Understanding how endogenous and exogenous factors shape epidemic dynamics is critical to predicting future outbreaks and making public health decisions.
-Our analysis shows that the interplay between climate-driven transmission and subtle changes in contact rates can cause a sudden transition in epidemic dynamics.
-More broadly, our analysis demonstrates that detailed epidemiological time series data can allow us to tease apart endogenous and exogenous factors in explaining dynamical transitions, offering unique insights into a long-standing ecological question.
-
 \section*{Methods}
 
 To model CI, we start with an abstract model that assumes the prediction target is the result of multiple causal factors \cite{wang2025individual}.
