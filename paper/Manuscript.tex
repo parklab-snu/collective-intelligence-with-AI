@@ -106,10 +106,11 @@
 }
 \newline
 \\
-Jaeseung Kim\textsuperscript{1} Sang Woo Park\textsuperscript{1,2,3,*}
+Jaeseung Kim\textsuperscript{1} Sang Woo Park\textsuperscript{1,2,*}
 \\
 \bigskip
-\textbf{1} School of Biological Sciences, Seoul National University, Seoul, Korea
+\textbf{1} School of Biological Sciences, Seoul National University, Seoul, Korea\\
+\textbf{2} Institute for Data Innovation in Science, Seoul National University, Seoul, Korea
 \bigskip
 
 *Corresponding author: sangwoopark@snu.ac.kr
@@ -187,7 +188,9 @@ Individual predictions are aggregated into a collective prediction by simple ave
 For example: this model now allows us to explore the impact of AI on }
 
 \subsection*{AI can either promote or prevent the emergence of CI}
-To understand how AI could affect the emergence of CI, we first compare collective dynamics with and without AI assistance.
+
+\swp{I think we talked about rewriting this section after changing the figure so I will skip for now.}
+To understand the impact of AI on the emergence of CI, we first compare collective dynamics with and without AI assistance.
 We find that AI affects CI in qualitatively different ways depending on the mode of AI.
 
 In the AI knows all model, AI promotes CI by increasing either the speed at which CI emerges or the resulting collective accuracy (Fig. 2A).
@@ -204,21 +207,28 @@ This trend is mediated by increased reliance on AI: individuals with higher reli
 However, the niche expert incentive can also drive reliance on AI toward zero, depending on the relationship between the true coefficient and AI bias.
 In this case, the group excludes AI assistance and builds CI on its own, which largely delays the emergence of CI (see SI).
 
-\subsection*{Directly incentivizing or penalizing AI use can harm CI}
-Given the strong influence of AI use on collective outcomes, a straightforward intervention is to directly incentivize or penalize AI use itself.
-To investigate whether such direct incentives or penalties improve CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
+\subsection*{Directly incentivizing or penalizing AI use can \swp{additionally} harm CI}
+
+Given the strong influence of AI use on collective outcomes, a straightforward intervention is to directly incentivize or penalize the use of AI itself.
+To investigate whether such direct incentives or penalties help maintain CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
 \begin{equation}
 \mathrm{Feedback /} \mathrm{Niche\ expert} + \lambda \beta_A
 \end{equation}
 where $\lambda$ represent the strength of incentive ($\lambda > 0$) or penalty ($\lambda < 0$).
-Except in the AI knows all model under the feedback incentive, directly incentivizing or penalizing AI use fails to promote near-perfect CI.
+\swp{``Except in the AI knows all model under the feedback incentive'' this is slightly awkward but I'm not sure how to fix it without looking at the figure...}
+Except in the AI knows all model under the feedback incentive, directly incentivizing or penalizing AI use fails to promote near-perfect CI. \swp{maybe we don't need CI? this also makes me wonder if we should define what we mean by CI in the methods section: CI should imply near-perfect accuracy. If we get anything less than perfect accuracy, then we should call it the collapse of CI, or failing to promote CI.}
 Moreover, in most cases, directly incentivizing or penalizing leads to lower collective accuracy than the original incentive structures (Fig. 3).
+\swp{maybe don't need ``than the original incentive structures ''?}
 
-When AI use is directly incentivized, reliance on AI evolves toward full reliance ($\beta_A = 1$), reducing collective accuracy as the collective prediction inherits AI bias. 
-By contrast, when AI use is directly penalized, group evolves toward no reliance on AI ($\beta_A = 0$), where collective accuracy decreases with the strength of the penalty.
+\swp{I think this paragraph sounds redundant...}
+\swp{I would try to simplify first two sentences like: Incentivizing or penalizing AI usage will cause the population to always (beta=1) or never (beta=0) rely on AI, respectively, and...?}
+\swp{i think ``in some cases...'' is good}
+When AI use is incentivized, reliance on AI evolves toward full reliance ($\beta_A = 1$), reducing collective accuracy as the collective prediction inherits AI bias. 
+By contrast, when AI use is penalized, group evolves toward no reliance on AI ($\beta_A = 0$), where collective accuracy decreases with the strength of the penalty.
 In some cases, when AI bias is relatively large and the penalty is weak, penalizing AI use can achieve higher collective accuracy than the original incentive structure.
 However, in most cases, penalizing AI use imposes strong selection against AI reliance, pushing the group toward lower stationary collective accuracy.
-Although the AI answers question model under the feedback incentive already shows stochastic breakdown of CI due to the loss of interest diversity, incentivizing or penalizing AI use further strengthens the breakdown.
+Although the AI-answers-question model under the feedback incentive already shows stochastic breakdown of CI due to the loss of interest diversity, incentivizing or penalizing AI use further strengthens the breakdown.
+\swp{I think we need better ways to call these models... maybe omniscient AI vs generative AI? generative isn't quite the word... let's think}
 
 % \subsection*{Balanced incentives mitigate AI-induced failures of CI}
 % Focusing on the AI answers question model, in which both incentive structures fail to promote accurate CI, we investigate whether a better incentive structure can overcome the risks introduced by AI.
@@ -241,14 +251,19 @@ Although the AI answers question model under the feedback incentive already show
 % This suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the group may need to rebuild CI through further adaptation when AI assistance become inaccessible.
 
 \subsection*{Balanced incentives mitigate AI-induced failures of CI}
+
+\swp{perhaps we can start with a question?}
+\swp{``focusing on ...'' feels like a detail that you can add later. I would briefly summarize what we found (i.e., can't maintain CI with current incentive structures), and ask the question that naturally emerges: what structure then would work?}
+
 Focusing on the AI answers question model, in which both incentive structures fail to promote accurate CI, we investigate whether a better incentive structure can overcome the risks introduced by AI.
 Here, we propose a ``balanced'' incentive, defined as the simple average of the feedback and niche expert incentives.
 
-The core idea of the balanced incentive is to maintain both prediction diversity and interest diversity.
+The core idea behind the balanced incentive is to maintain both prediction diversity and interest diversity.
 The feedback incentive can strongly maintain prediction diversity, defined as diversity in revised predictions among players, by incentivizing players whose predictions lie opposite to the collective prediction.
-However, interest diversity can be hindered when AI assistance is present.
+However, interest diversity can be hindered\swp{reduced?} when AI assistance is present.
+\swp{maybe you can combine into one sentence? However, the presence of AI assistance can limit interest diversity by...}
 This occurs because revising individual predictions with AI predictions reduces the dispersion of revised predictions in the group.
-Although the initial distribution of revised predictions is shifted toward the true value because of the AI's help, this reduced dispersion makes it harder for the group to achieve near-perfect predictions through social learning for factors with large absolute coefficients.
+Although the initial distribution of revised predictions is shifted toward the true value because of the AI's help, this reduced dispersion makes it harder for the group to achieve near-perfect predictions through social learning for factors with large absolute coefficients \swp{I don't understand this sentence... i'm not sure that the readers will understand that each prediction can consist of small and large coefficients... is there a way to write these in biological terms?}.
 This eventually leads to a strong flow of players from factors with relatively small coefficients to factors with larger coefficients, causing a loss of interest diversity.
 
 By contrast, the niche expert incentive can maintain interest diversity because it directly incentivizes minority interests.
@@ -256,10 +271,12 @@ However, it cannot maintain prediction diversity because, within the same factor
 This leads to strong selection for either high or low reliance on AI, which in turn results in lower collective accuracy.
 
 The balanced incentive can promote near-perfect CI by maintaining both prediction and interest diversity, regardless of AI accuracy.
+\swp{I wonder if it's better to say reliance on AI increases as AI accuracy increases?}
 Reliance on AI decreases as AI accuracy decreases, reflecting the effective use of AI assistance.
+\swp{I would focus on moderate accuracy first and say that it is largely stochastic after. because moderate accuracy is the main point.}
 However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved.
-This suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the group may need to rebuild CI through further adaptation when AI assistance become inaccessible.
-
+This result suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the population may need to rebuild CI through further adaptation when AI assistance become inaccessible.
+\swp{maybe we need to say that reliance on AI can degrade human's own performance first and then talk about rebuilding CI after? but I think rebuilding sounds more like it would fit in discussion...}
 
 \section*{Discussion}
 
@@ -452,49 +469,10 @@ Median value of AI belief $\beta_A$ in the population. \\
 \end{tabularx}
 \end{table}
 
-\subsection*{Simulations}
 
-We run a series of simulations to understand how the interplay between climate-driven transmission and population-level susceptibility can drive a sudden shift in the timing of an epidemic.
-First, we simulated the model for a year (from week 26 of the starting year to week 25 of the following year) by varying the initial conditions and computing the center of gravity.
-Specifically, we varied $i(0)$ between $1\times 10^{-4}$ and $3\times 10^{-3}$ and $s(0)$ between $0.078$ and $0.105$.
-All other parameters were set to posterior median estimates.
+\section*{Data and code availability}
 
-To further understand how the shape of seasonal transmission term affects the degree of shift in seasonality, we varied the shape of seasonal transmission term by interpolating the estimated $\tsub{\beta}{seas}$ from Honshu and Kyshu islands, which are the two most populated islands. 
-To do so, we first took posterior median estimates of $\tsub{\beta}{seas}$ from two islands and fitted generalized additive model with cyclic cubic spline bases to obtain smoothed estimates of $\tsub{\beta}{seas}$ for each island, which we denote as $\beta_H$ and $\beta_K$, respectively.
-Then, we normalized seasonal transmission rates such that it has a mean of zero and has an amplitude of 1:
-\begin{equation}
-\zeta_X(t) = \frac{1}{\alpha_X} \left(\frac{\beta_{X}(t)}{\bar{\beta}_X} - 1\right)
-\end{equation}
-where $\zeta_X(t)$ represents the normalized seasonal transmission pattern in island $X$,
-and $\alpha_X = (\max(\beta_X(t)) - \min(\beta_X(t)))/2$ represents the amplitude of seasonal transmission pattern in island $X$.
-This allowed us to interpolate between two normalized seasonal terms and obtain a flexible shape for seasonal transmission rate:
-\begin{align}
-\tsub{\zeta}{new}(t) &= \zeta_H(t) (1-\theta) + \zeta_K(t)(\theta),\\
-\tsub{\beta}{new} &= \left(\frac{\tsub{\alpha}{new} \tsub{\zeta}{new}(t)}{(\max(\tsub{\zeta}{new}(t))-\min(\tsub{\zeta}{new}(t)))/2} + 1\right) \tsub{\bar{\beta}}{new},
-\end{align}
-where $\theta$ represents the interpolation coefficient, such that $\theta=0$ and $\theta=1$ causes $\tsub{\beta}{new}$ to have the same shape as $\beta_H$ and $\beta_K$, respectively and $0 < \beta < 1$ allows us to model counterfactual transmission scenarios that interpolates between two islands.
-Note that $\tsub{\zeta}{new}(t)$ does not necessarily have an amplitude 1 so we divide it by $(\max(\tsub{\zeta}{new}(t))-\min(\tsub{\zeta}{new}(t)))/2$ to ensure the amplitude of 1.
-
-For a given value of the interpolation coefficient $\theta$ and seasonal amplitude $\tsub{\alpha}{new}$, we simulated two outbreaks for a year assuming $s(0) = 0.078$ and $s(0)=0.105$ and computed the difference in the timing of epidemic peak.
-In doing so, all other parameters, including the mean transmission rate $\tsub{\beta}{new}$, were fixed to posterior median estimates for the Honshu island. 
-
-\subsection*{Regression}
-
-We performed univariate quadratic regressions for the estimated transmission rates against mean specific humidity and mean temperature, separately, and computed R squared values for each regression.
-We also perform bivariate quadratic regressions for the estimated transmission rates using both mean specific humidity and mean temperature as covariates.
-The significance of regression coefficients was determined using two-sided t-tests at the 0.05 significance level.
-
-We performed a linear regression between the estimated proportion of susceptibles at the beginning of each season (week 26) against the number of children attending childcare facilities.
-For simplicity, the regression was performed using median estimates for the susceptible proportions.
-We did not have data on the number of children attending childcare facilities broken down by island level and so we used the national-level data instead.
-
-\section*{Data availability}
-
-All data are stored in a publicly available GitHub repository (\url{https://github.com/parksw3/perturbation}) \citep{perturbationzenodo}.
-
-\section*{Code availability}
-
-All code are stored in a publicly available GitHub repository (\url{https://github.com/parksw3/perturbation}) \citep{perturbationzenodo}.
+All data are stored in a publicly available GitHub repository (\url{https://github.com/parklab-snu/collective-intelligence-with-AI}).
 
 \bibliography{references}
 
@@ -502,18 +480,13 @@ All code are stored in a publicly available GitHub repository (\url{https://gith
 
 \section*{Acknowledgements}
 
-We acknowledge the efforts of the National Institute of Infectious Diseases, Statistics Bureau of Japan, and Children and Families Agency for collecting/maintaining the data used in this study and making them publicly available.
-E.H., B.G., and C.J.E.M. have been funded in whole or in part with Federal funds from the National Cancer Institute, National Institutes of Health, under Prime Contract No. 75N91019D00024, Task Order No. 75N91023F00016. 
-The content of this publication does not necessarily reflect the views or policies of the National Institutes of Health or the Department of Health and Human Services, nor does mention of trade names, commercial products or organizations imply endorsement by the U.S. Government.
-S.W.P acknowledges support from Peter and Carmen Lucia Buck Foundation Awardee of the Life Sciences Research Foundation and the New Faculty Startup Fund from Seoul National University.
-I.H. received postdoctoral funding from the High Meadows Environmental Institute of Princeton University.
-B.T.G. and C.J.E.M. acknowledge support from Princeton Catalysis Initiative and Princeton Precision Health.
-S.C. is supported by Federal funds from the National Institute of Allergy and Infectious Diseases, National Institutes of Health, Department of Health and Human Services under CEIRR contract 75N93021C00015 - Subcontract 77789.
-The content is solely the responsibility of the authors and does not necessarily represent the official views of the NIAID or the National Institutes of Health. 
+S.W.P. was supported by the New Faculty Startup Fund from Seoul National University,
+and the Global-LAMP Program of the National Research Foundation of Korea (NRF) grant funded by the Ministry of Education (No. RS-2023-00301976).
 
 \section*{Contributions}
 
-S.W.P., I.H., and B.T.G. conceived of the study. S.W.P. performed the analysis and wrote the initial draft. All authors (S.W.P., I.H., E.H., W.Y., R.E.B., G.A.V., S.C., C.J.E.M., and B.T.G.) reviewed and edited the manuscript.
+Jaeseung Kim: Conceptualization, Formal Analysis, Investigation, Methodology, Software, Visualization, Writing - Original Draft Preparation, Writing - Review & Editing.
+Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writing - Original Draft Preparation, Writing - Review & Editing.
 
 \section*{Competing Interests}
 
