@@ -1,0 +1,9 @@
+seed 42
+m <- 50
+bias 0.4
+alpha <- seq(5, -5, length = 51)
+sigma ~ uniform(0, 3)
+alpha ~ norm(0, sd = 5)
+beta ~ uniform (0,1)
+N <- 10000
+G <- 200000

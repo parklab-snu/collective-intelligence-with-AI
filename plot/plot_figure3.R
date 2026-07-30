@@ -16,7 +16,9 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-int
 
 lambda_value <- 0
 
-bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 )
+#bias_list <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 )
+
+bias_list <- c(0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6)
 
 rep_list <- 1:1
 
@@ -148,7 +150,7 @@ common_theme <- theme_classic(base_family = font_family) +
     legend.text      = element_text(size = 13, family = font_family),
     plot.title       = element_text(
       hjust = 0.5,
-      size = 20,
+      size = 15,
       family = font_family,
       margin = margin(b = 6)
     )
@@ -204,10 +206,10 @@ make_trajectory <- function(metric, title_text) {
   ) +
     geom_line(linewidth = 1.3, alpha = 0.9) +
     scale_color_viridis_c(
-      option = "plasma",
-      direction = 1,
-      breaks = c(-0.6, -0.3, 0, 0.3, 0.6),
-      labels = c("-0.6", "-0.3", "0", "0.3", "0.6"),
+      option = "viridis",
+      direction = -1,
+      breaks = c(0, -0.3, -0.6),
+      labels = c("0", "-0.3", "-0.6"),
       guide = guide_colorbar(
         barheight    = unit(4, "cm"),
         barwidth     = unit(0.5, "cm"),
@@ -239,12 +241,12 @@ make_trajectory <- function(metric, title_text) {
     theme(legend.position = "none")
 }
 
-p_acc     <- make_trajectory("accuracy",           "Accuracy")
-p_human   <- make_trajectory("human_accuracy",     "Human accuracy")
-p_div <- make_trajectory("interest_diversity", "Diversity") + scale_y_continuous(limits = c(0, 51))
-p_belief  <- make_trajectory("median_AI_belief",   "Median AI belief")
+p_acc <- make_trajectory("accuracy",           "Collective Accuracy")
+p_human <- make_trajectory("human_accuracy",     "Counterfactural Human CI")
+p_div <- make_trajectory("interest_diversity", "Interest diversity") + scale_y_continuous(limits = c(0, 51))
+p_belief <- make_trajectory("median_AI_belief",   "Median reliance on AI")
 p_bias_sq <- make_trajectory("bias_sq",            "Collective bias")
-p_var     <- make_trajectory("variance",           "Collective variance")
+p_var <- make_trajectory("variance",           "Collective variance")
 
 # ----- 6. Combine and save -----
 
@@ -252,7 +254,7 @@ combined <- (p_acc + p_human + p_div) /
   (p_belief + p_bias_sq + p_var)
 
 ggsave(
-  file.path(save_path, "Diverging.png"),
+  file.path(save_path, "Diverging_negative.png"),
   combined,
   width = 10,
   height = 7,

@@ -199,8 +199,42 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
        variance = variance)
 }
 
+
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Original/mu_sweep"
+mu_list <- c(0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08)
+bias_list <- c(0)
+for(i in mu_list){
+  for(j in bias_list){
+    set.seed(42)  
+    m <- 50
+    alpha <- runif(m+1, min = -5, max = 5)
+    
+    #sigma <- rep(1, m+1)
+    sigma <- runif(m, min = 0, max = 3)
+    sigma <- c(1, sigma)
+    
+    for(k in 1:1){
+      set.seed(1)
+      N <- 10000
+      G <- 200000
+      belief <- rnorm(N, mean = 0, sd = 5)
+      #Sample initial interest (SRS form 0 to 50)
+      interest <- sample(0:m, size = N, replace = TRUE)
+      players <- cbind(interest, belief)
+
+      Result <- main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback', mu = i)
+
+      
+      filename <- sprintf("Feedback_k%02d_i%02f_j%02f.RData", k, i, j)
+      filepath <- file.path(out_dir, filename)
+      
+      save(i, j, Result, file = filepath)
+    }
+  }
+}
+
 # sample the environment
-set.seed(7)
+set.seed(42)
 # number of factors
 m <- 50
 # make coef
@@ -221,15 +255,15 @@ interest <- sample(0:m, size = N, replace = TRUE)
 players <- cbind(interest, belief)
 
 # run simulation
-G <- 500000
+G <- 1000000
 
 # agg_type = "clustering" / "averaging"
 # payoff_type = "Expert" / Niche expert" / "Feedback"
-Result <- main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert')
+Result <- main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback', mu = 0.00)
 
 out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Original"
 
-filename <- sprintf("clu_niche.RData")
+filename <- sprintf("mu_0.00.RData")
 filepath <- file.path(out_dir, filename)
 
 save(Result, file = filepath)
@@ -239,20 +273,20 @@ library(tidyr)
 library(dplyr)
 # exploratory visualization
 accuracy <- Result$accuracy
-interest_diversity <- Result$interest_diversity
 median_AI_belief <- Result$median_AI_belief
+
+median_AI_belief[-1]
 
 df <- data.frame(
   Generation = seq_along(accuracy),
   Accuracy = accuracy,
-  Diversity = interest_diversity,
-  #AI_belief = median_AI_belief,
+  Reliance = median_AI_belief,
   source = "clustering_feedback_AI"
 )
 
 df_long <- pivot_longer(
   df,
-  cols = c(Accuracy, Diversity),
+  cols = c(Accuracy, Reliance),
   names_to = "metric",
   values_to = "value"
 )
@@ -262,15 +296,10 @@ plot <- ggplot(df_long, aes(x = Generation, y = value, color = metric, linetype 
   facet_wrap(~metric, scales = "free_y", ncol = 1) +
   scale_color_manual(values = c(
     "Accuracy" = "blue",
-    "Diversity" = "red"
-    #"AI_belief" = "green"
+    "Reliance" = "red"
   )) +
-  scale_linetype_manual(values = c(
-    "Accuracy" = "solid",
-    "Diversity" = "dashed"
-    #"AI_belief" = "solid"
-  ))+
   labs(title = "Clustering Feedback AI")
+
 plot
 
 averaging_niche_players_intime <- Result$players_intime
@@ -278,7 +307,7 @@ averaging_niche_players_intime <- Result$players_intime
 belief <- averaging_niche_players_intime[100,,]
 
 df_cl_fe_sc <- as.data.frame(belief)
-cl_fe_sc <- ggplot(df_cl_fe_sc, aes(x = V1, y = V3))+
+cl_fe_sc <- ggplot(df_cl_fe_sc, aes(x = V1, y = V2))+
   geom_point(
     size = 2,
     color = "red",

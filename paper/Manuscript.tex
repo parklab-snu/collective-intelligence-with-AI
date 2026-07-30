@@ -19,7 +19,7 @@
 \newcommand{\showcomment}[3]{\textcolor{#1}{\textbf{[#2: }\textsl{#3}\textbf{]}}}
 \newcommand{\nocomment}[3]{}
 
-\newcommand{\jd}[1]{\comment{cyan}{JD}{#1}}
+\newcommand{\js}[1]{\comment{cyan}{JS}{#1}}
 \newcommand{\swp}[1]{\comment{magenta}{SWP}{#1}}
 \newcommand{\bmb}[1]{\comment{blue}{BMB}{#1}}
 \newcommand{\djde}[1]{\comment{red}{DJDE}{#1}}
@@ -152,131 +152,100 @@ Across different assumptions about the AI model's ability and underlying incenti
 \section*{Main}
 \subsection*{Model}
 
-\swp{unclear what is meant by decentralized manner.}
-\swp{how about something like this: We begin by extending previously established models of CI in which a group of players participates in a prediction task from partial/independent observations of underlying causal factors and aggregates their predictions...}
-We begin by extending previously established models of CI in which a group of players makes collective predictions by gathering information and aggregating individual predictions in a decentralized manner \cite{hong2012incentives, mann2017optimal,wang2025individual}.
-\swp{I would first describe Y and then each individual's prediction. I think we can also leave out ``in the previous approach''.}
-In the previous approach, among $M$ different factors $(x_i)$ that affect the outcome $(Y)$, an individual ($A$) makes a prediction based on their factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
-Here, we assume each individual can independently consult AI and revise their prediction based on their reliance on AI ($\beta_A$): $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$.
-\swp{We need to say that this revised prediction now contributes to the collective outcome.}
+We begin by extending previously established models of CI in which a group of players participates in a prediction task, with each player making an individual prediction based on partial observations of the underlying causal factors and the group forming a collective prediction by aggregating these individual predictions \cite{hong2012incentives, mann2017optimal,wang2025individual}.
+The prediction target $(Y)$ is modeled as a linear combination of $M$ causal factors ($x_i$), with fixed coefficients ($\alpha_i$): $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution.
+Among $M$ different factors, an individual ($A$) makes prediction by the multiplication of single factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
+Here, we assume each individual can independently consult AI and revise their prediction based on their reliance on AI ($\beta_A$): $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$, and the revised prediction is aggregated to form collective prediction.
 
-\swp{I would first describe what AI does biologically. Noise and bias are secondary information and can be added towards the end.
-For example: To model AI prediction, we consider a scenario where AI has already been trained on this prediction task and therefore has information about the effect of each causal factor.
-Every time a player consults with AI, it will make predictions based on the known information, which can include factor-specific bias and stochastic error.
-}
-To specify how individuals consult AI, we model the AI prediction $(Y_A^{AI})$ as a noisy and biased estimate of the target outcome.
-Specifically, AI predictions include factor-specific bias $(b_i)$ and stochastic error $(\epsilon)$.
-We then consider two extreme modes of AI response, which differ in the amount of information AI uses when consulting an individual user \swp{when making prediction?}.
-The first is the ``AI knows all'' model, in which AI predicts the outcome based on all factors regardless of the user's interest:
-$Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$
-, where $\alpha_i$ represents the true coefficient of the factor.
-The second is the ``AI answers question'' model, in which AI predicts the outcome based only on the user's interest:
+To model AI, we consider a scenario where the group of players is given a novel prediction task, whereas the AI has an ability to perform prediction based on causal factors because it already been trained on similar tasks.
+Every time a player consults AI, it will make predictions $(Y_A^{AI})$  based on its internal parameters, which can include factor-specific bias $(b_i)$ and stochastic error $(\epsilon)$.
+We then consider two extreme modes of AI response, which differ in the amount of information AI uses when making predictions.
+At one extreme, the AI operates with complete knowledge of all causal factors, using them regardless of the user’s interest:
+$Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$.
+At the other extreme, AI can work like a chatbot, in which AI predicts the outcome based only on the user's interest:
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
+Hereafter, we refer to these two modes as `Omniscient AI' and `Chatbot AI', respectively.
 
-\swp{After every round of prediction task?}
-After the prediction, each individual receives payoff under the assumed incentive structure.
-We considere two incentive structures, ``feedback'' and ``niche expert'' \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy in the absence of AI (except averaging aggregation with niche expert incentive).
-The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true outcome, regardless of their individual predictive accuracy.
-In contrast, the niche expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest.
+Each generation consists of multiple round of predictions, and each player is rewarded by a payoff according to the incentive structure.
+For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff rather than computing the payoff for each round.
+We consider two incentive structures, ``feedback'' and ``niche-expert'' \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy in the absence of AI (except averaging aggregation with niche-expert structure).
+The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy.
+In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest.
 
-\swp{Need to say something about each round vs each generation... I think one generation consists of several rounds but we're making some kind of equilibrium assumption?}
-Through time, the group evolves by imitating the peers who got better payoff.
-Specifically, for each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference in expected payoff.
-Individual predictions are aggregated into a collective prediction by simple averaging in the AI knows all model, or by clustering in the AI answers question model, depending on the mode of AI.
+Through time, the group evolves by imitating the peers who receive higher payoffs.
+Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference between their expected payoffs.
+Individual predictions are aggregated into a collective prediction ($\hat{Y}$) by simple averaging when using Omniscient AI and by clustering when using Chatbot AI.
+Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction ($\alpha_0$).
+Hereafter, we refer to the near-perfect collective accuracy as accurate CI.
 
-\swp{I think we need a brief paragraph about what our goals are to make the next sections flow better.
-For example: this model now allows us to explore the impact of AI on }
+This model now allows us to explore the impact of AI on CI depending on the mode of AI and the incentive structure.
+Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate a better incentive structure that can promote CI in the presence of AI.
 
 \subsection*{AI can either promote or prevent the emergence of CI}
+To understand the impact of AI, we first compare collective dynamics with and without AI.
+We find that, except when Omniscient AI is used under the feedback structure, a group with AI fails to achieve accurate CI (Fig. 2).
+However, the effect of AI differs depending on the mode of AI.
 
-\swp{I think we talked about rewriting this section after changing the figure so I will skip for now.}
-To understand the impact of AI on the emergence of CI, we first compare collective dynamics with and without AI assistance.
-We find that AI affects CI in qualitatively different ways depending on the mode of AI.
+When Omniscient AI assists players, the group becomes equally or more accurate than the group without AI.
+Under the feedback structure, a group achieves accurate CI regardless of the assistance of AI (Fig. 2A).
+However, under the niche-expert structure, the group without AI is no better than the baseline prediction.
+Although Omniscient AI cannot help players achieve accurate CI, the group's prediction with AI is more accurate than both that of the group without AI and the AI itself (Fig. 2B).
+These results are robust across different levels of AI accuracy and can be shown mathematically by assuming a sufficiently large group of players (Fig. S2).
 
-In the AI knows all model, AI promotes CI by increasing either the speed at which CI emerges or the resulting collective accuracy (Fig. 2A).
-When the group can achieve near-perfect CI without AI (feedback incentive), AI accelerates its emergence by raising the initial collective accuracy to the level of AI accuracy.
-By contrast, when the group cannot achieve CI without AI (niche expert incentive), AI enables moderately accurate CI that exceeds the accuracy achievable by either AI or the human group alone.
-These trends are robust across different levels of AI accuracy and can be shown mathematically by assuming a sufficiently large group of players (see SI).
+When Chatbot AI assists players, the group becomes less accurate than the group without AI.
+Although both incentive structures can achieve accurate CI without AI, the assistance of Chatbot AI hinders group performance and prevents accurate CI from emerging (Fig. 2C, D).
+This occurs through different mechanisms depending on the incentive structure.
+Under the feedback structure, Chatbot AI leads to a loss of interest diversity, which eventually makes it impossible for the group to account for variation in some causal factors.
+This leads to an increase in collective variance and stochastic decrease in collective accuracy (Fig. S1).
+The loss of interest diversity may arise even without AI after sufficiently many generations in a finite population.
+However, Chatbot AI makes the group more vulnerable to the diversity loss.
+Under the niche-expert structure, the group becomes overly reliant on AI, causing the collective prediction to inherit the AI's bias (Fig. S1).
+This leads to an increase in collective bias and a decrease in collective accuracy.
+The niche-expert structure may also drive reliance on AI toward zero, depending on the relationship between the true coefficient and AI bias (Fig. S2).
+In this case, the group completely excludes AI assistance and builds CI on its own, which substantially delays the emergence of accurate CI.
+
+To investigate whether the group can retain its predictive ability when AI assistance suddenly becomes unavailable at a given generation, we measure counterfactual collective accuracy.
+This measure follows the same evolutionary trajectory as the simulation with AI, but accuracy is computed using the players' unrevised predictions.
+We find that counterfactual collective accuracy is always lower than the collective accuracy of groups, regardless of the AI mode or incentive structure.
+
+In summary, AI assistance may promote CI when it is omniscient, whereas AI operating with limited information may prevent the emergence of accurate CI.
+These findings underscore the need for incentive structures that can mitigate the potential risks associated with AI assistance.
 
 
-In contrast, In the AI answers question model, AI prevents the emergence and maintenance of CI (Fig. 2B).
-Under the feedback incentive, the group initially achieves near-perfect CI. 
-However, as interest diversity rapidly decreases, the group fails to capture variation in some factors, leading to increased collective variance and a breakdown of collective accuracy.
-Under the niche expert incentive, collective accuracy initially increases but peaks before near-perfect CI is achieved, and then plateaus with a slight decline.
-This trend is mediated by increased reliance on AI: individuals with higher reliance on AI obtain higher payoffs, causing the group to become increasingly reliant on AI and the collective prediction to inherit AI bias.
-However, the niche expert incentive can also drive reliance on AI toward zero, depending on the relationship between the true coefficient and AI bias.
-In this case, the group excludes AI assistance and builds CI on its own, which largely delays the emergence of CI (see SI).
+\subsection*{Directly incentivizing or penalizing AI use can additionally harm CI}
 
-\subsection*{Directly incentivizing or penalizing AI use can \swp{additionally} harm CI}
-
-Given the strong influence of AI use on collective outcomes, a straightforward intervention is to directly incentivize or penalize the use of AI itself.
-To investigate whether such direct incentives or penalties help maintain CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
+Given the strong influence of AI on collective outcomes, a straightforward intervention is to directly incentivize or penalize the use of AI.
+To investigate whether such direct incentives or penalties help emergence of CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
 \begin{equation}
-\mathrm{Feedback /} \mathrm{Niche\ expert} + \lambda \beta_A
+\mathrm{Feedback /} \mathrm{Niche\text{-}expert} + \lambda \beta_A
 \end{equation}
 where $\lambda$ represent the strength of incentive ($\lambda > 0$) or penalty ($\lambda < 0$).
-\swp{``Except in the AI knows all model under the feedback incentive'' this is slightly awkward but I'm not sure how to fix it without looking at the figure...}
-Except in the AI knows all model under the feedback incentive, directly incentivizing or penalizing AI use fails to promote near-perfect CI. \swp{maybe we don't need CI? this also makes me wonder if we should define what we mean by CI in the methods section: CI should imply near-perfect accuracy. If we get anything less than perfect accuracy, then we should call it the collapse of CI, or failing to promote CI.}
-Moreover, in most cases, directly incentivizing or penalizing leads to lower collective accuracy than the original incentive structures (Fig. 3).
-\swp{maybe don't need ``than the original incentive structures ''?}
 
-\swp{I think this paragraph sounds redundant...}
-\swp{I would try to simplify first two sentences like: Incentivizing or penalizing AI usage will cause the population to always (beta=1) or never (beta=0) rely on AI, respectively, and...?}
-\swp{i think ``in some cases...'' is good}
-When AI use is incentivized, reliance on AI evolves toward full reliance ($\beta_A = 1$), reducing collective accuracy as the collective prediction inherits AI bias. 
-By contrast, when AI use is penalized, group evolves toward no reliance on AI ($\beta_A = 0$), where collective accuracy decreases with the strength of the penalty.
+Directly incentivizing or penalizing AI use further reduce the collective accuracy (Fig. 3C, E, G), except when Omniscient AI is used under the feedback structure (Fig. 3A).
+This is because incentivizing or penalizing AI usage pushes the population to always ($\beta = 1$) or never ($\beta = 0$) rely on AI, respectively (Fig. 3B, D, F, H).
 In some cases, when AI bias is relatively large and the penalty is weak, penalizing AI use can achieve higher collective accuracy than the original incentive structure.
 However, in most cases, penalizing AI use imposes strong selection against AI reliance, pushing the group toward lower stationary collective accuracy.
-Although the AI-answers-question model under the feedback incentive already shows stochastic breakdown of CI due to the loss of interest diversity, incentivizing or penalizing AI use further strengthens the breakdown.
-\swp{I think we need better ways to call these models... maybe omniscient AI vs chatbot AI? that's what we have in the abstract}
-
-% \subsection*{Balanced incentives mitigate AI-induced failures of CI}
-% Focusing on the AI answers question model, in which both incentive structures fail to promote accurate CI, we investigate whether a better incentive structure can overcome the risks introduced by AI.
-% Here, we propose a ``balanced'' incentive, defined as the simple average of the feedback and niche expert incentives.
-
-% The core idea of the balanced incentive is to maintain both within- and between-interest diversity.
-% The feedback incentive can strongly maintain within-interest diversity, defined as diversity in strategies (belief and reliance on AI), among individuals with the same factor of interest.
-% However, between-interest diversity, which we denoted as ``interest diversity'' in the previous sections, can be hindered when AI assistance is present.
-% This occurs because revising individual predictions with AI predictions compresses the belief distribution of the group.
-% Although the initial belief distribution is shifted toward the true value, the compressed distribution makes it harder for the group to achieve near-perfect predictions through social learning for factors with large absolute coefficients.
-% This eventually leads to a strong flow of players from factors with relatively small coefficient to factors with larger coeffificent, causing a loss of between-interest diversity.
-
-% By contrast, the niche expert incentive can maintain between-interest diversity because it directly incentivizes minority interests.
-% However, it cannot maintain within-interest diversity because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance.
-% This leads to strong selection for either high or low reliance on AI, which in turn results in lower collective accuracy.
-
-% The balanced incentive can promote near-perfect CI by maintaining both within- and between-interest diversity, regardless of AI accuracy.
-% Reliance on AI decreases as AI accuracy decreases, reflecting the effective use of AI assistance.
-% However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved.
-% This suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the group may need to rebuild CI through further adaptation when AI assistance become inaccessible.
+Although the group with Chatbot AI under feedback structure shows stochastic breakdown of CI which doesn't result in stationary collective accuracy, incentivizing or penalizing AI use further strengthens the breakdown (Fig. 3E).
+This result suggests that simply incentivizing or penalizing the AI use may exacerbate rather than resolving the problem of AI.
 
 \subsection*{Balanced incentives mitigate AI-induced failures of CI}
+Neither the original incentive structures nor simple interventions targeting AI use are sufficient to promote CI.
+What incentive structure, then, would work in the presence of AI?
+Focusing on the Chatbot AI, in which proposed incentive structures fail to promote accurate CI, we investigate whether a better structure can overcome the risks introduced by AI.
+Here, we propose a ``balanced'' structure, defined as the simple average of the feedback and niche expert incentives.
 
-\swp{perhaps we can start with a question?}
-\swp{``focusing on ...'' feels like a detail that you can add later. I would briefly summarize what we found (i.e., can't maintain CI with current incentive structures), and ask the question that naturally emerges: what structure then would work?}
+Core idea behind the balanced structure is to maintain interest diversity while preventing the collective bias of the group.
+The feedback structure is prone to interest diversity loss, whereas can strongly prevent collective bias by incentivizing players whose predictions lie opposite to the collective prediction.
+By contrast, the niche-expert structure can maintain interest diversity because it directly incentivizes minority interests.
+However, it cannot prevent collective bias because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance, which homogenize the predictions. 
 
-Focusing on the AI answers question model, in which both incentive structures fail to promote accurate CI, we investigate whether a better incentive structure can overcome the risks introduced by AI.
-Here, we propose a ``balanced'' incentive, defined as the simple average of the feedback and niche expert incentives.
+By integrating both structure, the balanced structure can promote accurate CI by maintaining both interest diversity and preventing collective bias (Fig. 4, S3).
+Compare to the feedback and niche-expert, players are both evenly distributed through factors, and beliefs are close to the real coefficient (Fig. 4).
+Moreover, counterfactual collective accuracy maintained high compare to both feedback and niche-expert.
+These patterns are driven by the emergent property of the balanced structure, in which group increases its reliance on AI as the AI becomes more accurate, demonstrating appropriately calibrated AI use.
 
-The core idea behind the balanced incentive is to maintain both prediction diversity and interest diversity.
-The feedback incentive can strongly maintain prediction diversity, defined as diversity in revised predictions among players, by incentivizing players whose predictions lie opposite to the collective prediction.
-However, interest diversity can be hindered\swp{reduced?} when AI assistance is present.
-\swp{maybe you can combine into one sentence? However, the presence of AI assistance can limit interest diversity by...}
-This occurs because revising individual predictions with AI predictions reduces the dispersion of revised predictions in the group.
-Although the initial distribution of revised predictions is shifted toward the true value because of the AI's help, this reduced dispersion makes it harder for the group to achieve near-perfect predictions through social learning for factors with large absolute coefficients \swp{I don't understand this sentence... i'm not sure that the readers will understand that each prediction can consist of small and large coefficients... is there a way to write these in biological terms?}.
-This eventually leads to a strong flow of players from factors with relatively small coefficients to factors with larger coefficients, causing a loss of interest diversity.
 
-By contrast, the niche expert incentive can maintain interest diversity because it directly incentivizes minority interests.
-However, it cannot maintain prediction diversity because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance, which homogenize the predictions.
-This leads to strong selection for either high or low reliance on AI, which in turn results in lower collective accuracy.
 
-The balanced incentive can promote near-perfect CI by maintaining both prediction and interest diversity, regardless of AI accuracy.
-\swp{I wonder if it's better to say reliance on AI increases as AI accuracy increases?}
-Reliance on AI decreases as AI accuracy decreases, reflecting the effective use of AI assistance.
-\swp{I would focus on moderate accuracy first and say that it is largely stochastic after. because moderate accuracy is the main point.}
-However, human accuracy, defined as collective accuracy without AI, remains largely stochastic, and only moderate accuracy can be achieved.
-This result suggests that, although an appropriate incentive structure can promote robust CI under AI assistance, the population may need to rebuild CI through further adaptation when AI assistance become inaccessible.
-\swp{maybe we need to say that reliance on AI can degrade human's own performance first and then talk about rebuilding CI after? but I think rebuilding sounds more like it would fit in discussion...}
 
 \section*{Discussion}
 
@@ -427,8 +396,8 @@ and the Global-LAMP Program of the National Research Foundation of Korea (NRF) g
 
 \section*{Contributions}
 
-Jaeseung Kim: Conceptualization, Formal Analysis, Investigation, Methodology, Software, Visualization, Writing - Original Draft Preparation, Writing - Review & Editing.
-Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writing - Original Draft Preparation, Writing - Review & Editing.
+Jaeseung Kim: Conceptualization, Formal Analysis, Investigation, Methodology, Software, Visualization, Writing - Original Draft Preparation, Writing - Review \& Editing.
+Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writing - Original Draft Preparation, Writing - Review \& Editing.
 
 \section*{Competing Interests}
 

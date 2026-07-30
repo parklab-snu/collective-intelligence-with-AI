@@ -666,6 +666,12 @@ make_accuracy_plot <- function(data, tags) {
       color = Trajectory
     )
   ) +
+    geom_hline(
+      yintercept = 1.0,
+      linetype = "dashed",
+      linewidth = 0.9,
+      color = "black"
+    ) +
     geom_line(
       linewidth = 2,
       lineend = "round"

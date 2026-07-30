@@ -640,14 +640,14 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
 #        reliance_diversity = reliance_diversity)
 # }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/belief_sweep"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/SIFig3"
 
 #lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 #bias_list <- list(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
-#mu_list <- c(0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08)
-belief_list <- c(8, 9, 10)
+#mu_list <- c(0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08)
 bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
-for(i in belief_list){
+lambda_list <- c(0)
+for(i in lambda_list){
   for(j in bias_list){
     set.seed(42)  
     m <- 50
@@ -658,10 +658,10 @@ for(i in belief_list){
     sigma <- c(1, sigma)
     
     for(k in 1:1){
-      set.seed(1)
+      set.seed(k)
       N <- 10000
       G <- 200000
-      belief <- rnorm(N, mean = 0, sd = i)
+      belief <- rnorm(N, mean = 0, sd = 5)
       #Sample initial interest (SRS form 0 to 50)
       interest <- sample(0:m, size = N, replace = TRUE)
       #Sample initial AI belief
@@ -675,16 +675,16 @@ for(i in belief_list){
       alpha_AI <- alpha + bias_c
       AI_error_sd <- 0.3
       
-      #lambda <- i
+      lambda <- i
       
       #corr<- cor(alpha, bias, method = "pearson")
       denom <- sum((alpha[-1]*sigma[-1])^2)
       AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
       cat("Accuracy:", AI_accuracy, "\n")
       
-      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
+      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda)
       
-      filename <- sprintf("Feedback_k%02d_i%02d_j%02f.RData", k, i, j)
+      filename <- sprintf("Balanced_k%02d_i%02f_j%02f.RData", k, i, j)
       filepath <- file.path(out_dir, filename)
       
       save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
@@ -728,9 +728,11 @@ cat("Accuracy:", AI_accuracy, "\n")
 
 lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda, mu = 0.00)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda, mu = 0.1)
 
-filename <- sprintf("AI_mu_0.00_bias0.4_error0.3.RData")
+filename <- sprintf("clu_niche_seed42_b0.4_e0.3.RData")
 filepath <- file.path(out_dir, filename)
 
 save(Result, file = filepath)
+
+

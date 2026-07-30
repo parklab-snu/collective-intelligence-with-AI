@@ -1,6 +1,7 @@
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(svglite)
 
 save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Figure4"
 
@@ -8,9 +9,9 @@ feedback_env <- new.env()
 niche_env <- new.env()
 balanced_env <- new.env()
 
-load(file.path(save_path, "Feedback_sequential_reversed.RData"), envir = feedback_env)
-load(file.path(save_path, "Niche_sequential_reversed.RData"), envir = niche_env)
-load(file.path(save_path, "Balanced_sequential_reversed.RData"), envir = balanced_env)
+load(file.path(save_path, "Feedback_sequential.RData"), envir = feedback_env)
+load(file.path(save_path, "Niche_sequential.RData"), envir = niche_env)
+load(file.path(save_path, "Balanced_sequential.RData"), envir = balanced_env)
 
 feedback_result <- feedback_env$Result
 niche_result <- niche_env$Result
@@ -63,11 +64,12 @@ trajectory_theme <- theme_classic(
 ) +
   theme(
     axis.line = element_blank(),
-    panel.border = element_rect(
+    panel.background = element_rect(
+      fill = "white",
       color = "black",
-      fill = NA,
       linewidth = 1.2
     ),
+    panel.border = element_blank(),
     axis.title.x = element_text(
       size = 28,
       margin = margin(t = 14)
@@ -95,7 +97,10 @@ trajectory_theme <- theme_classic(
     ),
     legend.key.width = grid::unit(2.1, "cm"),
     legend.spacing.x = grid::unit(0.5, "cm"),
-    legend.margin = margin(t = 12)
+    legend.margin = margin(t = 12),
+    legend.key = element_blank(),
+    legend.background = element_blank(),
+    legend.box.background = element_blank()
   )
 
 trajectory_accuracy <- ggplot(
@@ -121,14 +126,14 @@ trajectory_accuracy <- ggplot(
     expand = expansion(mult = c(0, 0.005))
   ) +
   scale_y_continuous(
-    breaks = c(0.4, 0.7, 1),
-    limits = c(0.38, 1.02),
+    breaks = c(0.70, 0.85, 1.00),
+    limits = c(0.65, 1.02),
     expand = expansion(mult = c(0, 0))
   ) +
   labs(
     x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
     y = "Collective accuracy",
-    color = "Incentive structure"
+    color = "Incentive"
   ) +
   guides(
     color = guide_legend(
@@ -163,14 +168,14 @@ trajectory_human <- ggplot(
     expand = expansion(mult = c(0, 0.005))
   ) +
   scale_y_continuous(
-    breaks = c(-0.4, 0.3, 1.0),
-    limits = c(-0.45, 1.05),
+    breaks = c(0.0, 0.5, 0.9),
+    limits = c(-0.05, 0.95),
     expand = expansion(mult = c(0, 0))
   ) +
   labs(
     x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
     y = "Counterfactual human CI",
-    color = "Incentive structure"
+    color = "Incentive"
   ) +
   guides(
     color = guide_legend(
@@ -197,13 +202,21 @@ feedback_players <- as.data.frame(
   feedback_result$players_intime[200, , ]
 )
 
+median_reliance_feedback <- feedback_result$median_AI_belief[200]
+
 niche_players <- as.data.frame(
   niche_result$players_intime[200, , ]
 )
 
+median_reliance_niche <- niche_result$median_AI_belief[200]
+
+
 balanced_players <- as.data.frame(
   balanced_result$players_intime[200, , ]
 )
+
+median_reliance_balanced <- balanced_result$median_AI_belief[200]
+
 
 scatter_theme <- theme_classic(
   base_family = "Arial",
@@ -212,14 +225,11 @@ scatter_theme <- theme_classic(
   theme(
     panel.background = element_rect(
       fill = "white",
-      color = NA
-    ),
-    panel.grid = element_blank(),
-    panel.border = element_rect(
       color = "black",
-      fill = NA,
       linewidth = 1.2
     ),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
     axis.title.x = element_text(
       size = 28,
       margin = margin(t = 12)
@@ -249,6 +259,13 @@ belief_feedback <- ggplot(
   feedback_players,
   aes(x = V1, y = V2)
 ) +
+  geom_abline(
+    intercept = 5,
+    slope = -0.2,
+    linetype = "dashed",
+    linewidth = 2,
+    color = "black"
+  )+
   geom_point(
     size = 2.4,
     color = incentive_colors["Feedback"],
@@ -280,6 +297,13 @@ belief_niche <- ggplot(
     color = incentive_colors["Niche expert"],
     alpha = 0.3
   ) +
+  geom_abline(
+    intercept = 5,
+    slope = -0.2,
+    linetype = "dashed",
+    linewidth = 2.0,
+    color = "black"
+  )+
   scale_x_continuous(
     limits = c(0, 50),
     breaks = c(0, 25, 50),
@@ -306,6 +330,13 @@ belief_balanced <- ggplot(
     color = incentive_colors["Balanced"],
     alpha = 0.3
   ) +
+  geom_abline(
+    intercept = 5,
+    slope = -0.2,
+    linetype = "dashed",
+    linewidth = 2.0,
+    color = "black"
+  )+
   scale_x_continuous(
     limits = c(0, 50),
     breaks = c(0, 25, 50),
@@ -332,6 +363,12 @@ reliance_feedback <- ggplot(
     color = incentive_colors["Feedback"],
     alpha = 0.3
   ) +
+  geom_hline(
+    yintercept = median_reliance_feedback,
+    linetype = "dashed",
+    linewidth = 2.0,
+    color = "black"
+  )+
   scale_x_continuous(
     limits = c(0, 50),
     breaks = c(0, 25, 50),
@@ -358,6 +395,12 @@ reliance_niche <- ggplot(
     color = incentive_colors["Niche expert"],
     alpha = 0.3
   ) +
+  geom_hline(
+    yintercept = median_reliance_niche,
+    linetype = "dashed",
+    linewidth = 2.0,
+    color = "black"
+  )+
   scale_x_continuous(
     limits = c(0, 50),
     breaks = c(0, 25, 50),
@@ -384,6 +427,12 @@ reliance_balanced <- ggplot(
     color = incentive_colors["Balanced"],
     alpha = 0.3
   ) +
+  geom_hline(
+    yintercept = median_reliance_balanced,
+    linetype = "dashed",
+    linewidth = 2.0,
+    color = "black"
+  )+
   scale_x_continuous(
     limits = c(0, 50),
     breaks = c(0, 25, 50),
@@ -414,27 +463,43 @@ reliance_row <- reliance_feedback +
     axis_titles = "collect_x"
   )
 
-final_plot <- trajectory_row /
-  belief_row /
-  reliance_row +
-  plot_layout(
-    heights = c(1.25, 1, 1)
-  ) &
+final_plot <- (
+  trajectory_row /
+    belief_row /
+    reliance_row +
+    plot_layout(
+      heights = c(1.25, 1, 1)
+    ) +
+    plot_annotation(
+      tag_levels = "A"
+    )
+) &
   theme(
     plot.background = element_rect(
       fill = "white",
       color = NA
-    )
+    ),
+    plot.tag = element_text(
+      family = "Arial",
+      size = 28,
+      face = "bold",
+      color = "black",
+      hjust = 0,
+      vjust = 1
+    ),
+    plot.tag.position = c(0.02, 0.12),
+    plot.tag.location = "panel"
   )
 
 ggsave(
   filename = file.path(
     save_path,
-    "trajectory_and_player_distributions_s_r.png"
+    "trajectory_and_player_distributions_s_r_dash.pdf"
   ),
   plot = final_plot,
+  device = grDevices::cairo_pdf,
   width = 16,
   height = 16,
-  dpi = 300,
+  units = "in",
   bg = "white"
 )

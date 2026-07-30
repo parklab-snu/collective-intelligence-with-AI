@@ -1,0 +1,494 @@
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+
+lambda_list <- c(-40, -30, -20, -10, 0, 10, 20, 30, 40)
+bias_list <- c(-0.4, -0.2, 0.2, 0.4)
+
+font_family <- "Arial"
+
+x_title_size <- 16
+y_title_size <- 16
+axis_number_size <- 13
+
+direction_text_size <- 4
+legend_title_size <- 18
+legend_text_size <- 16
+panel_label_size <- 8
+
+header_text_size <- 6.2
+row_label_text_size <- 5.3
+
+line_width <- 1.2
+point_size <- 4
+panel_border_width <- 0.7
+
+panel_y_ranges <- list(
+  A = c(0, 1),
+  B = c(0, 1),
+  C = c(0, 1),
+  D = c(0, 1),
+  E = c(-0.4, 1),
+  F = c(0, 1),
+  G = c(0.4, 1),
+  H = c(0, 1)
+)
+
+lambda_offset <- 0.2
+lambda_arrow_gap <- 0.10
+direction_text_offset <- 0.10
+
+arrow_start <- -33
+arrow_end <- 33
+penalize_x <- -28
+incentivize_x <- 28
+
+arrow_line_width <- 0.7
+arrow_head_length <- 0.11
+
+panel_bottom_margin <- 40
+panel_side_margin <- 5
+panel_top_margin <- 0
+
+panel_aspect_ratio <- 0.9
+
+row_label_width <- 0.25
+row_label_top_margin <- 30
+row_label_bottom_margin <- 30
+row_label_left_margin <- 5
+row_label_right_margin <- 12
+
+column_gap_width <- 0.015
+header_height <- 0.16
+row_gap_height <- 0.0
+
+figure_width <- 18
+figure_height <- 8.5
+
+grid <- expand.grid(
+  i = lambda_list,
+  j = bias_list
+)
+
+case_specs <- list(
+  omniscient_feedback = list(
+    path = file.path(project_path, "AI_knows_all/Adv_feedback"),
+    prefix = "adv_feedback",
+    has_k = TRUE
+  ),
+  omniscient_niche = list(
+    path = file.path(project_path, "AI_knows_all/Adv_niche"),
+    prefix = "adv_niche",
+    has_k = TRUE
+  ),
+  chatbot_feedback = list(
+    path = file.path(project_path, "AI_answers_question/Adv_feedback"),
+    prefix = "adv_feedback",
+    has_k = FALSE
+  ),
+  chatbot_niche = list(
+    path = file.path(project_path, "AI_answers_question/Adv_niche"),
+    prefix = "adv_niche",
+    has_k = FALSE
+  )
+)
+
+read_stationary <- function(save_path, prefix, has_k) {
+  df <- bind_rows(lapply(seq_len(nrow(grid)), function(k) {
+    i <- grid$i[k]
+    j <- grid$j[k]
+    
+    if (has_k) {
+      filename <- sprintf(
+        paste0(prefix, "_k%02d_i%03d_j%f.RData"),
+        1, i, j
+      )
+    } else {
+      filename <- sprintf(
+        paste0(prefix, "_i%03d_j%f.RData"),
+        i, j
+      )
+    }
+    
+    env <- new.env()
+    load(file.path(save_path, filename), envir = env)
+    
+    result <- env$Result
+    
+    data.frame(
+      lambda = i,
+      bias_i = j,
+      Generation = seq_along(result$accuracy),
+      accuracy = result$accuracy,
+      median_AI_belief = result$median_AI_belief
+    )
+  }))
+  
+  df %>%
+    filter(Generation >= 190000, Generation <= 200000) %>%
+    group_by(lambda, bias_i) %>%
+    summarise(
+      accuracy = mean(accuracy),
+      median_AI_belief = mean(median_AI_belief),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      bias_i = factor(
+        bias_i,
+        levels = c(-0.4, -0.2, 0.2, 0.4),
+        labels = c("-0.4", "-0.2", "0.2", "0.4")
+      )
+    ) %>%
+    arrange(lambda, bias_i)
+}
+
+omniscient_feedback <- read_stationary(
+  case_specs$omniscient_feedback$path,
+  case_specs$omniscient_feedback$prefix,
+  case_specs$omniscient_feedback$has_k
+)
+
+omniscient_niche <- read_stationary(
+  case_specs$omniscient_niche$path,
+  case_specs$omniscient_niche$prefix,
+  case_specs$omniscient_niche$has_k
+)
+
+chatbot_feedback <- read_stationary(
+  case_specs$chatbot_feedback$path,
+  case_specs$chatbot_feedback$prefix,
+  case_specs$chatbot_feedback$has_k
+)
+
+chatbot_niche <- read_stationary(
+  case_specs$chatbot_niche$path,
+  case_specs$chatbot_niche$prefix,
+  case_specs$chatbot_niche$has_k
+)
+
+bias_colors <- c(
+  "-0.4" = "#00658d",
+  "-0.2" = "#008f7b",
+  "0.2" = "#5fab29",
+  "0.4" = "#ffa600"
+)
+
+bias_shapes <- c(
+  "-0.4" = 17,
+  "-0.2" = 15,
+  "0.2" = 16,
+  "0.4" = 18
+)
+
+x_scale <- scale_x_continuous(
+  breaks = c(-40, -20, 0, 20, 40)
+)
+
+single_theme <- theme_classic(
+  base_family = font_family
+) +
+  theme(
+    panel.border = element_rect(
+      color = "black",
+      fill = NA,
+      linewidth = panel_border_width
+    ),
+    aspect.ratio = panel_aspect_ratio,
+    axis.title.x = element_blank(),
+    axis.title.y = element_text(
+      size = y_title_size,
+      family = font_family
+    ),
+    axis.text = element_text(
+      size = axis_number_size,
+      color = "black",
+      family = font_family
+    ),
+    axis.ticks = element_line(
+      color = "black",
+      linewidth = 0.5
+    ),
+    legend.title = element_text(
+      size = legend_title_size,
+      family = font_family
+    ),
+    legend.text = element_text(
+      size = legend_text_size,
+      family = font_family
+    ),
+    legend.key.height = grid::unit(0.6, "cm"),
+    plot.margin = margin(
+      panel_top_margin,
+      panel_side_margin,
+      panel_bottom_margin,
+      panel_side_margin
+    )
+  )
+
+make_panel <- function(
+    data,
+    variable,
+    y_label,
+    panel_label,
+    y_range
+) {
+  y_span <- diff(y_range)
+  
+  lambda_y <- y_range[1] - y_span * lambda_offset
+  arrow_y <- lambda_y - y_span * lambda_arrow_gap
+  direction_text_y <- arrow_y - y_span * direction_text_offset
+  
+  ggplot(
+    data,
+    aes(
+      x = lambda,
+      y = .data[[variable]],
+      color = bias_i,
+      shape = bias_i,
+      group = bias_i
+    )
+  ) +
+    geom_vline(
+      xintercept = 0,
+      linetype = "dashed",
+      linewidth = 0.6
+    ) +
+    geom_line(linewidth = line_width) +
+    geom_point(size = point_size) +
+    annotate(
+      "text",
+      x = 0,
+      y = lambda_y,
+      label = "\u03bb",
+      size = x_title_size / ggplot2::.pt,
+      family = font_family,
+      color = "black"
+    ) +
+    annotate(
+      "segment",
+      x = arrow_start,
+      xend = arrow_end,
+      y = arrow_y,
+      yend = arrow_y,
+      linewidth = arrow_line_width,
+      color = "black",
+      arrow = grid::arrow(
+        ends = "both",
+        type = "closed",
+        length = grid::unit(arrow_head_length, "in")
+      )
+    ) +
+    annotate(
+      "text",
+      x = penalize_x,
+      y = direction_text_y,
+      label = "Penalize",
+      size = direction_text_size,
+      family = font_family,
+      color = "black"
+    ) +
+    annotate(
+      "text",
+      x = incentivize_x,
+      y = direction_text_y,
+      label = "Incentivize",
+      size = direction_text_size,
+      family = font_family,
+      color = "black"
+    ) +
+    annotate(
+      "text",
+      x = Inf,
+      y = -Inf,
+      label = panel_label,
+      hjust = 1.25,
+      vjust = -0.45,
+      size = panel_label_size,
+      fontface = "bold",
+      family = font_family,
+      color = "black"
+    ) +
+    scale_color_manual(
+      values = bias_colors,
+      name = "Bias"
+    ) +
+    scale_shape_manual(
+      values = bias_shapes,
+      name = "Bias"
+    ) +
+    x_scale +
+    coord_cartesian(
+      ylim = y_range,
+      clip = "off"
+    ) +
+    labs(
+      x = NULL,
+      y = y_label
+    ) +
+    single_theme
+}
+
+make_block <- function(data, panel_labels) {
+  p_accuracy <- make_panel(
+    data,
+    "accuracy",
+    "Collective accuracy",
+    panel_labels[1],
+    panel_y_ranges[[panel_labels[1]]]
+  )
+  
+  p_belief <- make_panel(
+    data,
+    "median_AI_belief",
+    "Median reliance on AI",
+    panel_labels[2],
+    panel_y_ranges[[panel_labels[2]]]
+  )
+  
+  p_accuracy | p_belief
+}
+
+make_header <- function(label) {
+  ggplot() +
+    annotate(
+      "text",
+      x = 0.5,
+      y = 0.5,
+      label = label,
+      size = header_text_size,
+      family = font_family,
+      fontface = "bold"
+    ) +
+    xlim(0, 1) +
+    ylim(0, 1) +
+    theme_void() +
+    theme(
+      panel.background = element_rect(
+        fill = "grey88",
+        color = NA
+      ),
+      plot.margin = margin(0, 18, 1, 18)
+    )
+}
+
+make_row_label <- function(label) {
+  ggplot() +
+    annotate(
+      "text",
+      x = 0.5,
+      y = 0.5,
+      label = label,
+      size = row_label_text_size,
+      family = font_family,
+      fontface = "bold",
+      lineheight = 0.9
+    ) +
+    xlim(0, 1) +
+    ylim(0, 1) +
+    theme_void() +
+    theme(
+      panel.background = element_rect(
+        fill = "grey88",
+        color = NA
+      ),
+      plot.margin = margin(
+        row_label_top_margin,
+        row_label_right_margin,
+        row_label_bottom_margin,
+        row_label_left_margin
+      )
+    )
+}
+
+block_omniscient_feedback <- make_block(
+  omniscient_feedback,
+  c("A", "B")
+)
+
+block_omniscient_niche <- make_block(
+  omniscient_niche,
+  c("C", "D")
+)
+
+block_chatbot_feedback <- make_block(
+  chatbot_feedback,
+  c("E", "F")
+)
+
+block_chatbot_niche <- make_block(
+  chatbot_niche,
+  c("G", "H")
+)
+
+feedback_header <- make_header("Feedback")
+niche_header <- make_header("Niche expert")
+
+omniscient_label <- make_row_label("Omniscient AI")
+chatbot_label <- make_row_label("Chatbot AI")
+
+layout_design <- "
+ABCD
+EFGH
+IIII
+JKLM
+"
+
+layout_widths <- c(
+  row_label_width,
+  1,
+  column_gap_width,
+  1
+)
+
+layout_heights <- c(
+  header_height,
+  1,
+  row_gap_height,
+  1
+)
+
+base_plot <- (
+  plot_spacer() +
+    feedback_header +
+    plot_spacer() +
+    niche_header +
+    omniscient_label +
+    block_omniscient_feedback +
+    plot_spacer() +
+    block_omniscient_niche +
+    plot_spacer() +
+    chatbot_label +
+    block_chatbot_feedback +
+    plot_spacer() +
+    block_chatbot_niche +
+    plot_layout(
+      design = layout_design,
+      widths = layout_widths,
+      heights = layout_heights,
+      guides = "collect"
+    )
+) +
+  plot_annotation(
+    theme = theme(
+      plot.background = element_rect(
+        fill = "white",
+        color = NA
+      ),
+      plot.margin = margin(0)
+    )
+  ) &
+  theme(
+    legend.position = "right"
+  )
+
+ggsave(
+  file.path(project_path, "Adv_all_cases.pdf"),
+  base_plot,
+  width = figure_width,
+  height = figure_height,
+  units = "in",
+  device = grDevices::cairo_pdf,
+  bg = "white"
+)
