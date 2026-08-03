@@ -159,12 +159,12 @@ Here, we assume each individual can independently consult AI and revise their pr
 
 To model AI, we consider a scenario where the group of players is given a novel prediction task, whereas the AI has an ability to perform prediction based on causal factors because it already been trained on similar tasks.
 Every time a player consults AI, it will make predictions $(Y_A^{AI})$  based on its internal parameters, which can include factor-specific bias $(b_i)$ and stochastic error $(\epsilon)$.
-We then consider two extreme modes of AI response, which differ in the amount of information AI uses when making predictions.
+We then consider two extreme types of AI response, which differ in the amount of information AI uses when making predictions.
 At one extreme, the AI operates with complete knowledge of all causal factors, using them regardless of the user’s interest:
 $Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$.
 At the other extreme, AI can work like a chatbot, in which AI predicts the outcome based only on the user's interest:
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
-Hereafter, we refer to these two modes as `Omniscient AI' and `Chatbot AI', respectively.
+Hereafter, we refer to these two types as `Omniscient AI' and `Chatbot AI', respectively.
 
 Each generation consists of multiple round of predictions, and each player is rewarded by a payoff according to the incentive structure.
 For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff rather than computing the payoff for each round.
@@ -248,6 +248,56 @@ These patterns are driven by the emergent property of the balanced structure, in
 
 
 \section*{Discussion}
+
+In this paper, we study how AI and incentive structures affect the emergence of CI. 
+Our model suggests that the effect of AI depends on the type of AI used by the group.
+AI that can incorporate all relevant causal factors may improve group performance, whereas AI that relies on users to gather information about the causal factors may impair it.
+By examining different variants of incentive structures, we further show that direct interventions targeting AI use generally harm group performance.
+Instead, we suggest balanced structure which can promote CI while also generating appropriately calibrated AI use as an emergent property.
+
+Although Omniscient AI can produce group performance that is equal to or better than that achieved without AI, such AI may be difficult to realize in practice because it needs to be able to observe causal factors independently.
+Achieving this capability would require hardwares, such as sensors, as well as autonomous data acquisition capabilities.
+For this reason, most AI services currently available are better represented by the Chatbot AI in our model, which highlights the potential risks of AI use for CI.
+
+In our model, individuals revise their predictions based on the AI’s assistance.
+It is therefore unsurprising that AI assistance reduces the diversity of individual predictions, a pattern that has also been observed empirically.
+However, a reduction in prediction diversity does not necessarily lead to the collapse of CI.
+The principal risk arises when the incentive structure fails to guide the group toward an appropriate set of strategies.
+
+Because AI already generates substantial benefits as well as costs, organizations increasingly seek to improve collective performance by regulating AI use.
+Such interventions may take direct forms, including AI-use policies or token-based leaderboards, or may operate indirectly through other incentives, such as productivity rewards or the social stigma associated with AI use.
+However, our model suggests that directly incentivizing or penalizing AI use is unlikely to induce appropriately calibrated reliance on AI or to promote CI.
+Incentivizing AI use may lead to overreliance, causing groups to propagate AI biases, whereas penalizing AI use may lead to underreliance, preventing groups from using AI even when it performs well in the relevant domain.
+Our results instead suggest that appropriate AI use and accurate CI can be promoted by focusing on the classic properties of groups that have been emphasized for decades—maintaining diversity and preventing collective bias—rather than on AI use itself.
+
+Limited level of counterfactual collective accuracy observed across AI types and incentive structures suggests that the presence of AI can degrade human group’s own performance.
+This may reduce collective performance when AI assistance becomes unavailable because of resource constraints, system failure, or model collapse, forcing the group to rebuild CI through further adaptation.
+The higher counterfactual collective accuracy achieved under the balanced structure indicates that an appropriate incentive structure can mitigate the risk of CI breakdown following the loss of AI assistance. 
+
+Our model and analysis have several limitations. 
+First, the model considers only social learning among humans and treats the influence of AI as unidirectional.
+In reality, humans can learn from AI, while AI systems can also be further trained on human-generated data.
+Such bidirectional adaptation may further reduce group performance by increasing the similarity between human and AI predictions and thereby weakening their complementarity. Empirical studies of human–AI collaboration likewise suggest that stronger correlations between human and AI predictions can diminish the benefits of collaboration.
+Second, we model AI errors using factor-specific additive biases and random noise.
+Previous studies of AI bias and error suggest that additive biases may arise from skewed training data, or systematic calibration.
+However, AI errors may also exhibit more complex structures, including biased estimates of factor effects and correlations across prediction errors.
+Further empirical research is therefore needed to characterize the structure of AI bias and error, together with modeling approaches that can incorporate these more complex patterns.
+Finally, to retain the tractability of established CI models, we assume that the prediction target is a linear combination of causal factors, which does not hold for many real-world tasks.
+In particular, many machine learning methods used in AI systems are capable of capturing nonlinear relationships. Future research should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.
+
+% Feedback structure leads to breakdown of CI because it recruits more players to more important factors, which has larger coefficient ($\alpha$). 
+% This charasteristic made a risk of interest diversity loss in finite population, the circumstance where no player is interested in some factors because most of the players move to relatively important factors.
+% Originally, this occurs when the initial individual prediction isn't diverse enough or there is no source of novel idea.
+% Revising individual prediction with AI drags the individuals toward the AI, which lead to less diverse predictions even with the same belief distribution.  
+% Niche-expert structure hinders CI because incentivizing individual performance makes the group become overly reliant on AI
+
+
+
+% AI can be considered as a source of correlations between individuals, which have been suggested as a mojor risk for the emergence of CI (cites). 
+% However, AI has a different charasterstics compare to classical source of correlation, which is the influence of other individuals, that AI has an ability to account causal factors to generate the prediction, and its performance can exceed individual performance.      
+
+
+
 
 \section*{Methods}
 
@@ -361,7 +411,7 @@ $\displaystyle \operatorname{Var}(Y - \hat{Y}^{\mathrm{revised}})$ &
 Variability of the revised collective prediction error across prediction events. \\
 \addlinespace
 
-Human accuracy &
+Counterfactual collective accuracy &
 $\displaystyle 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}$ &
 Accuracy of the human-only collective prediction relative to the baseline prediction $\alpha_0$. \\
 \addlinespace
@@ -371,9 +421,9 @@ $\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i \ln \rho_i\right)$ &
 Effective number of interests represented in the population. \\
 \addlinespace
 
-Median AI belief &
+Median reliance on AI &
 $\displaystyle \operatorname{median}_{A \in N}(\beta_A)$ &
-Median value of AI belief $\beta_A$ in the population. \\
+Median value of reliance on AI $\beta_A$ in the population. \\
 
 
 \bottomrule

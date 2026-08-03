@@ -275,7 +275,7 @@ library(dplyr)
 accuracy <- Result$accuracy
 median_AI_belief <- Result$median_AI_belief
 
-median_AI_belief[-1]
+median_AI_belief[900000]
 
 df <- data.frame(
   Generation = seq_along(accuracy),
