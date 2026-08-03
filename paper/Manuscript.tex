@@ -222,7 +222,7 @@ To investigate whether such direct incentives or penalties help emergence of CI,
 where $\lambda$ represent the strength of incentive ($\lambda > 0$) or penalty ($\lambda < 0$).
 
 Directly incentivizing or penalizing AI use further reduce the collective accuracy (Fig. 3C, E, G), except when Omniscient AI is used under the feedback structure (Fig. 3A).
-This is because incentivizing or penalizing AI usage pushes the population to always ($\beta = 1$) or never ($\beta = 0$) rely on AI, respectively (Fig. 3B, D, F, H).
+This is because incentivizing or penalizing AI usage pushes the group to always ($\beta = 1$) or never ($\beta = 0$) rely on AI, respectively (Fig. 3B, D, F, H).
 In some cases, when AI bias is relatively large and the penalty is weak, penalizing AI use can achieve higher collective accuracy than the original incentive structure.
 However, in most cases, penalizing AI use imposes strong selection against AI reliance, pushing the group toward lower stationary collective accuracy.
 Although the group with Chatbot AI under feedback structure shows stochastic breakdown of CI which doesn't result in stationary collective accuracy, incentivizing or penalizing AI use further strengthens the breakdown (Fig. 3E).
@@ -237,7 +237,7 @@ Here, we propose a ``balanced'' structure, defined as the simple average of the 
 Core idea behind the balanced structure is to maintain interest diversity while preventing the collective bias of the group.
 The feedback structure is prone to interest diversity loss, whereas can strongly prevent collective bias by incentivizing players whose predictions lie opposite to the collective prediction.
 By contrast, the niche-expert structure can maintain interest diversity because it directly incentivizes minority interests.
-However, it cannot prevent collective bias because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance, which homogenize the predictions. 
+However it cannot prevent collective bias because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance, which homogenize the predictions. 
 
 By integrating both structure, the balanced structure can promote accurate CI by maintaining both interest diversity and preventing collective bias (Fig. 4, S3).
 Compare to the feedback and niche-expert, players are both evenly distributed through factors, and beliefs are close to the real coefficient (Fig. 4).
@@ -263,14 +263,22 @@ In our model, individuals revise their predictions based on the AI’s assistanc
 It is therefore unsurprising that AI assistance reduces the diversity of individual predictions, a pattern that has also been observed empirically.
 However, a reduction in prediction diversity does not necessarily lead to the collapse of CI.
 The principal risk arises when the incentive structure fails to guide the group toward an appropriate set of strategies.
+The feedback structure leads to the breakdown of CI because it recruits more players to more important factors, which have larger coefficients. 
+This characteristic creates a risk of interest-diversity loss in finite populations, a situation in which no player remains interested in certain factors because most players shift toward relatively important factors.
+Without AI, this occurs when initial individual predictions are not sufficiently diverse or when there is no source of novel ideas, such as mutation.
+Revising individual predictions with AI assistance exacerbates this problem by pulling individuals’ predictions toward the AI’s prediction, thereby reducing prediction diversity even under the same belief distribution.
+The niche-expert structure hinders CI because it favors extreme levels of reliance on AI.
+Because individuals within each interest group are affected only by their own performance, incentives based on individual performance reach their maximum at either full reliance on AI or no reliance at all.
+This extreme reliance results in suboptimal collective accuracy or substantially delays the emergence of CI.
 
 Because AI already generates substantial benefits as well as costs, organizations increasingly seek to improve collective performance by regulating AI use.
 Such interventions may take direct forms, including AI-use policies or token-based leaderboards, or may operate indirectly through other incentives, such as productivity rewards or the social stigma associated with AI use.
 However, our model suggests that directly incentivizing or penalizing AI use is unlikely to induce appropriately calibrated reliance on AI or to promote CI.
-Incentivizing AI use may lead to overreliance, causing groups to propagate AI biases, whereas penalizing AI use may lead to underreliance, preventing groups from using AI even when it performs well in the relevant domain.
-Our results instead suggest that appropriate AI use and accurate CI can be promoted by focusing on the classic properties of groups that have been emphasized for decades—maintaining diversity and preventing collective bias—rather than on AI use itself.
+Incentivizing AI use could lead to overreliance, causing groups to propagate AI biases, whereas penalizing AI use could lead to underreliance, preventing groups from using AI even when it performs well in the relevant domain.
+Our result instead shows that appropriate AI use and accurate CI can be promoted by focusing on the classic properties of groups that have been emphasized for decades—maintaining diversity and preventing collective bias—rather than on AI use itself.
 
-Limited level of counterfactual collective accuracy observed across AI types and incentive structures suggests that the presence of AI can degrade human group’s own performance.
+
+The consistently limited counterfactual collective accuracy observed across AI types and incentive structures suggests that the presence of AI can degrade human group’s own performance, consistent with empirical evidence.
 This may reduce collective performance when AI assistance becomes unavailable because of resource constraints, system failure, or model collapse, forcing the group to rebuild CI through further adaptation.
 The higher counterfactual collective accuracy achieved under the balanced structure indicates that an appropriate incentive structure can mitigate the risk of CI breakdown following the loss of AI assistance. 
 
@@ -284,12 +292,6 @@ However, AI errors may also exhibit more complex structures, including biased es
 Further empirical research is therefore needed to characterize the structure of AI bias and error, together with modeling approaches that can incorporate these more complex patterns.
 Finally, to retain the tractability of established CI models, we assume that the prediction target is a linear combination of causal factors, which does not hold for many real-world tasks.
 In particular, many machine learning methods used in AI systems are capable of capturing nonlinear relationships. Future research should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.
-
-% Feedback structure leads to breakdown of CI because it recruits more players to more important factors, which has larger coefficient ($\alpha$). 
-% This charasteristic made a risk of interest diversity loss in finite population, the circumstance where no player is interested in some factors because most of the players move to relatively important factors.
-% Originally, this occurs when the initial individual prediction isn't diverse enough or there is no source of novel idea.
-% Revising individual prediction with AI drags the individuals toward the AI, which lead to less diverse predictions even with the same belief distribution.  
-% Niche-expert structure hinders CI because incentivizing individual performance makes the group become overly reliant on AI
 
 
 
