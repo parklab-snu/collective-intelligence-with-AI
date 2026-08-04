@@ -152,6 +152,14 @@ Across different assumptions about the AI model's ability and underlying incenti
 \section*{Main}
 \subsection*{Model}
 
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 1.pdf}
+\caption{
+\textbf{A schematic diagram of the model for individual and collective prediction in the presence of personalized AI assistance.}
+\swp{Need brief description.}
+}
+\end{figure}
+
 We begin by extending previously established models of CI in which a group of players participates in a prediction task, with each player making an individual prediction based on partial observations of the underlying causal factors and the group forming a collective prediction by aggregating these individual predictions \cite{hong2012incentives, mann2017optimal,wang2025individual}.
 The prediction target $(Y)$ is modeled as a linear combination of $M$ causal factors ($x_i$), with fixed coefficients ($\alpha_i$): $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution.
 Among $M$ different factors, an individual ($A$) makes prediction by the multiplication of single factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
@@ -182,6 +190,15 @@ This model now allows us to explore the impact of AI on CI depending on the mode
 Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate a better incentive structure that can promote CI in the presence of AI.
 
 \subsection*{AI can either promote or prevent the emergence of CI}
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 2.pdf}
+\caption{
+\textbf{Need caption.}
+\swp{Need brief description.}
+}
+\end{figure}
+
 To understand the impact of AI, we first compare collective dynamics with and without AI.
 We find that, except when Omniscient AI is used under the feedback structure, a group with AI fails to achieve accurate CI (Fig. 2).
 However, the effect of AI differs depending on the mode of AI.
@@ -214,6 +231,16 @@ These findings underscore the need for incentive structures that can mitigate th
 
 \subsection*{Directly incentivizing or penalizing AI use can additionally harm CI}
 
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 3.pdf}
+\caption{
+\textbf{Need caption.}
+\swp{Need brief description.}
+}
+\end{figure}
+
+
 Given the strong influence of AI on collective outcomes, a straightforward intervention is to directly incentivize or penalize the use of AI.
 To investigate whether such direct incentives or penalties help emergence of CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
 \begin{equation}
@@ -229,6 +256,15 @@ Although the group with Chatbot AI under feedback structure shows stochastic bre
 This result suggests that simply incentivizing or penalizing the AI use may exacerbate rather than resolving the problem of AI.
 
 \subsection*{Balanced incentives mitigate AI-induced failures of CI}
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 4.pdf}
+\caption{
+\textbf{Need caption.}
+\swp{Need brief description.}
+}
+\end{figure}
+
 Neither the original incentive structures nor simple interventions targeting AI use are sufficient to promote CI.
 What incentive structure, then, would work in the presence of AI?
 Focusing on the Chatbot AI, in which proposed incentive structures fail to promote accurate CI, we investigate whether a better structure can overcome the risks introduced by AI.
@@ -243,9 +279,6 @@ By integrating both structure, the balanced structure can promote accurate CI by
 Compare to the feedback and niche-expert, players are both evenly distributed through factors, and beliefs are close to the real coefficient (Fig. 4).
 Moreover, counterfactual collective accuracy maintained high compare to both feedback and niche-expert.
 These patterns are driven by the emergent property of the balanced structure, in which group increases its reliance on AI as the AI becomes more accurate, demonstrating appropriately calibrated AI use.
-
-
-
 
 \section*{Discussion}
 
@@ -432,14 +465,9 @@ Median value of reliance on AI $\beta_A$ in the population. \\
 \end{tabularx}
 \end{table}
 
-
 \section*{Data and code availability}
 
 All data are stored in a publicly available GitHub repository (\url{https://github.com/parklab-snu/collective-intelligence-with-AI}).
-
-\bibliography{references}
-
-\pagebreak
 
 \section*{Acknowledgements}
 
@@ -455,79 +483,62 @@ Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writi
 
 The authors declare no competing interests.
 
-\section*{Figures}
+\pagebreak
 
-\begin{figure}[!th]
-% \includegraphics[width=\textwidth]{../figure/figure1.pdf}
+\setcounter{figure}{0}
+\setcounter{equation}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+
+\section*{Supplementary Text}
+
+\pagebreak
+
+\section*{Supplementary Figure}
+
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 1.pdf}
 \caption{
-\textbf{Observed changes in RSV outbreak dynamics in Japan.}
-(A) Relative RSV cases across 47 prefectures in Japan between 2013 and 2024.
-Relative cases, representing the relative magnitude of RSV outbreaks in each prefecture compared to RSV outbreak sizes before the COVID-19 pandemic, are calculated by dividing the raw cases by the maximum value before the COVID-19 pandemic.
-The red arrow indicates when the shift in seasonality occurred.
-(B) Estimates of center of gravity (i.e., the mean timing of an epidemic) across 46 prefectures, excluding Okinawa.
-(C) Estimates of the epidemic trough (i.e., the minimum number of cases in a season divided by the population size) across 47 prefectures.
-In panels B and C, the center (horizontal line), lower bounds, and upper bounds of the box plot correspond to median, lower quartile (25th percentile), and upper quartile (75th percentile), respectively.
-The whiskers indicate the range of values that extend up to 1.5 times the interquartile range beyond the lower and upper quartiles.
-Outliers, which fall outside this range, are plotted individually. 
-(D) Time series of RSV cases across 5 major islands.
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig1}
 \end{figure}
 
-\begin{figure}[!th]
-% \includegraphics[width=\textwidth]{../figure/figure_comb_sirs_npi.pdf}
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 2.pdf}
 \caption{
-\textbf{Summary of SIRS model fits to RSV outbreaks across major islands in Japan.}
-(A) Comparisons of observed cases (points) across the five major islands and fitted epidemic trajectories (red lines).
-(B) Estimated periodic seasonal transmission rates.
-(C) Relationship between the estimated periodic seasonal transmission rates and mean specific humidity.
-Points represent seasonal transmission rate estimates across 52 weeks versus average humidity across 2013--2020.
-Blue lines and regions represent the corresponding locally estimated scatterplot smoothing (LOESS) estimates and corresponding 95\%  confidence intervals (n=52).
-Red lines and regions represent the corresponding quadratic regression fits and corresponding 95\% confidence intervals (n=52).
-(D) Estimated relative changes in transmission, capturing the impact of NPI measures.
-(E) Estimated proportion of the susceptible pool.
-In panels B, D, and E, lines represent the estimated median of the posterior distribution (n=8000 posterior samples).
-In panels B, D, and E, shaded regions represent the 95\% credible intervals from the posterior distribution (n=8000 posterior samples).
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig2}
 \end{figure}
 
+\pagebreak
 
-\begin{figure}[!th]
-\begin{center}
-% \includegraphics[width=0.9\textwidth]{../figure/figure_comb_sirs_change.pdf}
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 3.pdf}
 \caption{
-\textbf{An increase in the susceptible pool explains sudden changes in seasonality.}
-(A) Predicted effects of the proportion of infected $i(0)$ and susceptible $S(0)$ at the beginning of season on center of gravity.
-Points represent the estimated values for $i(0)$ and $s(0)$ between 2013 and 2019, showing the last two digits of a given year.
-The white vertical dashed line represents the $i(0)$ value used for simulating epidemic dynamics in panel B.
-(B) Changes in epidemic trajectories caused by an increase in the susceptible proportion at the beginning of season for a fixed value of $i(0)$.
-(C--F) Comparisons of interpolated transmission rates used for simulating the SIRS model, corresponding to each corner in Panel G. 
-Black lines represent the transmission rates used for simulations. 
-Gray lines represent the estimated transmission rates the Honshu island as a visual reference.
-(C) The estimated transmission rates for the Honshu island.
-(D) The resulting transmission rates for the Honshu island with equal amplitude as the Kyushu island.
-(E) The resulting transmission rates for the Kyushu island with equal amplitude as the Honshu island.
-(F) The estimated transmission rates for the Kyushu island.
-(G) Differences in peak epidemic timing when we increase the the susceptible proportion at the beginning of season from 7.8\% to 10.5\% using transmission patterns that interpolate the estimates for Honshu and Kyushu islands. 
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig3}
-\end{center}
 \end{figure}
 
-\begin{figure}[!th]
-% \includegraphics[width=\textwidth]{../figure/figure_childcare.pdf}
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 4.pdf}
 \caption{
-\textbf{Increase in the susceptible pool following the launch of the Comprehensive Support System for Children and Childcare in Japan.}
-(A) Direct comparisons between the estimates of susceptible proportion at the beginning of each season in each island (black) and the number of children attending childcare facilities in Japan (red).
-Points represent median from n=8000 posterior samples.
-Shaded regions represent the 95\% credible interval in our estimates (n=8000 posterior samples).
-(B) Correlations between the estimates of susceptible proportion at the beginning of each season in each island and the number of children attending childcare facilities in Japan.
-Points represent median from n=8000 posterior samples.
-Error bars represent the 95\% credible interval in our estimates (n=8000 posterior samples).
-Red lines and shaded regions represent the best fitting linear regression and the corresponding 95\% confidence intervals.
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig4}
 \end{figure}
+
+\pagebreak
+
+\bibliography{references}
+
 
 \end{document}
