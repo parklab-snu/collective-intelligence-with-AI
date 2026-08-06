@@ -131,57 +131,79 @@ We showed that, to promote collective intelligence, penalizing or incentivizing 
 
 Collective intelligence (CI) describes a phenomenon in which a group’s ability to solve problems, make decisions, or adapt to changing environments exceeds each member’s ability \cite{galton1907vox,woolley2010evidence,yaniv2007using,hommes2005coordination,lorge1958survey}.
 This phenomenon, also referred to as wisdom of crowds, has thus served as a central mechanism underlying the success of diverse organizations, ranging from animal groups \cite{dreyer2025comparing,simons2004many,berdahl2013emergent} and human societies \cite{woolley2010evidence, riedl2021quantifying} to machine-learning systems \cite{breiman1996bagging,breiman2001random}.
-Understanding the conditions that promote and  maintain CI therefore remains a fundamental question across social sciences \cite{mann2017optimal}, evolutionary biology \cite{wang2025individual}, and computer science \cite{werfel2026fluid}.
+Understanding the conditions that promote and maintain CI therefore remains a fundamental question across social sciences \cite{mann2017optimal}, evolutionary biology \cite{wang2025individual}, and computer science \cite{werfel2026fluid}.
 Addressing this question has become particularly timely as artificial intelligence (AI) has begun to reshape how individuals acquire information, make decisions, and contribute to collective outcomes \cite{cui2024ai}.
 
 The recent emergence of generative AIs and large language models (LLMs) has changed the way individuals engage in various cognitive tasks, ranging from simple everyday tasks to more complex tasks, including scientific discovery \cite{lu2026towards} and creative writing \cite{doshi2024generative}.
-In particular, while the use of personal AI models, such as ChatGPT, has been rapidly increasing \cite{sajadieh2026artificial}, the potential long-term impact of personal AI services on human society, especially the CI, remains uncertain.
+In particular, while the use of generative AI models, such as ChatGPT, has been rapidly increasing \cite{sajadieh2026artificial}, the potential long-term impact of personal AI assistants on human society, especially the CI, remains uncertain.
 Some argue that AI can promote CI by enhancing individual expertise \cite{vaccaro2024combinations}, and opinion aggregation \cite{burton2024large}.
 Conversely, empirical evidence indicate that the use of AIs can limit the diversity of opinions \cite{doshi2024generative,meincke2025chatgpt, fugener2021will}, a key requirement for the emergence of CI \cite{lorenz2011social,aplin2014individual,hong2004groups}.
 
-Our ability to predict the long-term impact of personal AI services on human CI is hampered by the apparent discrepancy in the incentives that shape AI uses.
+Our ability to predict the long-term impact of personal AI assistants on human CI is further hampered by the apparent discrepancy in the incentives that shape AI uses.
 On one hand, many industrial sectors are pushing towards increased AI usages, where the number of ``tokens'' used is often perceived as a proxy for productivity \cite{bousquette2026tokenmaxxing,keary2026cult}.
-On the other hand, many academic institutions appear to discourage, and even penalize, AI use, reflecting concerns about plagiarism, misinformation, and limited independnce \cite{chawla2026researchers,thorp2023chatgpt}.
+On the other hand, many academic institutions appear to discourage, and even penalize, AI uses, reflecting concerns about plagiarism, misinformation, and limited independnce \cite{chawla2026researchers,thorp2023chatgpt}.
 Such discrepancy raises a question about whether directly incentivizing or penalizing AI usage will benefit or harm human CI.
-These observations further highlight the importance of indentifying a robust incentive structure that can promote CI in the presence of AI, which can retain the benefits of AIs while preventing potential risk such as preserving the diversity of individual opinions.
+These observations further highlight the importance of indentifying a robust incentive structure that can promote CI in the presence of personal AI assistants.
+Such incentive structure should seek to retain the benefits of AIs and prevent potential risk, such as preserving the diversity of individual opinions.
 
 To address these questions, we extend previous approaches for modeling CI, where each individual makes independent predictions for the outcome from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
-We allow each individual to independently consult with personal AIs and revise their predictions accordingly.
-Across different assumptions about the AI model's ability and underlying incentive structures, we investigate the robustness of human CIs.
+In particular, we allow each individual to independently consult with personal AI assistants and revise their predictions accordingly.
+The resulting model allows us to investigate the robustness of human CIs under different assumptions about the AI model's ability to make predictions as well as incentive structures that are associated with the prediction task.
+In doing so, we assess the impact of directly incentivizing or penalizing AI uses on CI and further suggest a balanced incentive structure that can maintain CI in the presence of AI.
 
 \section*{Main}
 \subsection*{Model}
 
-We begin by extending previously established models of CI in which a group of players participates in a prediction task, with each player making an individual prediction based on partial observations of the underlying causal factors and the group forming a collective prediction by aggregating these individual predictions \cite{hong2012incentives, mann2017optimal,wang2025individual}.
-The prediction target $(Y)$ is modeled as a linear combination of $M$ causal factors ($x_i$), with fixed coefficients ($\alpha_i$): $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution.
-Among $M$ different factors, an individual ($A$) makes prediction by the multiplication of single factor of interest $(x_{e_A})$ and their own belief $(c_A)$: $Y_{A} = c_A x_{e_A}$.
-Here, we assume each individual can independently consult AI and revise their prediction based on their reliance on AI ($\beta_A$): $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$, and the revised prediction is aggregated to form collective prediction.
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 1.pdf}
+\caption{
+\textbf{A schematic diagram of the model for individual and collective prediction in the presence of personal AI assistants.}
+\swp{Need brief description.}
+}
+\end{figure}
 
-To model AI, we consider a scenario where the group of players is given a novel prediction task, whereas the AI has an ability to perform prediction based on causal factors because it already been trained on similar tasks.
-Every time a player consults AI, it will make predictions $(Y_A^{AI})$  based on its internal parameters, which can include factor-specific bias $(b_i)$ and stochastic error $(\epsilon)$.
-We then consider two extreme types of AI, which differ in the amount of information AI uses when making predictions.
-At one extreme, the AI operates with complete knowledge of all causal factors, using them regardless of the user’s interest:
+We begin by extending previously established models of CI, in which a group of players participates in a prediction task (Figure 1): each player makes an individual prediction based on partial observations of the underlying causal factors, and the group forms a collective prediction by aggregating these individual predictions \cite{hong2012incentives, mann2017optimal,wang2025individual}.
+Specifically, the prediction target $(Y)$ is modeled as a linear combination of $M$ causal factors $x_i$, with fixed coefficients $\alpha_i$: $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution (Figure 1A).
+Then, each individual $A$ observes a single factor of their interest $x_{e_A}$ and makes a prediction based on their own belief $c_A$: $Y_{A} = c_A x_{e_A}$ (Figure 1B).
+We assume each individual can then independently consult their AI assistants and revise their prediction based on their reliance on AI $\beta_A$: $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$ (Figure 1B).
+This revised prediction is aggregated to form collective prediction.
+\swp{I think we need to say averaging and clustering aggregation here?}
+
+To model AI, we assume that AI has already been trained on similar tasks and is able to make predictions based on partial or full observations of causal factors (Figure 1B).
+Every time a player consults AI, it will make a new prediction $Y_A^{AI}$ based on its internal parameters, which can include factor-specific bias $(b_i)$ and stochastic error $\epsilon$.
+Here, we consider two extreme types of AI response, which differ in the amount of information AI uses when making predictions.
+In one extreme, the AI can observe all causal factors and use all information to make predictions, regardless of the user’s interest:
 $Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$.
-At the other extreme, AI can work like a chatbot, in which AI predicts the outcome based only on the user's interest:
+In the other extreme, AI works like a chatbot, where the AI predicts the outcome based only on the user's interest:
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
 Hereafter, we refer to these two types as `Omniscient AI' and `Chatbot AI', respectively.
 
-Each generation consists of multiple round of predictions, and each player is rewarded by a payoff according to the incentive structure.
-For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff rather than computing the payoff for each round.
-We consider two incentive structures, ``feedback'' and ``niche-expert'' \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy in the absence of AI (except averaging aggregation with niche-expert structure).
-The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy.
-In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a underrepresented interest.
+Each generation consists of multiple round of predictions, and each player is rewarded a payoff according to the incentive structure (Figure 1C).
+For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff value rather than computing the payoffs for every round.
+We consider two incentive structures from previous work, ``feedback'' and ``niche-expert'', which have been shown to promote near-perfect collective accuracy in the absence of AI \cite{wang2025individual}.
+The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy. \swp{maybe we need equations...}
+In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest. \swp{maybe we need equations... but also say that this preserves diversity}
+We note collective intelligence fails to emerge under the combination of averaging aggregation with niche-expert structure in the absence of AI \cite{wang2025individual}.
 
-Through time, the group evolves by imitating the peers who receive higher payoffs.
-Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference between their expected payoffs.
-Individual predictions are aggregated into a collective prediction ($\hat{Y}$) by simple averaging when using Omniscient AI and by clustering when using Chatbot AI.
-Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction ($\alpha_0$).
+Through time, the group evolves by allowing each individual to imitate peers who have received higher payoffs (Figure 1C).
+Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (the factor of interest, factor belief, and reliance on AI) of the other with a probability determined by the difference in their expected payoffs.
+Individual predictions are aggregated into a collective prediction $\hat{Y}$ by simple averaging when using Omniscient AI and by clustering when using Chatbot AI.
+Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction $\alpha_0$.
 Hereafter, we refer to the near-perfect collective accuracy as accurate CI.
 
 This model now allows us to explore the impact of AI on CI depending on the mode of AI and the incentive structure.
 Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate a better incentive structure that can promote CI in the presence of AI.
 
 \subsection*{AI can either promote or prevent the emergence of CI}
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 2.pdf}
+\caption{
+\textbf{Need caption.}
+\swp{Need brief description.}
+}
+\end{figure}
+
 To understand the impact of AI, we first compare collective dynamics with and without AI.
 We find that, except when Omniscient AI is used under the feedback structure, a group with AI fails to achieve accurate CI (Fig. 2).
 However, the effect of AI differs depending on the type of AI.
@@ -214,6 +236,16 @@ These findings underscore the need for incentive structures that can mitigate th
 
 \subsection*{Directly incentivizing or penalizing AI use can additionally harm CI}
 
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 3.pdf}
+\caption{
+\textbf{Need caption.}
+\swp{Need brief description.}
+}
+\end{figure}
+
+
 Given the strong influence of AI on collective outcomes, a straightforward intervention is to directly incentivize or penalize the use of AI.
 To investigate whether such direct incentives or penalties help emergence of CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
 \begin{equation}
@@ -229,6 +261,15 @@ Although the group with Chatbot AI under feedback structure shows stochastic bre
 This result suggests that simply incentivizing or penalizing the AI use may exacerbate rather than resolving the problem of AI.
 
 \subsection*{Balanced incentives mitigate AI-induced failures of CI}
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 4.pdf}
+\caption{
+\textbf{Need caption.}
+\swp{Need brief description.}
+}
+\end{figure}
+
 Neither the original incentive structures nor simple interventions targeting AI use are sufficient to promote CI.
 What incentive structure, then, would work in the presence of AI?
 Focusing on the Chatbot AI, in which proposed incentive structures fail to promote accurate CI, we investigate whether a better structure can overcome the risks introduced by AI.
@@ -243,7 +284,6 @@ By integrating both structure, the balanced structure can promote accurate CI by
 Compare to the feedback and niche-expert, players are both evenly distributed through factors, and beliefs are close to the real coefficient (Fig. 4).
 Moreover, counterfactual collective accuracy maintained high compare to both feedback and niche-expert.
 These patterns are driven by the emergent property of the balanced structure, in which group increases its reliance on AI as the AI becomes more accurate, demonstrating appropriately calibrated AI use.
-
 
 \section*{Discussion}
 
@@ -471,14 +511,9 @@ Median reliance on AI in the population. \\
 \end{tabularx}
 \end{table}
 
-
 \section*{Data and code availability}
 
 All data are stored in a publicly available GitHub repository (\url{https://github.com/parklab-snu/collective-intelligence-with-AI}).
-
-\bibliography{references}
-
-\pagebreak
 
 \section*{Acknowledgements}
 
@@ -494,79 +529,62 @@ Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writi
 
 The authors declare no competing interests.
 
-\section*{Figures}
+\pagebreak
 
-\begin{figure}[!th]
-% \includegraphics[width=\textwidth]{../figure/figure1.pdf}
+\setcounter{figure}{0}
+\setcounter{equation}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+
+\section*{Supplementary Text}
+
+\pagebreak
+
+\section*{Supplementary Figure}
+
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 1.pdf}
 \caption{
-\textbf{Observed changes in RSV outbreak dynamics in Japan.}
-(A) Relative RSV cases across 47 prefectures in Japan between 2013 and 2024.
-Relative cases, representing the relative magnitude of RSV outbreaks in each prefecture compared to RSV outbreak sizes before the COVID-19 pandemic, are calculated by dividing the raw cases by the maximum value before the COVID-19 pandemic.
-The red arrow indicates when the shift in seasonality occurred.
-(B) Estimates of center of gravity (i.e., the mean timing of an epidemic) across 46 prefectures, excluding Okinawa.
-(C) Estimates of the epidemic trough (i.e., the minimum number of cases in a season divided by the population size) across 47 prefectures.
-In panels B and C, the center (horizontal line), lower bounds, and upper bounds of the box plot correspond to median, lower quartile (25th percentile), and upper quartile (75th percentile), respectively.
-The whiskers indicate the range of values that extend up to 1.5 times the interquartile range beyond the lower and upper quartiles.
-Outliers, which fall outside this range, are plotted individually. 
-(D) Time series of RSV cases across 5 major islands.
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig1}
 \end{figure}
 
-\begin{figure}[!th]
-% \includegraphics[width=\textwidth]{../figure/figure_comb_sirs_npi.pdf}
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 2.pdf}
 \caption{
-\textbf{Summary of SIRS model fits to RSV outbreaks across major islands in Japan.}
-(A) Comparisons of observed cases (points) across the five major islands and fitted epidemic trajectories (red lines).
-(B) Estimated periodic seasonal transmission rates.
-(C) Relationship between the estimated periodic seasonal transmission rates and mean specific humidity.
-Points represent seasonal transmission rate estimates across 52 weeks versus average humidity across 2013--2020.
-Blue lines and regions represent the corresponding locally estimated scatterplot smoothing (LOESS) estimates and corresponding 95\%  confidence intervals (n=52).
-Red lines and regions represent the corresponding quadratic regression fits and corresponding 95\% confidence intervals (n=52).
-(D) Estimated relative changes in transmission, capturing the impact of NPI measures.
-(E) Estimated proportion of the susceptible pool.
-In panels B, D, and E, lines represent the estimated median of the posterior distribution (n=8000 posterior samples).
-In panels B, D, and E, shaded regions represent the 95\% credible intervals from the posterior distribution (n=8000 posterior samples).
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig2}
 \end{figure}
 
+\pagebreak
 
-\begin{figure}[!th]
-\begin{center}
-% \includegraphics[width=0.9\textwidth]{../figure/figure_comb_sirs_change.pdf}
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 3.pdf}
 \caption{
-\textbf{An increase in the susceptible pool explains sudden changes in seasonality.}
-(A) Predicted effects of the proportion of infected $i(0)$ and susceptible $S(0)$ at the beginning of season on center of gravity.
-Points represent the estimated values for $i(0)$ and $s(0)$ between 2013 and 2019, showing the last two digits of a given year.
-The white vertical dashed line represents the $i(0)$ value used for simulating epidemic dynamics in panel B.
-(B) Changes in epidemic trajectories caused by an increase in the susceptible proportion at the beginning of season for a fixed value of $i(0)$.
-(C--F) Comparisons of interpolated transmission rates used for simulating the SIRS model, corresponding to each corner in Panel G. 
-Black lines represent the transmission rates used for simulations. 
-Gray lines represent the estimated transmission rates the Honshu island as a visual reference.
-(C) The estimated transmission rates for the Honshu island.
-(D) The resulting transmission rates for the Honshu island with equal amplitude as the Kyushu island.
-(E) The resulting transmission rates for the Kyushu island with equal amplitude as the Honshu island.
-(F) The estimated transmission rates for the Kyushu island.
-(G) Differences in peak epidemic timing when we increase the the susceptible proportion at the beginning of season from 7.8\% to 10.5\% using transmission patterns that interpolate the estimates for Honshu and Kyushu islands. 
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig3}
-\end{center}
 \end{figure}
 
-\begin{figure}[!th]
-% \includegraphics[width=\textwidth]{../figure/figure_childcare.pdf}
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 4.pdf}
 \caption{
-\textbf{Increase in the susceptible pool following the launch of the Comprehensive Support System for Children and Childcare in Japan.}
-(A) Direct comparisons between the estimates of susceptible proportion at the beginning of each season in each island (black) and the number of children attending childcare facilities in Japan (red).
-Points represent median from n=8000 posterior samples.
-Shaded regions represent the 95\% credible interval in our estimates (n=8000 posterior samples).
-(B) Correlations between the estimates of susceptible proportion at the beginning of each season in each island and the number of children attending childcare facilities in Japan.
-Points represent median from n=8000 posterior samples.
-Error bars represent the 95\% credible interval in our estimates (n=8000 posterior samples).
-Red lines and shaded regions represent the best fitting linear regression and the corresponding 95\% confidence intervals.
+\textbf{Caption.}
+Text.
 }
-\label{fig:fig4}
 \end{figure}
+
+\pagebreak
+
+\bibliography{references}
+
 
 \end{document}
