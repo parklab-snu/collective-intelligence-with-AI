@@ -159,7 +159,7 @@ Here, we assume each individual can independently consult AI and revise their pr
 
 To model AI, we consider a scenario where the group of players is given a novel prediction task, whereas the AI has an ability to perform prediction based on causal factors because it already been trained on similar tasks.
 Every time a player consults AI, it will make predictions $(Y_A^{AI})$  based on its internal parameters, which can include factor-specific bias $(b_i)$ and stochastic error $(\epsilon)$.
-We then consider two extreme types of AI response, which differ in the amount of information AI uses when making predictions.
+We then consider two extreme types of AI, which differ in the amount of information AI uses when making predictions.
 At one extreme, the AI operates with complete knowledge of all causal factors, using them regardless of the user’s interest:
 $Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon$.
 At the other extreme, AI can work like a chatbot, in which AI predicts the outcome based only on the user's interest:
@@ -170,7 +170,7 @@ Each generation consists of multiple round of predictions, and each player is re
 For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff rather than computing the payoff for each round.
 We consider two incentive structures, ``feedback'' and ``niche-expert'' \cite{wang2025individual}, which have been shown to promote near-perfect collective accuracy in the absence of AI (except averaging aggregation with niche-expert structure).
 The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy.
-In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest.
+In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a underrepresented interest.
 
 Through time, the group evolves by imitating the peers who receive higher payoffs.
 Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (factor of interest, belief, reliance on AI) of the other with a probability determined by the difference between their expected payoffs.
@@ -184,7 +184,7 @@ Here, we begin by comparing the emergence of CI with and without AI and subseque
 \subsection*{AI can either promote or prevent the emergence of CI}
 To understand the impact of AI, we first compare collective dynamics with and without AI.
 We find that, except when Omniscient AI is used under the feedback structure, a group with AI fails to achieve accurate CI (Fig. 2).
-However, the effect of AI differs depending on the mode of AI.
+However, the effect of AI differs depending on the type of AI.
 
 When Omniscient AI assists players, the group becomes equally or more accurate than the group without AI.
 Under the feedback structure, a group achieves accurate CI regardless of the assistance of AI (Fig. 2A).
@@ -245,8 +245,6 @@ Moreover, counterfactual collective accuracy maintained high compare to both fee
 These patterns are driven by the emergent property of the balanced structure, in which group increases its reliance on AI as the AI becomes more accurate, demonstrating appropriately calibrated AI use.
 
 
-
-
 \section*{Discussion}
 
 In this paper, we study how AI and incentive structures affect the emergence of CI. 
@@ -286,147 +284,188 @@ Our model and analysis have several limitations.
 First, the model considers only social learning among humans and treats the influence of AI as unidirectional.
 In reality, humans can learn from AI, while AI systems can also be further trained on human-generated data.
 Such bidirectional adaptation may further reduce group performance by increasing the similarity between human and AI predictions and thereby weakening their complementarity. Empirical studies of human–AI collaboration likewise suggest that stronger correlations between human and AI predictions can diminish the benefits of collaboration.
-Second, we model AI errors using factor-specific additive biases and random noise.
+Second, we model AI errors using factor-specific additive biases and random error.
 Previous studies of AI bias and error suggest that additive biases may arise from skewed training data, or systematic calibration.
 However, AI errors may also exhibit more complex structures, including biased estimates of factor effects and correlations across prediction errors.
 Further empirical research is therefore needed to characterize the structure of AI bias and error, together with modeling approaches that can incorporate these more complex patterns.
 Finally, to retain the tractability of established CI models, we assume that the prediction target is a linear combination of causal factors, which does not hold for many real-world tasks.
-In particular, many machine learning methods used in AI systems are capable of capturing nonlinear relationships. Future research should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.
-
-
-
-% AI can be considered as a source of correlations between individuals, which have been suggested as a mojor risk for the emergence of CI (cites). 
-% However, AI has a different charasterstics compare to classical source of correlation, which is the influence of other individuals, that AI has an ability to account causal factors to generate the prediction, and its performance can exceed individual performance.      
-
-
+In particular, many machine learning methods used in AI systems are capable of capturing nonlinear relationships. Future research should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.     
 
 
 \section*{Methods}
 
-To model CI, we start with an abstract model that assumes the prediction target is the result of multiple causal factors \cite{wang2025individual}.
-Specifically, the prediction target $Y$ is modeled as a linear combination of $M$ independent factors ($x_1, x_2, ..., x_m$) and $M+1$ coefficients ($\alpha_0, \alpha_1, ..., \alpha_m$), where $\alpha_0$ denotes the global offset (Fig. 1A).
-The $M$ factors are randomly drawn from normal distributions with mean $X_i$ and standard deviation $\sigma_i$ in each generation.
+\subsection*{Prediction target}
 
-Among a population of $N$ individuals, each individual can observe a single factor and make a prediction based on the observed value and their own belief.
-In particular, individual $A$'s prediction is modeled as:
+Following previous models of CI, we model the prediction target as a linear combination of $M$ independent causal factors:
 
 \begin{equation}
-Y_{A} = c_A x_{e_A}
+Y = \alpha_0 + \alpha_1 X_1 + \cdots + \alpha_M X_M,
 \end{equation}
 
-where $c_A$ represents individual $A$'s personal belief, $e_A$ represents the factor that $A$ observes (interest), and $x_{e_A}$ represents the realized value of $A$'s interest.
-Individuals can also choose not to observe any factor, which represents stubborn individuals who make predictions only based on their own belief.
-For notational convenience, we assume that stubborn individuals have interest $0$, and let $x_0$ always be 1.
+where the fixed coefficient $\alpha_i$ determines the magnitude and direction of the effect of factor $i$, and $\alpha_0$ is a global intercept. Each causal factor $X_i$ is modeled as an independent Gaussian random variable with mean zero and standard deviation $\sigma_i$.
 
-Next, we model AI as a prediction system that has learned the true coefficients with bias and error (Fig. 1B).
-For each factor $i \in [0, M]$, AI knows the exact coefficient $\alpha_i$ and has a fixed bias $b_i$, resulting in a prediction of $\alpha_i x_i + b_i$.
-In terms of human-AI interaction, we model two contrasting modes of AI: the “AI knows all” model and the “AI answers question” model.
-In the AI knows all model, AI acts as an omniscient system and gives an answer regardless of the individual’s interest, accounting for all factors related to the task.
-Thus, AI predicts as follows:
+
+\subsection*{Players}
+
+We consider a well-mixed population $N$ consisting of $n$ players engaged in a novel prediction task. In the absence of AI assistance, the strategy of player $A$ is characterized by two variables: interest $e_A$ and belief $c_A$. Player $A$ observes the causal factor $X_{e_A}$ and predicts the target by multiplying the observed factor value by their belief:
 
 \begin{equation}
-Y_{A}^{AI} = \sum_{i = 0}^{M}(\alpha_{i}x_{i} + b_{i}) + \epsilon
+Y_A = c_A X_{e_A},
 \end{equation}
 
-In contrast, the AI answers question model acts as a chatbot and gives an answer only based on the individual’s interest.
-Thus, given the individual’s interest, $e_A$, AI predicts as follows:
+where $e_A$ can take an integer value from 0 to $M$. When $e_A=0$, the player does not observe any causal factor and instead makes a constant prediction based solely on their belief. We refer to this as a stubborn strategy because the player's prediction does not respond to the realized values of the causal factors. For notational convenience, we assume that $X_0=1$.
+
+When the group is assisted by AI, each player's strategy additionally includes reliance on AI, denoted by $\beta_A$. We assume that each player consults the AI independently and revises their prediction by taking a weighted average of their own prediction and the AI-generated prediction:
 
 \begin{equation}
-Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon
+Y_A^{\mathrm{re}} = \beta_A Y_A^{\mathrm{AI}} + (1-\beta_A)Y_A,
 \end{equation}
 
-In both models, $\epsilon \sim N(0, \sigma_{e}^{2})$ represents random error arising from the stochastic generative process of the AI model.
+where $\beta_A$ ranges from 0 to 1. A value of $\beta_A=1$ indicates complete reliance on AI, whereas $\beta_A=0$ indicates that the player does not use the AI prediction.
 
-AI works as a personalized assistant for each individual, such that each individual receives assistance by incorporating the AI’s prediction.
-However, even with the same opportunity to receive AI assistance, reliance on AI can vary substantially across individuals.
-To model this, we assume that the revised prediction is a weighted sum of the individual’s own prediction and the AI’s prediction by introducing AI belief $\beta_A$ as a weighting coefficient.
-The revised prediction of individual $A$ can be written as:
+
+\subsection*{AI models}
+We assume that the AI model has been trained on similar tasks and is therefore capable of making predictions based on causal factors. However, because the model is imperfect, its outputs are subject to systematic additive bias and stochastic error. The additive bias associated with factor $i$ is denoted by $b_i$, and the stochastic error is denoted by $\epsilon$. The AI is neither trained nor updated during the simulation, and its biases therefore remain fixed throughout the simulation. Although the bias is indexed by factor, all $b_i$, including $b_0$, are assigned the same value in the main analyses for simplicity. The model formulation nevertheless allows biases to differ among factors.
+
+We assume that the stochastic error follows a Gaussian distribution with mean zero and standard deviation $\tau$. Each time a player consults the AI, an independent error is generated. Errors are therefore independent across players and across repeated consultations by the same player. Consequently, stochastic AI errors can be attenuated when independently generated predictions are aggregated across players. We therefore held $\tau$ constant and varied the magnitude of the additive bias to manipulate the level of AI accuracy across analyses.
+
+We consider two extreme types of AI that differ in the amount of information available for prediction. The first is termed the Omniscient AI, which can observe all $M$ causal factors and incorporate them into its prediction regardless of the user's interest. The prediction generated by the Omniscient AI for player $A$ is expressed as follows:
 
 \begin{equation}
-Y_{A}^{revised} = \beta_{A}Y_{A}^{AI} + (1 - \beta_{A})Y_{A}
+Y_A^{\mathrm{AI}} = \alpha_0 + b_0 + \alpha_1 X_1 + b_1 + \cdots + \alpha_M X_M + b_M + \epsilon.
 \end{equation}
 
-The revised predictions of individuals are aggregated by two different mechanisms, depending on the mode of AI.
-In the AI knows all model, even if an individual can observe only a single factor, their revised prediction contains information about all factors through interaction with AI.
-Therefore, we use simple averaging of revised predictions as the collective prediction.
-In contrast, in the AI answers question model, each individual gives a prediction based only on a single factor even after revising their prediction with AI assistance.
-Therefore, we use clustering aggregation to obtain the collective prediction, which is performed by clustering individuals based on interest and summing the average values of each cluster.
-
-For each generation, each individual is rewarded with a payoff based on the given incentive structure (Fig. 1C).
-We adopt two incentive structures, “feedback” and “niche expert,” which were proposed by Wang et al. \cite{wang2025individual} and promote collective intelligence when prediction is performed without AI.
-The feedback incentive gives higher payoff to individuals who can push the collective prediction toward the true value, regardless of their individual performance.
-Given individual $A$’s revised prediction $Y_{A}^{revised}$ and the collective prediction $\hat{Y}^{revised}$, it can be expressed as:
+The second is termed the Chatbot AI, which can use only the single causal factor $X_{e_A}$ associated with the player's interest. The prediction generated by the Chatbot AI for player $A$ is expressed as follows:
 
 \begin{equation}
-\pi_{A} = Y_{A}^{revised}(Y - \hat Y^{revised})
+Y_A^{\mathrm{AI}} = \alpha_{e_A} X_{e_A} + b_{e_A} + \epsilon.
 \end{equation}
 
-The niche expert incentive gives higher payoff to individuals who have both better individual performance and a minority interest.
-Specifically, the niche expert payoff is expressed as the product of the proportion of individuals who observe the same factor as individual $A$, $\rho_{e_A}$, and individual accuracy.
-Given individual $A$’s revised prediction $Y_{A}^{revised}$, it can be expressed as:
+
+\subsection*{Aggregation rules}
+
+The revised individual predictions are aggregated to form a collective prediction. We use two aggregation rules proposed in previous research, depending on the type of AI used by the group.
+
+When the group is assisted by the Omniscient AI, the AI component of each revised prediction contains information about all $M$ factors, even though the individual's own prediction is based on only one factor. Each revised prediction can therefore be treated as an estimate of the entire target. Accordingly, we calculate the collective prediction by taking the simple average of the revised individual predictions:
 
 \begin{equation}
-\pi_{A} = - \rho_{e_A}(Y_{A}^{revised} - Y)^2
+\hat{Y}^{\mathrm{re}} = \frac{Y_1^{\mathrm{re}} + Y_2^{\mathrm{re}} + \cdots + Y_n^{\mathrm{re}}}{n}.
 \end{equation}
 
-These two incentive structures were shown to achieve nearly perfect collective intelligence through social learning (except for the niche expert incentive with simple averaging aggregation) by promoting individual expertise while maintaining collective diversity.
-Therefore, we use these incentive structures as a baseline to understand how AI affects the emergence of collective intelligence.
-Moreover, we modify the two baseline incentives in a later section to understand the consequences of direct incentives and penalties for AI usage.
+When the group is assisted by the Chatbot AI, both the player's initial prediction and the AI's prediction are based on the same causal factor. Each revised prediction therefore contains information about only one factor and can be treated as an estimate of that factor's contribution to the target. We consequently use clustering aggregation.
 
-Throughout the simulation, individuals engage in social learning by imitating other individuals who receive higher payoffs.
-We assume that prediction events occur more frequently than social learning events within the population, such that individual payoff can be computed as an expected payoff.
-The imitation process is performed for at most one pair in each generation.
-By sampling two random individuals, $A$ and $B$, imitation is performed with probability:
+Clustering aggregation is performed by grouping individuals according to their interests and calculating the mean prediction within each group. The collective prediction is then obtained by summing the mean predictions of all nonempty groups:
 
 \begin{equation}
-\frac{1}{1 + \exp(s(\mathbb{E}[\pi_A] - \mathbb{E}[\pi_B]))}
+\hat{Y}^{\mathrm{re}} = \sum_{i:n_i>0} \frac{1}{n_i} \sum_{A\in\mathcal{A}_i} Y_A^{\mathrm{re}},
 \end{equation}
 
-where $s$ denotes the strength of social learning.
-When imitation occurs, $A$ imitates all three strategies of $B$: interest, belief, and AI belief.
+where $\mathcal{A}_i$ is the set of players interested in factor $i$, and $n_i=|\mathcal{A}_i|$ is the number of players in that set.
 
-To evaluate and analyze the dynamics of collective prediction, we define six summary metrics: collective accuracy, collective bias, collective variance, human accuracy, interest diversity, and median AI belief.
-These metrics capture the accuracy of the revised collective prediction, its bias–variance decomposition, the predictive performance without AI, the diversity of individual interests, and median AI belief in the population (Table 1).
+When the group is not assisted by AI, collective predictions are computed from the unrevised individual predictions throughout the simulation. Both simple averaging and clustering can be used in the absence of AI. For fair comparison, we use the same aggregation rule as in the corresponding AI-assisted condition.
+
+
+\subsection*{Incentive structures}
+
+Players receive payoffs determined by an incentive structure based on their strategies. We consider five incentive structures: feedback structure, niche-expert structure, direct intervention on AI use of these two structures, and a balanced structure.
+
+The feedback structure does not directly reward individuals according to their own prediction accuracy. Instead, it rewards predictions that are aligned with the residual error of the collective prediction and therefore have the potential to move the collective prediction toward the true value. Given player $A$'s revised prediction $Y_A^{\mathrm{re}}$ and the collective prediction $\hat{Y}^{\mathrm{re}}$, the payoff is expressed as
+
+\begin{equation}
+\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}).
+\end{equation}
+
+The niche-expert structure assigns higher payoffs to individuals who make accurate predictions while having an underrepresented interest. Specifically, the squared prediction error of player $A$ is weighted by $\rho_{e_A}=n_{e_A}/n$, the proportion of players interested in the same factor:
+
+\begin{equation}
+\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2.
+\end{equation}
+
+Previous research has shown that these two incentive structures can produce nearly perfect CI through social learning, except when the niche-expert incentive is combined with simple averaging. They are therefore used as baseline structures for examining how AI assistance affects the emergence of CI.
+
+To examine the effects of directly encouraging or discouraging AI use, we modify the feedback and niche-expert structures by adding a term proportional to the player's reliance on AI:
+
+\begin{equation}
+\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A.
+\end{equation}
+
+\begin{equation}
+\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A.
+\end{equation}
+
+Here, $\lambda$ is a weighting coefficient representing the strength of the direct incentive or penalty applied to AI use. A positive value of $\lambda$ rewards AI reliance, whereas a negative value penalizes it. When $\lambda=0$, no direct incentive or penalty is applied, and the payoff functions reduce to the original feedback and niche-expert structures.
+
+The balanced structure is defined as the arithmetic mean of the feedback and niche-expert payoff components:
+
+\begin{equation}
+\pi_A = \frac{Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - \rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2}{2}.
+\end{equation}
+
+
+\subsection*{Simulations}
+
+All simulations were conducted using an agent-based model with 50 causal factors ($M=50$) and 10,000 players ($n=10{,}000$). The parameters defining the prediction target were sampled at the beginning of the simulations and subsequently held fixed.
+
+The coefficients $\alpha_i$were sampled from a uniform distribution on $[-5,5]$, except in the simulation presented in Figure~4, in which $\alpha_i$ was set to $5-0.2i$ for visualization. The standard deviations $\sigma_i$ were sampled from a uniform distribution on $[0,3]$.
+
+Players' initial strategies were also sampled from predefined probability distributions. The distribution of individual belief $c_A$ depended on the aggregation rule. Under simple averaging, each factor's contribution is scaled by the proportion of players interested in that factor. We therefore sampled beliefs from a Gaussian distribution with mean zero and standard deviation 100, following the scaling used in previous work \cite{wang2025individual}. 
+Under clustering aggregation, beliefs were sampled from a Gaussian distribution with mean zero and standard deviation 5. Because predictions are averaged separately within each interest group and then summed, no additional scaling of $c_A$ is required. 
+The initial interest of each player was sampled uniformly from the integers between 0 and 50, and reliance on AI was sampled from a uniform distribution on $[0,1]$.
+
+We assumed that prediction events occurred on a substantially faster timescale than social learning. At each generation, we therefore calculated the expected payoff $\mathbb{E}[\pi_A]$ of each player analytically rather than explicitly sampling prediction events. The expectation was taken over the distributions of the causal factors $X_1,\ldots,X_M$ and the stochastic AI error $\epsilon$, conditional on the current population strategies and the fixed target parameters. Closed form expression of expected payoffs were derived for all incentive structures and are presented in the Supplementary Methods.
+
+Each generation consisted of an expected payoff calculation followed by one opportunity for pairwise social learning. Two distinct players, $A$ and $B$, were randomly sampled, and player $A$ imitated all three strategies of player $B$ with probability
+
+\begin{equation}
+\frac{1}{1+\exp\left(s\left(\mathbb{E}[\pi_A]-\mathbb{E}[\pi_B]\right)\right)},
+\end{equation}
+
+where $s$ represents the strength of social learning and was set to 50 in all simulations. We introduced a mutation rate $\mu$, such that with probability $\mu$, player $A$ did not imitate player $B$ but instead redrew all strategy components from the same distributions used to initialize the population. The mutation rate was set to zero in all simulations except those presented in Supplementary Figure~4.
+
+Unless otherwise specified, each simulation was run for 200,000 generations. When a result was represented by a single summary value rather than as a temporal trajectory, the metric was averaged over the final 10,000 generations.
+
+To evaluate the dynamics of collective prediction, we defined six summary metrics: collective accuracy, collective bias, collective variance, counterfactual collective accuracy, interest diversity, and median reliance on AI. At each population state, expectations and variances were evaluated analytically over the distributions of the causal factors and AI errors rather than estimated from sampled prediction events. Collective bias and collective variance constitute the bias--variance decomposition of the group level collective prediction error.
+
+Collective accuracy was normalized relative to the baseline prediction $\alpha_0$. A negative value indicates that the collective prediction performs worse than the baseline. Counterfactual collective accuracy was evaluated by setting $\beta_A=0$ while retaining the evolved interests and beliefs of the AI-assisted population. In calculating interest diversity, we used the convention that $\rho_i\ln\rho_i=0$ when $\rho_i=0$ (Table~\ref{tab:evaluation_metrics}).
 
 \begin{table}[htbp]
 \centering
 \caption{Evaluation metrics used to analyze collective prediction dynamics.}
 \label{tab:evaluation_metrics}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}L{0.23\textwidth} C{0.30\textwidth} Y@{}}
+\begin{tabularx}{\textwidth}{@{}L{0.28\textwidth} C{0.27\textwidth} Y@{}}
 \toprule
 Metric & Definition & Interpretation \\
 \midrule
 
 Collective accuracy &
-$\displaystyle 1 - \frac{\mathbb{E}[(Y - \hat{Y}^{\mathrm{revised}})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}$ &
+\(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
 Accuracy of the revised collective prediction relative to the baseline prediction $\alpha_0$. \\
 \addlinespace
 
 Collective bias &
-$\displaystyle \left(\mathbb{E}[Y - \hat{Y}^{\mathrm{revised}}]\right)^2$ &
-Squared systematic deviation of the revised collective prediction from the true value. \\
+\(\displaystyle \left(\mathbb{E}[Y-\hat{Y}^{\mathrm{re}}]\right)^2\) &
+Squared expected deviation of the revised collective prediction from the true target. \\
 \addlinespace
 
 Collective variance &
-$\displaystyle \operatorname{Var}(Y - \hat{Y}^{\mathrm{revised}})$ &
+\(\displaystyle \operatorname{Var}(Y-\hat{Y}^{\mathrm{re}})\) &
 Variability of the revised collective prediction error across prediction events. \\
 \addlinespace
 
 Counterfactual collective accuracy &
-$\displaystyle 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}$ &
-Accuracy of the human-only collective prediction relative to the baseline prediction $\alpha_0$. \\
+\(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
+Accuracy obtained after removing AI use from the current population while retaining its evolved interests and beliefs. \\
 \addlinespace
 
 Interest diversity &
-$\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i \ln \rho_i\right)$ &
+\(\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i\ln\rho_i\right)\) &
 Effective number of interests represented in the population. \\
 \addlinespace
 
 Median reliance on AI &
-$\displaystyle \operatorname{median}_{A \in N}(\beta_A)$ &
-Median value of reliance on AI $\beta_A$ in the population. \\
-
+\(\displaystyle \operatorname{median}_{A\in N}(\beta_A)\) &
+Median reliance on AI in the population. \\
 
 \bottomrule
 \end{tabularx}
