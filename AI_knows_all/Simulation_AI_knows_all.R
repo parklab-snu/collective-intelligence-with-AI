@@ -427,7 +427,7 @@ bias_i <- rep(0.4, m+1)
 bias <- sum(bias_i)
 
 # error
-AI_error_sd <- 0.3
+AI_error_sd <- 0.0
 
 alpha_AI <- alpha + bias_c
 denom <- sum((alpha[-1]*sigma[-1])^2)

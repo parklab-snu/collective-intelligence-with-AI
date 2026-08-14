@@ -728,7 +728,10 @@ cat("Accuracy:", AI_accuracy, "\n")
 
 lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda, mu = 0.00)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda, mu = 0.00)
+
+players <- Result$players_intime[1000,,]
+players[players[, 1] == 0, ]
 
 filename <- sprintf("AI_mu_0.00_bias0.4_error0.3.RData")
 filepath <- file.path(out_dir, filename)

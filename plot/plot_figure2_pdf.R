@@ -8,8 +8,8 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-int
 idx <- unique(c(seq(1, 200000, by = 100), 200000))
 
 trajectory_order <- c(
-  "Human-only CI",
-  "AI-assisted CI",
+  "Without AI",
+  "With AI",
   "Counterfactual human CI"
 )
 
@@ -19,8 +19,8 @@ incentive_order <- c(
 )
 
 trajectory_colors <- c(
-  "Human-only CI" = "#298C8C",
-  "AI-assisted CI" = "#A00000",
+  "Without AI" = "#298C8C",
+  "With AI" = "#A00000",
   "Counterfactual human CI" = "#A6A6A6"
 )
 
@@ -36,8 +36,8 @@ make_panel_data <- function(original_file, ai_file, ai_model, incentive) {
   
   data.frame(
     Generation = idx,
-    `Human-only CI` = original$accuracy[idx],
-    `AI-assisted CI` = ai$accuracy[idx],
+    `Without AI` = original$accuracy[idx],
+    `With AI` = ai$accuracy[idx],
     `Counterfactual human CI` = ai$human_accuracy[idx],
     check.names = FALSE
   ) %>%

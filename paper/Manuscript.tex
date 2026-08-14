@@ -37,6 +37,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
+\usepackage{mathtools}
 \usepackage[utf8]{inputenc} % make sure fancy dashes etc. don't get dropped
 
 \usepackage{booktabs}
@@ -158,7 +159,11 @@ In doing so, we assess the impact of directly incentivizing or penalizing AI use
 \includegraphics[width=\textwidth]{../Figures/Figure 1.pdf}
 \caption{
 \textbf{A schematic diagram of the model for individual and collective prediction in the presence of personal AI assistants.}
-\swp{Need brief description.}
+(A) The prediction target is modeled as a linear combination of causal factors.
+(B) Each player is characterized by three strategies: interest, belief, and reliance on AI.
+Players make predictions based on their interests and beliefs and subsequently revise them with AI assistance.
+We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the amount of information available for generating predictions.
+(C) Players receive payoffs according to the incentive structure, and the population evolves through imitation of peers with higher payoffs.
 }
 \end{figure}
 
@@ -199,8 +204,16 @@ Here, we begin by comparing the emergence of CI with and without AI and subseque
 \begin{figure}[!th]
 \includegraphics[width=\textwidth]{../Figures/Figure 2.pdf}
 \caption{
-\textbf{Need caption.}
-\swp{Need brief description.}
+\textbf{Comparision of collective accuracy with and without AI.} 
+Trajectories of collective accuracy when the group is assisted by Omniscient AI under the feedback structure (A), 
+by Omniscient AI under the niche-expert structure (B), 
+by Chatbot AI under the feedback structure (C), 
+and by Chatbot AI under the niche-expert structure (D).
+The green line represents the trajectory of collective accuracy without AI assistance, whereas the red line represents the trajectory with AI assistance.
+The gray line represents counterfactual collective accuracy, computed from players’ unrevised predictions while retaining the evolutionary trajectory of the group with AI assistance, indicating the group’s predictive accuracy if AI assistance were unavailable at the given generation.
+Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A, B), $c_A \sim \mathcal{N}(0, 5^2)$ for (C, D), and $\beta_A \sim U(0, 1)$. 
+AI parameters: $b_i = 0.36$ and $\tau = 0.3$.
 }
 \end{figure}
 
@@ -240,8 +253,16 @@ These findings underscore the need for incentive structures that can mitigate th
 \begin{figure}[!th]
 \includegraphics[width=\textwidth]{../Figures/Figure 3.pdf}
 \caption{
-\textbf{Need caption.}
-\swp{Need brief description.}
+\textbf{Effect of direct intervention on AI use.} 
+Collective accuracy and median reliance on AI under varying strengths of intervention ($\lambda$) applied to the incentive structure.
+Positive $\lambda$ represents an incentive for AI use, whereas negative $\lambda$ represents a penalty for AI use.
+In each panel, the vertical dashed line indicates the original incentive structure ($\lambda = 0$).
+(A, B) Omniscient AI under the modified feedback structure, (C, D) Omniscient AI under the modified niche-expert structure, (E, F) Chatbot AI under the modified feedback structure, and (G, H) Chatbot AI under the modified niche-expert structure.
+Four AI bias levels are shown: $b_i = \pm 0.2$, representing higher-accuracy AI, and $b_i = \pm 0.4$, representing lower-accuracy AI.
+Collective accuracy and median reliance on AI are averaged over generations 190,000--200,000.
+Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A--D), $c_A \sim \mathcal{N}(0, 5^2)$ for (E--H), and $\beta_A \sim U(0, 1)$. 
+AI parameter: $\tau = 0.3$.
 }
 \end{figure}
 
@@ -265,8 +286,13 @@ This result suggests that simply incentivizing or penalizing the AI use may exac
 \begin{figure}[!th]
 \includegraphics[width=\textwidth]{../Figures/Figure 4.pdf}
 \caption{
-\textbf{Need caption.}
-\swp{Need brief description.}
+\textbf{Balanced structure can promote collective intelligence} 
+Trajectories of collective accuracy (A) and counterfactual human CI (B) under three incentive structures (feedback, niche-expert, and balanced) with Chatbot AI.
+Distributions of individual interest and belief (C-E) and of interest and reliance on AI (F-H) after 200,000 generations. 
+Each point represents a player. The dashed lines in (C-E) represent the true coefficients ($\alpha_i$) of the prediction target, and the dashed horizontal lines in (F-H) indicate the median reliance on AI.
+Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i = 5 - 0.2i$, and $\sigma_i \sim U(0, 3)$. 
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
+AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
 }
 \end{figure}
 
@@ -347,7 +373,7 @@ where the fixed coefficient $\alpha_i$ determines the magnitude and direction of
 
 \subsection*{Players}
 
-We consider a well-mixed population $N$ consisting of $n$ players engaged in a novel prediction task. In the absence of AI assistance, the strategy of player $A$ is characterized by two variables: interest $e_A$ and belief $c_A$. Player $A$ observes the causal factor $X_{e_A}$ and predicts the target by multiplying the observed factor value by their belief:
+We consider a well-mixed population $\mathcal{N}$ consisting of $N$ players engaged in a novel prediction task. In the absence of AI assistance, the strategy of player $A$ is characterized by two variables: interest $e_A$ and belief $c_A$. Player $A$ observes the causal factor $X_{e_A}$ and predicts the target by multiplying the observed factor value by their belief:
 
 \begin{equation}
 Y_A = c_A X_{e_A},
@@ -389,7 +415,7 @@ The revised individual predictions are aggregated to form a collective predictio
 When the group is assisted by the Omniscient AI, the AI component of each revised prediction contains information about all $M$ factors, even though the individual's own prediction is based on only one factor. Each revised prediction can therefore be treated as an estimate of the entire target. Accordingly, we calculate the collective prediction by taking the simple average of the revised individual predictions:
 
 \begin{equation}
-\hat{Y}^{\mathrm{re}} = \frac{Y_1^{\mathrm{re}} + Y_2^{\mathrm{re}} + \cdots + Y_n^{\mathrm{re}}}{n}.
+\hat{Y}^{\mathrm{re}} = \frac{Y_1^{\mathrm{re}} + Y_2^{\mathrm{re}} + \cdots + Y_n^{\mathrm{re}}}{N}.
 \end{equation}
 
 When the group is assisted by the Chatbot AI, both the player's initial prediction and the AI's prediction are based on the same causal factor. Each revised prediction therefore contains information about only one factor and can be treated as an estimate of that factor's contribution to the target. We consequently use clustering aggregation.
@@ -538,6 +564,511 @@ The authors declare no competing interests.
 \renewcommand{\thetable}{S\arabic{table}}
 
 \section*{Supplementary Text}
+
+\section{Omniscient AI}
+Omniscient AI assumes that AI can incorporate all causal factors regardless of the player's interest.
+
+\subsection{Model}
+
+
+\begin{equation}
+Y_A^{\mathrm{AI}} = \alpha_0 + b_0 + \alpha_1 X_1 + b_1 + \cdots + \alpha_M X_M + b_M + \epsilon.
+\end{equation}
+
+For simplicity, prediction of Omniscient AI can be written as:
+
+\begin{equation}
+Y^{AI} = Y + B + \epsilon
+\end{equation}
+
+where $Y$ stands for true prediction target ($Y = \alpha_0 + \alpha_1 X_1 + \cdots + \alpha_M X_M$) and $B$ is sum of all fixed baises ($B = b_0 + b_1 + \cdots + b_M$), $\epsilon$ follows normal distribution with zero mean, $\tau$ standard deviation with no correlation within or between players. Player A's prediction and revised prediction can be written as follows:
+
+\begin{equation}
+Y_A = c_A X_{e_A}
+\end{equation}
+\begin{equation}
+Y_A^{re} = \beta_A Y^{AI} + (1-\beta_A)Y_A
+\end{equation}
+where $c_A$ stands for player A's belief on the factor, $e_A$ stands for the interest, and $\beta_A$ stands for reliance on AI.
+
+\subsection{Aggregation}
+Because $Y_A^{AI}$ is subject to all $M$ factors, we use simple averaging aggregation for collective prediction.
+
+\begin{align*}
+\hat{Y}^{re}
+&= \frac{1}{N}\sum_{j = 1}^N Y_j^{re}\\
+&= \frac{1}{N}\sum_{j = 1}^N\left\{\beta_jY^{AI} + (1-\beta_j)Y_j\right\}\\
+&= \frac{1}{N}\sum_{j = 1}^N\left\{\beta_j(Y + B + \epsilon) + (1 - \beta_A)c_jX_{e_j}\right\}
+\end{align*}
+Reparameterization for simple derivation and interpretability.
+\begin{equation}
+\bar{\beta} \coloneqq \frac{1}{N}\sum_{j = 1}^{N} \beta_j
+\end{equation}
+\begin{equation}
+\bar{\eta} \coloneqq \frac{1}{N}\sum_{j = 1}^{N} \beta_i\epsilon
+\label{eta}
+\end{equation}
+\begin{equation}
+\gamma_i \coloneqq \frac{1}{N}\sum_{A \in \mathcal{A}_i}(1-\beta_A)c_A
+\end{equation}
+$\bar{\beta}$ can be interpreted as mean reliance on AI, $\gamma$ stands for the coefficient for the factor $i$ which is solely based on players' belief. \\
+By this reparameterization, we can write $\hat{Y}^{re}$ as follows.
+\begin{equation}
+\hat{Y}^{re} = \bar{\beta}(Y + B) + \sum_{i = 0}^{M}\gamma_iX_i + \bar{\eta}
+\end{equation}
+
+\subsection{Expected payoffs}
+
+\subsubsection*{Feedback}
+\begin{equation}
+\delta_0 \coloneqq \alpha_0- (\bar{\beta}(\alpha_0 + B) + \gamma_0)
+\end{equation}
+\begin{equation}
+\delta_i \coloneqq \alpha_i- (\bar{\beta}\alpha_i + \gamma_i), \qquad (i \neq 0)
+\end{equation}
+\begin{equation}
+Y - \hat{Y}^{re} = \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}
+\end{equation}
+See equation Eq.~\eqref{eta} for the $\bar{\eta}$.\\
+$\delta_0$ is constant term and $\delta_i$ is independent of $\alpha_k$ $(k\neq i)$, $\epsilon$, and $\bar{\eta}$.
+\begin{align*}
+\mathbb{E}(\pi_A)
+&= \mathbb{E}[Y_A^{re}(Y - \hat{Y}^{re})] \\
+&= \mathbb{E}\left[\left\{\beta_A \alpha_0 + \beta_A \sum_{i = 1}^{M} \alpha_i X_i + \beta_A B  + \beta_A \epsilon) + (1 - \beta_A)c_AX_{e_A}\right\}\left\{\delta_0 + \sum_{i = 1}^{m}\delta_iX_i - \bar{\eta}\right\}\right] \\
+&= \beta_A\alpha_0\delta_0 + \beta_A\sum_{i = 1}^{M}\delta_i\alpha_i\sigma_i^2 + \beta_AB\delta_0 - \frac{1}{N}\beta_A^2\tau^2 + (1-\beta_A)c_A\delta_{e_A}\sigma_{e_A}^2\\
+&= \beta_A\left\{(\alpha_0+B)\delta_0 + \sum_{i = 1}^{M}\alpha_i\delta_i\sigma_i^2\right\} + (1-\beta_A)c_A\delta_{e_A}\sigma_{e_A}^2 - \frac{\beta_A^2\tau^2}{N}
+\end{align*}
+
+\subsubsection*{Niche-expert}
+
+If $e_A = 0$, player does not observe causal facor and their unrevised prediction is same with their belief $c_A$. Such that, the expected payoff is
+\begin{align*}
+\mathbb{E}(\pi_A)
+&= -\mathbb{E}[\rho_{0}(Y_A^{re} - Y)^2] \\
+&= -\mathbb{E}\left[\rho_{0}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A \right\}^2\right] \\[6pt]
+&= -\mathbb{E}\left[\rho_{0}\left\{(\beta_A - 1)(\alpha_0- c_A) + \beta_A B + (\beta_A - 1)\sum_{i=1}^{M} \alpha_i X_i + \beta_A \epsilon\right\}^2\right] \\[6pt]
+&= -\rho_{0}\Bigl\{(1-\beta_A)^2(\alpha_0 - c_A)^2 - 2\beta_A(1-\beta_A)(\alpha_0 - c_A) B + \beta_A^2 B^2\\
+&\qquad + (1-\beta_A)^2\sum_{i \neq 0}\alpha_i^2\sigma_i^2  + \beta_A^2\tau^2\Bigr\}
+\end{align*}
+Else,
+\begin{align*}
+\mathbb{E}(\pi_A)
+&= -\mathbb{E}[\rho_{e_A}(Y_A^{re} - Y)^2] \\
+&= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A X_{e_A} \right\}^2\right] \\[6pt]
+&= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A -1 )\alpha_0 + \beta_A B + + (\beta_A - 1)(\alpha_{eA} - c_A) X_{e_A} + (\beta_A - 1)\sum_{i \neq e_A, 0} \alpha_i X_i + \beta_A \epsilon\right\}^2\right] \\[6pt]
+&= -\rho_{e_A}\Bigl\{ (1-\beta_A)^2\alpha_0^2 - 2\beta_A(1-\beta_A)\alpha_0 B + \beta_A^2 B^2  + (1-\beta_A)^2(\alpha_{eA} - c_A)^2\sigma_{e_A}^2 \\
+&\qquad + (1-\beta_A)^2\sum_{i \neq e_A, 0}\alpha_i^2\sigma_i^2 + \beta_A^2\tau^2\Bigr\}
+\end{align*}
+
+\subsubsection*{Incentivizing or penalizing AI use}
+Because additive term $\lambda\beta$ is not a random variable, we can simply derive the expected payoff as
+
+\begin{equation}
+\mathbb{E}(\pi_{A, Feedback})=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A.
+\end{equation}
+
+\begin{equation}
+\mathbb{E}(\pi_{A, Niche-expert}) = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
+\end{equation}
+
+\subsection{Expected accuracy}
+\begin{equation}
+\mathbb{E}[(Y - \alpha_0)^2] = \mathbb{E}\left[\left(\alpha_0 +\sum_{i = 1}^{M}\alpha_iX_i - \alpha_0\right)^2\right] = \sum_{i = 1}^{M}\alpha_i^2\sigma_i^2
+\end{equation}
+\begin{equation}
+\mathbb{E}[(Y - \hat{Y}^{re})^2] = \mathbb{E}\left[\left(\delta_0 +\sum_{i = 1}^{M}\delta_iX_i - \hat{\eta}\right)^2\right] = \delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \frac{\tau^2}{N^2}\sum_{j = 1}^{N}\beta_j^2
+\end{equation}
+\begin{align*}
+R
+&= 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}\\[6pt]
+&= 1- \frac{\delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \frac{\tau^2}{N^2}\sum_{j = 1}^{N}\beta_j^2}{\sum_{i = 1}^{M}\alpha_i^2\sigma_i^2}
+\end{align*}
+
+\section{Chatbot AI}
+\subsection{Model}
+\begin{equation}
+Y_A^{AI} = \alpha_{e_A}X_{e_A} + b_{e_A} +\epsilon
+\end{equation}
+$b_{eA}$ stands for factor specific additive bias, $\epsilon$ follows normal distribution with zero mean, $\tau$ standard deviation with no correlation within or between players. Player A's prediction and revised prediction can be written as follows:
+\begin{equation}
+Y_A = c_AX_{e_A}
+\end{equation}
+\begin{equation}
+Y_A^{re} = \beta_AY_A^{AI} + (1-\beta_A)Y_A
+\end{equation}
+where $c_A$ stands for player A's belief on the factor, $e_A$ stands for the interest, and $\beta_A$ stands for reliance on AI.
+
+\subsection{Aggregation}
+For Chatbot AI, clustering aggregation is used for collective prediction.
+\begin{align*}
+\hat{Y}^{re}
+&= \sum_{i = 0}^{M}\frac{1}{n_i}\sum_{A \in \mathcal{A}_i}Y_A^{re}\\
+&= \sum_{i = 0}^{M}\frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left\{\beta_AY_A^{AI} + (1-\beta_A)Y_A\right\}\\
+&= \sum_{i = 0}^{M}\frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left[\left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\}X_{e_A} + \beta_Ab_{e_A} + \beta_A\epsilon\right]
+\end{align*}
+Reparameterize for the simplicity.
+\begin{equation}
+\tilde{c}_i \coloneqq \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\}
+\end{equation}
+\begin{equation}
+\tilde{B}_i \coloneqq \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_Ab_{e_A}
+\end{equation}
+\begin{equation}
+\bar{B} \coloneqq \sum_{i = 0}^{M}\tilde{B}_i
+\end{equation}
+\begin{equation}
+\tilde{\eta}_i \coloneqq \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_A\epsilon
+\end{equation}
+\begin{equation}
+\bar{\eta} \coloneqq \sum_{i = 0}^{M}\tilde{\eta}_i
+\end{equation}
+
+\subsection{Expected payoffs}
+\subsubsection*{Feedback}
+\begin{equation}
+\delta_0 \coloneqq \alpha_0 - \tilde{c}_0 - \bar{B}
+\end{equation}
+\begin{equation}
+\delta_i \coloneqq \alpha_i - \tilde{c}_i, \qquad (i\neq 0)
+\end{equation}
+\begin{equation}
+Y - \hat{Y}^{re} = \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}
+\end{equation}
+$\delta_0$ is constant term and $\delta_i$ is independent of $\alpha_k$ $(k\neq i)$, $\epsilon$, and $\bar{\eta}$.
+\begin{align*}
+\mathbb{E}(\pi_A)
+&= \mathbb{E}[Y_A^{re}(Y - \hat{Y}^{re})] \\
+&= \mathbb{E}\left[\left\{\left(\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right)X_{e_A} + \beta_Ab_{e_A} + \beta_A\epsilon\right\}\left\{\delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}\right\}\right] \\
+&= \left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\}\delta_{e_A}\sigma_{e_A}^2 + \beta_Ab_{e_A}\delta_0 - \frac{1}{n_{e_A}}\beta_A^2\tau^2
+\end{align*}
+
+\subsubsection*{Niche-expert}
+If $e_A = 0$,
+\begin{align*}
+\mathbb{E}(\pi_A)
+&= -\mathbb{E}[\rho_{0}(Y_A^{re} - Y)^2] \\
+&= -\mathbb{E}\left[\rho_{0}\left[\left\{\beta_A\alpha_0 + (1-\beta_A)c_A\right\} + \beta_Ab_0 + \beta_A\epsilon - \alpha_0 - \sum_{i = 1}^{M}\alpha_iX_i\right]^2\right] \\[6pt]
+&= -\rho_{0}\Bigl\{(1-\beta_A)^2(c_A - \alpha_0)^2 + 2(1-\beta_A)(c_A - \alpha_0)\beta_Ab_0 + \beta_A^2 b_0^2 \\
+&\qquad + \sum_{i \neq 0}\alpha_i^2\sigma_i^2 + \beta_A^2\tau^2\Bigr\}
+\end{align*}
+Else,
+\begin{align*}
+\mathbb{E}(\pi_A)
+&= -\mathbb{E}[\rho_{e_A}(Y_A^{re} - Y)^2] \\
+&= -\mathbb{E}\left[\rho_{e_A}\left[\left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\} X_{e_A} + \beta_Ab_{e_A} + \beta_A\epsilon - \alpha_0 - \sum_{i = 1}^{M}\alpha_iX_i\right]^2\right] \\[6pt]
+&= -\rho_{e_A}\Bigl\{(1-\beta_A)^2(c_A - \alpha_{e_A})^2\sigma_{e_A}^2 + \sum_{i \neq e_A, 0}\alpha_i^2\sigma_i^2 \\
+&\qquad + \alpha_0^2 + \beta_A^2 b_{e_A}^2 - 2\alpha_0\beta_Ab_{e_A} + \beta_A^2\tau^2\Bigr\}
+\end{align*}
+
+\subsubsection*{Incentivizing or penalizing AI use}
+Because additive term $\lambda\beta$ is not a random variable, we can simply derive the expected payoff as
+
+\begin{equation}
+\mathbb{E}(\pi_{A, Feedback})=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A.
+\end{equation}
+
+\begin{equation}
+\mathbb{E}(\pi_{A, Niche-expert}) = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
+\end{equation}
+
+\subsubsection*{Balanced}
+Expected payoff of the balanced structure can also be driven by arithmetic mean of expected payoff of feedback and niche-expert.
+
+\begin{equation}
+\mathbb{E}(\pi_{A})=\mathbb{E}\left[\frac{Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - \rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2}{2}\right] = \frac{\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] - \mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]}{2}
+\end{equation}
+
+\subsection{Expected accuracy}
+\begin{equation}
+\mathbb{E}[(Y - \alpha_0)^2] = \mathbb{E}\left[\left(\alpha_0 +\sum_{i = 1}^{M}\alpha_iX_i - \alpha_0\right)^2\right] = \sum_{i = 1}^{M}\alpha_i^2\sigma_i^2
+\end{equation}
+\begin{equation}
+\mathbb{E}[(Y - \hat{Y})^2] = \mathbb{E}\left[\left(\delta_0 +\sum_{i = 1}^{M}\delta_iX_i - \hat{\eta}\right)^2\right] = \delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \sum_{i = 0}^{M}\frac{\tau^2}{n_i^2}\sum_{A \in \mathcal{A}_i}\beta_A^2
+\end{equation}
+\begin{align*}
+R
+&= 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}\\[6pt]
+&= 1- \frac{\delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \sum_{i = 0}^{M}\frac{\tau^2}{n_i^2}\sum_{A \in \mathcal{A}_i}\beta_A^2}{\sum_{i = 1}^{M}\alpha_i^2\sigma_i^2}
+\end{align*}
+
+\section{Evolutionary dynamics}
+
+For sufficiently large population ($N \to \infty$), we can approximate the deterministic evolutionary dynamics using the replicator equation.
+Let $\lambda$ denote a strategy, $p_\lambda$ its frequency, and $u_\lambda=\mathbb{E}(\pi_\lambda)$ its expected payoff.
+The replicator equation is
+
+\begin{equation}
+\frac{dp_\lambda}{dt} = p_\lambda(u_\lambda-\bar{u}),
+\end{equation}
+
+where $\bar{u}=\sum_\lambda p_\lambda u_\lambda$.
+Therefore, at an internal stationary state, all strategies with positive frequency have the same expected payoff.
+A boundary state can also be stationary because a strategy with exactly zero frequency cannot increase under the replicator equation.
+Thus, stability of a boundary state needs to be considered separately by examining invasion by a rare strategy.
+
+\subsection{Omniscient AI}
+
+\subsubsection{Feedback}
+When the population size approaches infinity, the effect of stochastic error on the collective prediction vanishes ($\bar{\eta}\to0$) and the effect of stochastic error in the expected payoff, $-\beta^2\tau^2/N$, also vanishes.
+Following prior research \cite{wang2025individual}, we define the Lyapunov function as the expected error of collective prediction
+
+\begin{equation}
+V = \mathbb{E}\left[(Y-\hat{Y}^{re})^2\right].
+\end{equation}
+
+The function $V$ is non-negative and equals zero when the collective prediction is identical to the target.
+To examine how $V$ changes under the evolutionary dynamics, we take its time derivative:
+
+\begin{align*}
+\frac{dV}{dt}
+&= -2\mathbb{E}\left[(Y-\hat{Y}^{re})\frac{d\hat{Y}^{re}}{dt}\right] \\
+&= -2\mathbb{E}\left[(\delta_0+\sum_{i=1}^{M}\delta_iX_i)
+\left\{\frac{d\bar{\beta}}{dt}(Y+B)+\sum_{i=0}^{M}\frac{d\gamma_i}{dt}X_i\right\}\right] \\
+&= -2\left[\left\{(\alpha_0+B)\delta_0+\sum_{i=1}^{M}\alpha_i\delta_i\sigma_i^2\right\}\frac{d\bar{\beta}}{dt}
++\delta_0\frac{d\gamma_0}{dt}
++\sum_{i=1}^{M}\delta_i\sigma_i^2\frac{d\gamma_i}{dt}\right].
+\end{align*}
+For notational convenience, we define
+\begin{equation}
+K = (\alpha_0+B)\delta_0+\sum_{i=1}^{M}\alpha_i\delta_i\sigma_i^2.
+\end{equation}
+Although $K$ changes with the population state, it is common to all strategies at a given state and can therefore be treated as a constant with respect to the strategy index $\lambda$.
+We also define
+\begin{equation}
+G_e =
+\begin{cases}
+\delta_0, & e=0,\\
+\delta_e\sigma_e^2, & e\neq0.
+\end{cases}
+\end{equation}
+
+By the definitions of $\bar{\beta}$ and $\gamma_i$ and the replicator equation,
+\begin{equation}
+\frac{d\bar{\beta}}{dt} = \sum_\lambda p_\lambda(u_\lambda-\bar{u})\beta_\lambda = Cov(\beta,u).
+\end{equation}
+Similarly, the terms involving $\gamma_i$ can be combined as
+\begin{equation}
+\delta_0\frac{d\gamma_0}{dt} + \sum_{i=1}^{M}\delta_i\sigma_i^2\frac{d\gamma_i}{dt}
+= Cov((1-\beta)cG_e,u).
+\end{equation}
+Therefore,
+\begin{align*}
+\frac{dV}{dt}
+&= -2\left\{KCov(\beta,u)+Cov((1-\beta)cG_e,u)\right\} \\
+&= -2Cov(K\beta+(1-\beta)cG_e,u).
+\end{align*}
+
+For the feedback structure in the limit $N\to\infty$, the expected payoff of strategy $\lambda$ is
+
+\begin{equation}
+u_\lambda = K\beta_\lambda+(1-\beta_\lambda)c_\lambda G_{e_\lambda}.
+\end{equation}
+Which is same with Thus,
+\begin{equation}
+\frac{dV}{dt} = -2Cov(u,u) = -2Var(u) \leq 0.
+\end{equation}
+
+Therefore, the expected error of collective prediction cannot increase during the evolutionary process and decreases whenever strategies differ in their expected payoffs. The derivative becomes zero when the variance of expected payoffs is zero, $\mathrm{Var}(u)=0$.
+This condition corresponds to equal expected payoffs among the strategies present in the population.
+A boundary state in which the entire population consists of a single strategy can also satisfy $\mathrm{Var}(u)=0$ even when $V>0$.
+However, such a state is not evolutionarily stable under the feedback structure.
+If the collective prediction differs from the target $Y$, a nonzero residual remains. By the definition of the feedback payoff, a novel strategy whose prediction aligns with the direction of this residual obtains a higher expected payoff than the resident strategy and can therefore invade the population.
+Thus, an imperfect boundary equilibrium with $V>0$ is unstable to the introduction of novel predictions.
+
+Consequently, the evolutionary dynamics continue to reduce the collective prediction error until the population reaches the stable state with zero residual, $V=0$. At this state, the collective prediction equals the target, $\hat{Y}^{re}=Y$, and the collective accuracy reaches $R=1$.
+
+\subsubsection{Niche-expert}
+Unlike the stochastic error in the collective prediction, stochastic error in the niche-expert payoff is evaluated at the individual level and does not vanish as population size increases.
+Therefore, we retain $\tau>0$ in the following derivation.
+
+We first consider strategies having the same interest by optimizing the expected payoff with respect to $c$ and $\beta$.
+For a nonzero interest $e$, the expected payoff is strictly concave with respect to $c$ for $\beta<1$ and $\sigma_e>0$, and is maximized at
+
+\begin{equation}
+c_e^*=\alpha_e.
+\end{equation}
+
+After substituting $c_e^*=\alpha_e$, the payoff is strictly concave with respect to $\beta$.
+Its unconstrained stationary point is
+
+\begin{equation}
+\tilde{\beta}_e = \frac{\alpha_0^2+\alpha_0B+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2}{(\alpha_0+B)^2+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2+\tau^2}.
+\end{equation}
+
+Because $\beta$ is constrained between 0 and 1, the optimal $\beta_e^*$ is $\tilde{\beta}_e$ when $0<\tilde{\beta}_e<1$, and otherwise lies at the corresponding boundary, $\beta_e^*=0$ or $\beta_e^*=1$.
+Thus, the boundary cases do not require a separate evolutionary argument; they only change the optimal prediction and its minimum expected squared error.
+When $\beta_e^*=1$, the revised prediction is independent of $c_e$, so different values of $c_e$ are selectively neutral and can be treated as a single payoff-equivalent strategy class.
+
+Let $L_e$ denote the minimum expected individual error, $\mathbb{E}[(Y_A^{re}-Y)^2]$, within interest $e$.
+For an internal optimum,
+
+\begin{equation}
+L_e=\frac{B^2\sum_{j\neq e,0}\alpha_j^2\sigma_j^2+\tau^2\left(\alpha_0^2+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2\right)}{(\alpha_0+B)^2+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2+\tau^2}.
+\end{equation}
+
+If the optimum is located at $\beta_e^*=0$ or $\beta_e^*=1$, $L_e$ is instead obtained by evaluating the expected squared prediction error at the corresponding boundary.
+
+For interest 0, optimization with respect to $c$ gives
+
+\begin{equation}
+c_0^*(\beta)=\alpha_0-\frac{\beta}{1-\beta}B.
+\end{equation}
+
+Substituting this into the expected payoff gives a strictly concave function of $\beta$, with the unique optimum
+
+\begin{equation}
+\beta_0^* = \frac{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2}{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2+\tau^2}.
+\end{equation}
+
+Therefore,
+
+\begin{equation}
+c_0^* = \alpha_0-\frac{B}{\tau^2}\sum_{j=1}^{M}\alpha_j^2\sigma_j^2,
+\end{equation}
+
+and
+
+\begin{equation}
+L_0 = \frac{\tau^2\sum_{j=1}^{M}\alpha_j^2\sigma_j^2}{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2+\tau^2}.
+\end{equation}
+
+We denote the optimal strategy, or the payoff-equivalent strategy class when $\beta_e^*=1$, by $S_e$.
+A state containing a suboptimal strategy within an interest can be stationary if the optimal strategy is absent, but it is unstable against invasion because the optimal strategy has a strictly higher payoff at the same $\rho_e$.
+Therefore, a stable state can contain only $S_e$ within each represented interest.
+
+We next consider the frequencies of the $M+1$ optimal strategies.
+Let $\rho_e$ denote the frequency of $S_e$.
+Its expected payoff is
+
+\begin{equation}
+u_e=-\rho_eL_e.
+\end{equation}
+
+Assuming $L_e>0$ for all interests, the equal-payoff condition of the replicator equation at an internal stationary state gives
+
+\begin{equation}
+\rho_0^*L_0 = \rho_1^*L_1 =\cdots = \rho_M^*L_M.
+\end{equation}
+
+Together with $\sum_{e=0}^{M}\rho_e^*=1$, this uniquely determines
+
+\begin{equation}
+\rho_e^* =\frac{D}{L_e},
+\qquad D = \left(\sum_{j=0}^{M}\frac{1}{L_j}\right)^{-1}.
+\end{equation}
+
+This internal stationary state is locally stable.
+At equilibrium, all represented interests have the same expected payoff, with $\rho_e^*L_e=D$.
+If the frequency of one interest increases slightly above its equilibrium value, its payoff decreases because the niche-expert payoff is proportional to $-\rho_eL_e$.
+Conversely, if the frequency of an interest decreases below its equilibrium value, its payoff increases.
+The replicator dynamics therefore generate a restoring force that reduces small deviations in interest frequencies and drives the population back toward the internal stationary state.
+
+If one or more interests are absent, the resulting boundary state can be stationary under the replicator equation, but it is unstable against invasion.
+The payoff of a rare absent interest approaches zero as $\rho_e\to0$, whereas the mean payoff of the resident population is negative when $L_e>0$, so the rare interest increases when introduced at sufficiently small frequency.
+
+Thus, there exists a unique stable full-support equilibrium in terms of the optimal prediction strategies and their frequencies.
+Whether the constrained optimum has $\beta_e^*=0$, $0<\beta_e^*<1$, or $\beta_e^*=1$ does not change the frequency argument, because these cases differ only through the resulting value of $L_e$.
+When $\beta_e^*=1$, the strategy is selectively neutral with respect to $c_e$, but its prediction, payoff, and equilibrium interest frequency remain uniquely determined.
+
+This equilibrium also allows a direct comparison with the expected accuracy of the AI.
+Using $Y^{\mathrm{AI}}$ itself without aggregation as the prediction gives
+
+\begin{equation}
+\mathbb{E}\left[(Y-Y^{\mathrm{AI}})^2\right] = B^2+\tau^2.
+\end{equation}
+
+For every interest, complete reliance on AI, $\beta=1$, is a feasible strategy.
+Therefore, because $L_e$ is the minimum individual expected squared prediction error within interest $e$,
+
+\begin{equation}
+L_e\leq B^2+\tau^2.
+\end{equation}
+
+Moreover, for interest 0,
+
+\begin{equation}
+L_0 = \frac{\tau^2\sum_{j=1}^{M}\alpha_j^2\sigma_j^2}{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2+\tau^2}
+< \tau^2 \leq B^2+\tau^2.
+\end{equation}
+
+Because the stable equilibrium has $\rho_0^*>0$,
+
+\begin{equation}
+\sum_{e=0}^{M}\rho_e^*L_e < B^2+\tau^2.
+\end{equation}
+
+The collective prediction is the average of individual revised predictions.
+By convexity of the squared error,
+
+\begin{equation}
+\mathbb{E}\left[(Y-\hat{Y}^{re})^2\right] \leq \sum_{e=0}^{M}\rho_e^*L_e.
+\end{equation}
+
+Therefore,
+
+\begin{equation}
+\mathbb{E}\left[(Y-\hat{Y}^{re})^2\right] < \mathbb{E}\left[(Y-Y^{\mathrm{AI}})^2\right].
+\end{equation}
+
+Because the collective accuracy and AI accuracy use the same normalization by $\mathbb{E}[(Y-\alpha_0)^2]$, the stationary collective accuracy under the niche-expert structure is strictly greater than the expected accuracy of the AI prediction.
+
+Although the niche-expert structure improves collective prediction relative to the AI, the stationary collective accuracy does not reach one when $\tau>0$.
+For a nonzero factor $i$, the residual coefficient of the stationary collective prediction can be written as
+
+\begin{equation}
+\delta_i^* = \alpha_i\left\{1-\bar{\beta}^*-\rho_i^*(1-\beta_i^*)\right\} = \alpha_i\sum_{e\neq i}\rho_e^*(1-\beta_e^*).
+\end{equation}
+
+At the stable equilibrium, $\rho_0^*>0$.
+In addition, $\tau>0$ implies $\beta_0^*<1$.
+Therefore, for every factor with $\alpha_i\neq0$,
+
+\begin{equation}
+\delta_i^*\neq0.
+\end{equation}
+
+Because $\sum_{i=1}^{M}\alpha_i^2\sigma_i^2>0$, at least one factor contributes positive prediction error.
+Hence,
+
+\begin{equation}
+\mathbb{E}\left[(Y-\hat{Y}^{re})^2\right]>0,
+\end{equation}
+
+and consequently the stationary collective accuracy satisfies $R^*<1$.
+
+
+\subsection{Chatbot AI}
+\subsubsection{Feedback}
+With Chatbot AI, the effect of stochastic error on the collective prediction depends on $n_i$, requiring the additional assumption that $n_i \to \infty$ for every interest for the stochastic error to vanish.
+However, Under this assumption, the loss of interest diversity cannot occur, and therefore the stochastic breakdown of collective accuracy observed in finite populations cannot be analytically captured. 
+Instead, by assuming that each interest is represented by infinitely many players, we can show that the expected collective prediction error monotonically decreases until perfect accuracy is achieved.
+Because finite population dynamics are more relevant to the empirical populations considered in this study, we retain finite population simulations for the main result.
+
+\subsubsection{Niche-expert}
+We first consider strategies having the same interest by optimizing the expected payoff with respect to $c$ and $\beta$.
+For a nonzero interest $e$, the expected payoff is strictly concave with respect to $c$ for $\beta<1$ and $\sigma_e>0$, and is maximized at
+
+\begin{equation}
+c_e^*=\alpha_e.
+\end{equation}
+After substituting $c_e^*=\alpha_e$, the payoff is strictly concave with respect to $\beta$.
+Its unconstrained stationary point is
+\begin{equation}
+\tilde{\beta}_e = \frac{2\alpha_0b_{e}}{2b_e^2+2\tau^2}.
+\end{equation}
+Because $\beta$ is constrained between 0 and 1, the optimal $\beta_e^*$ is $\tilde{\beta}_e$ when $0<\tilde{\beta}_e<1$, and otherwise lies at the corresponding boundary, $\beta_e^*=0$ or $\beta_e^*=1$.
+Because we assumes AI model with moderate accuracy, $b_e$ and $\tau$ is relatively smaller than $\alpha_0$ which makes $\tilde{\beta}_e >1$ when $\alpha_0b_e >0$ and $\tilde{\beta}_e < 0$ when $\alpha_0b_e <0$.
+These boundary cases lead to extreme reliance on AI or complete exclusion of AI which both hinders the emergence of CI.
+Only when the prediction task is centered near zero and AI is relatively inaccurate ($\alpha_0b_e < b_e^2 + \tau^2$), and $\alpha_0b_e >0$, the internal optimum $\beta_e^*$ can be exist. 
+
+For interest 0, optimization with respect to $c$ gives
+\begin{equation}
+c_0^*(\beta)=\alpha_0-\frac{\beta}{1-\beta}b_0.
+\end{equation}
+Substituting this into the expected payoff gives a strictly concave function of $\beta$, with the unique optimum
+\begin{equation}
+\beta_0^* = 0.
+\end{equation}
 
 \pagebreak
 
