@@ -240,8 +240,8 @@ To investigate whether the group can retain its predictive ability when AI assis
 Across all scenarios, we find that the counterfactual collective accuracy is lower than the collective accuracy of the corresponding population.
 
 In summary, an omniscient AI can promote CI, but AI operating with limited information may prevent the emergence CI.
-Moreover, reliance on AI can limit inherent, collective accuracy of the population, raising concerns about future AI usage.
-These findings underscore the need for incentive structures that can mitigate the potential risks associated with AI assistance.
+Moreover, reliance on AI can limit inherent ability of the population to make accurate predictions on their own, raising concerns about future AI usage.
+These findings further underscore the need for incentive structures that can mitigate the potential risks associated with AI assistance.
 
 \subsection*{Directly incentivizing or penalizing AI use can additionally harm CI}
 
@@ -249,12 +249,11 @@ These findings underscore the need for incentive structures that can mitigate th
 \includegraphics[width=\textwidth]{../Figures/Figure 3.pdf}
 \caption{
 \textbf{Collective accuracy under the influence of direct intervention on AI use.}
-Collective accuracy and median reliance on AI under varying strengths of intervention ($\lambda$) across different assumptions about AI types and incentive structures.
+Collective accuracy and median reliance on AI under varying strengths of intervention ($\lambda$) across different assumptions about AI types (omniscient AI, A--D and chatbot AI, E--H) and incentive structures (Feedback, A,B,E,F, and Niche expert, C,D,G,H).
 Positive $\lambda$ represents an incentive for AI use, whereas negative $\lambda$ represents a penalty for AI use.
 In each panel, the vertical dashed line indicates the original incentive structure ($\lambda = 0$).
-(A, B) Omniscient AI under the modified feedback structure, (C, D) Omniscient AI under the modified niche-expert structure, (E, F) Chatbot AI under the modified feedback structure, and (G, H) Chatbot AI under the modified niche-expert structure.
 Four AI bias levels are shown: $b_i = \pm 0.2$, representing higher-accuracy AI, and $b_i = \pm 0.4$, representing lower-accuracy AI.
-Collective accuracy and median reliance on AI are averaged over generations 190,000--200,000.
+Collective accuracy (A,C,E,G) and median reliance on AI (B,D,F,H) are averaged over generations 190,000--200,000.
 Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A--D), $c_A \sim \mathcal{N}(0, 5^2)$ for (E--H), and $\beta_A \sim U(0, 1)$. 
 AI parameter: $\tau = 0.3$.
@@ -262,18 +261,24 @@ AI parameter: $\tau = 0.3$.
 \end{figure}
 
 Given the strong influence of AI on collective outcomes, a straightforward intervention is to directly incentivize or penalize the use of AI.
-To investigate whether such direct incentives or penalties help emergence of CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
+\swp{maybe a sentence about how this reflects real world scenarios.}
+To investigate whether such direct incentives or penalties can help the emergence of CI, we modify the two incentive structures by adding a payoff term proportional to individual reliance on AI:
 \begin{equation}
 \mathrm{Feedback /} \mathrm{Niche\text{-}expert} + \lambda \beta_A
 \end{equation}
-where $\lambda$ represent the strength of incentive ($\lambda > 0$) or penalty ($\lambda < 0$).
+where $\lambda$ represent the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$).
+\swp{maybe we need to call incentive pi earlier on...}
+\swp{also good to define beta again here as a reminder.}
 
-Directly incentivizing or penalizing AI use further reduce the collective accuracy (Fig. 3C, E, G), except when Omniscient AI is used under the feedback structure (Fig. 3A).
-This is because incentivizing or penalizing AI usage pushes the group to always ($\beta = 1$) or never ($\beta = 0$) rely on AI, respectively (Fig. 3B, D, F, H).
-In some cases, when AI bias is relatively large and the penalty is weak, penalizing AI use can achieve higher collective accuracy than the original incentive structure.
-However, in most cases, penalizing AI use imposes strong selection against AI reliance, pushing the group toward lower stationary collective accuracy.
-Although the group with Chatbot AI under feedback structure shows stochastic breakdown of CI which doesn't result in stationary collective accuracy, incentivizing or penalizing AI use further strengthens the breakdown (Fig. 3E).
-This result suggests that simply incentivizing or penalizing the AI use may exacerbate rather than resolving the problem of AI.
+Directly incentivizing or penalizing AI use can further reduce the collective accuracy (Fig. 3C, E, G), except when Omniscient AI is used under the feedback structure;
+in the latter case, the population retains collective intelligence regardless of the intervention strength (Fig. 3A).
+The reduction in collective accuracy arises because incentivizing or penalizing AI usage causes individuals to imitate others based on their AI usage rather than their predictive accuracy.
+Thus, stronger interventions can push the group to always ($\beta = 1$) or never ($\beta = 0$) rely on AI  (Fig. 3B,D, F, H) but these scenarios do not necessarily lead to better outcomes (Fig. 3D, F, H).
+When AI bias is relatively large, a weak penalty can lead to higher collective accuracy, but this represents a narrow parameter regime (Figure 3G).
+
+Overall, these results indicate that simply incentivizing or penalizing the AI, independent of individuals' performance, use may exacerbate rather than resolve the risk of AI on CI.
+Thus, we also considered an incentive structure where interventions for AI usage affects the payoffs multiplicatively, thus giving higher payoffs to individuals who rely more (or less) AI and makes better prediction.
+\swp{Supp.}
 
 \subsection*{Balanced incentives mitigate AI-induced failures of CI}
 
@@ -281,9 +286,11 @@ This result suggests that simply incentivizing or penalizing the AI use may exac
 \includegraphics[width=\textwidth]{../Figures/Figure 4.pdf}
 \caption{
 \textbf{Balanced structure can promote collective intelligence} 
-Trajectories of collective accuracy (A) and counterfactual human CI (B) under three incentive structures (feedback, niche-expert, and balanced) with Chatbot AI.
+Trajectories of collective accuracy (A) and counterfactual human CI (B) under three incentive structures (feedback, niche-expert, and balanced) with Chatbot AI.\swp{A and B should have the same y axes scaling.}
 Distributions of individual interest and belief (C-E) and of interest and reliance on AI (F-H) after 200,000 generations. 
-Each point represents a player. The dashed lines in (C-E) represent the true coefficients ($\alpha_i$) of the prediction target, and the dashed horizontal lines in (F-H) indicate the median reliance on AI.
+Each point represents an individual. 
+Dashed lines in panels C-E represent the true coefficients ($\alpha_i$) of the prediction target.
+Dashed horizontal lines in panels F-H indicate the median reliance on AI.
 Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i = 5 - 0.2i$, and $\sigma_i \sim U(0, 3)$. 
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
 AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
@@ -292,17 +299,16 @@ AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
 
 Neither the original incentive structures nor simple interventions targeting AI use are sufficient to promote CI.
 What incentive structure, then, would work in the presence of AI?
-Focusing on the Chatbot AI, in which proposed incentive structures fail to promote accurate CI, we investigate whether a better structure can overcome the risks introduced by AI.
-Here, we propose a ``balanced'' structure, defined as the simple average of the feedback and niche expert incentives.
+Here, we propose a ``balanced'' incentive structure, modeled as the average of the feedback and niche expert incentives.
 
-Core idea behind the balanced structure is to maintain interest diversity while preventing the collective bias of the group.
-The feedback structure is prone to interest diversity loss, whereas can strongly prevent collective bias by incentivizing players whose predictions lie opposite to the collective prediction.
-By contrast, the niche-expert structure can maintain interest diversity because it directly incentivizes minority interests.
-However it cannot prevent collective bias because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance, which homogenize the predictions. 
+The core idea behind the balanced structure is to maintain interest diversity and prevent collective bias.
+On one hand, the feedback incentive structure is prone to the loss of interest diversity but can prevent collective bias by incentivizing players whose predictions lie opposite to the collective prediction.
+On the other hand, the niche-expert structure can maintain interest diversity because it directly incentivizes minority interests.
+However the niche-expert structure cannot prevent collective bias because, within the same factor of interest, individuals are rewarded only according to their individual predictive performance, which in turn homogenize the predictions.
 
-By integrating both structure, the balanced structure can promote accurate CI by maintaining both interest diversity and preventing collective bias (Fig. 4, S3).
-Compare to the feedback and niche-expert, players are both evenly distributed through factors, and beliefs are close to the real coefficient (Fig. 4).
-Moreover, counterfactual collective accuracy maintained high compare to both feedback and niche-expert.
+Therefore, when both incentive structures are combined, the population achieves CI by maintaining both interest diversity and limited collective bias (Fig. 4, S3).
+Compare to the feedback and niche-expert incentive structures, individuals are both evenly distributed through factors (Fig. 4C--E), and their beliefs lie closer to true values (Fig. 4F--H).
+Moreover, the balanced incentive structure allows for higher levels of counterfactual collective accuracy compared to pure feedback and niche-expert scenarios.
 These patterns are driven by the emergent property of the balanced structure, in which group increases its reliance on AI as the AI becomes more accurate, demonstrating appropriately calibrated AI use.
 
 \section*{Discussion}
