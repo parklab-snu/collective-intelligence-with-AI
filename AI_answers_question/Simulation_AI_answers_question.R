@@ -9,7 +9,6 @@ compute_p_revised_vec <- function(interest, belief, AI_belief, alpha_AI) {
   AI_belief * alpha_AI[interest + 1] + (1 - AI_belief) * belief
 }
 # Compute the payoff of the single player.
-# only supports averaging aggregation.
 # supports Expert, Niche expert, Disadvantage AI Niche, Advantage AI Niche, Feedback, Disadvantage AI Feedback, and Advantage AI Feedback payoffs
 # Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i

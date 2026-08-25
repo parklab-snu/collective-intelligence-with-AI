@@ -171,8 +171,7 @@ We begin by extending previously established models of CI, in which a group of p
 Specifically, the prediction target $(Y)$ is modeled as a linear combination of $M$ causal factors $x_i$, with fixed coefficients $\alpha_i$: $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution (Figure 1A).
 Then, each individual $A$ observes a single factor of their interest $x_{e_A}$ and makes a prediction based on their own belief $c_A$: $Y_{A} = c_A x_{e_A}$ (Figure 1B).
 We assume each individual can then independently consult their AI assistants and revise their prediction based on their reliance on AI $\beta_A$: $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$ (Figure 1B).
-This revised prediction is aggregated to form collective prediction.
-\swp{I think we need to say averaging and clustering aggregation here?}
+The revised predictions are then aggregated using two alternative aggregation rules, averaging and clustering, to form collective prediction.
 
 To model AI, we assume that AI has already been trained on similar tasks and is able to make predictions based on partial or full observations of causal factors (Figure 1B).
 Every time a player consults AI, it will make a new prediction $Y_A^{AI}$ based on its internal parameters, which can include factor-specific bias $(b_i)$ and stochastic error $\epsilon$.
@@ -183,19 +182,26 @@ In the other extreme, AI works like a chatbot, where the AI predicts the outcome
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
 Hereafter, we refer to these two types as `Omniscient AI' and `Chatbot AI', respectively.
 
+\js{I added a new paragraph explicitly explaining the different aggregation rules used for each type of AI.}
+The appropriate aggregation rule for collective prediction depends on the type of AI.
+With Omniscient AI, each revised prediction contains information about all causal factors and therefore represents an estimate of the full prediction target.
+With Chatbot AI, each revised prediction remains an estimate of the contribution of a single factor to the target.
+Based on this distinction, we use averaging aggregation for Omniscient AI, in which revised individual predictions are simply averaged to form the collective prediction.
+For Chatbot AI, we use clustering aggregation, in which revised predictions are first averaged among individuals interested in the same factor, and then summed across factors.
+
 Each generation consists of multiple round of predictions, and each player is rewarded a payoff according to the incentive structure (Figure 1C).
 For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff value rather than computing the payoffs for every round.
 We consider two incentive structures from previous work, ``feedback'' and ``niche-expert'', which have been shown to promote near-perfect collective accuracy in the absence of AI \cite{wang2025individual}.
-The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy. \swp{maybe we need equations...}
-In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest. \swp{maybe we need equations... but also say that this preserves diversity}
+The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy: $\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})$.
+In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest: $\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2$.
+Here, $\rho_{e_A}$ denotes the proportion of players interested in the same factor, thereby allowing the niche-expert structure to preserve interest diversity.
 We note collective intelligence fails to emerge under the combination of averaging aggregation with niche-expert structure in the absence of AI \cite{wang2025individual}.
 
 Through time, the group evolves by allowing each individual to imitate peers who received higher payoffs (Figure 1C).
-Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (the factor of interest, factor belief, and reliance on AI) of the other with a probability determined by the difference in their expected payoffs \swp{either refer to methods or supp.}.
+Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (the factor of interest, factor belief, and reliance on AI) of the other with a probability determined by the difference in their expected payoffs (see the Simulations section in Methods).
 Individual predictions are aggregated into a collective prediction $\hat{Y}$ by simple averaging when using Omniscient AI and by clustering when using Chatbot AI.
-Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction $\alpha_0$ \swp{maybe need equation}.
-Hereafter, we refer to the near-perfect collective accuracy as accurate CI.
-\swp{How about: hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.}
+Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction $\alpha_0$: $1-\frac{\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}$.
+Hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.
 
 This model now allows us to explore the impact of AI on CI depending on the mode of AI and the incentive structure.
 Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate a how different incentive structures affect the emergence CI in the presence of AI.

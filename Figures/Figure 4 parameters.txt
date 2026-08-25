@@ -7,3 +7,7 @@ alpha ~ norm(0, sd = 5)
 beta ~ uniform (0,1)
 N <- 10000
 G <- 200000
+
+Climate and urbanisation showed contrasting associations with plumage polymorphism across among-city and within-city scales. Among cities, morph composition was primarily associated with climate, with colder cities showing higher melanisation, consistent with Bogert’s rule, , although the strength of this association varied across regions. Within cities, by contrast, urbanisation showed clearer associations than climate, with more urbanised grid cells tending to show higher melanisation and a more even morph composition. Humidity showed positive association with melanisation in both scales, however its association is small and weakly supported.
+
+좋아 꽤 괜찮은 것 같은데. 이제 Discussion을 고민해보자. Discussion에서 좀 더 명확히 논의해야 할 부분이 있을까. 지금 Discussion은 바로 Among-city Temperature-melanisation association에 대해서 논의하는데 그 전에 Climate이 large spatial scale에 Urbanisation이 small spatial scale에 작용함을 논의하고, 이것이 선행연구에서 반복되어온 climate - urbanisation의 scale dependency다. 혹은 선행연구에서 반복적으로 강조되어온 ecological process의 scale dependency
