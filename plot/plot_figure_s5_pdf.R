@@ -7,10 +7,8 @@ project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-
 
 output_path <- file.path(
   project_path,
-  "trajectory_and_accuracy_heatmaps.pdf"
+  "trajectory_and_interest_diversity_heatmaps.pdf"
 )
-
-vertical_gap_height <- 0.15
 
 font_family <- "Arial"
 
@@ -25,24 +23,6 @@ heatmap_legend_title_size <- 15
 heatmap_legend_text_size <- 12
 
 panel_tag_size <- 21
-
-trajectory_line_width <- 2
-trajectory_legend_rows <- 2
-
-left_tag_width <- 0.15
-human_heatmap_width <- 0.12
-heatmap_gap_width <- 0.4
-ai_heatmap_width <- 1.62
-
-trajectory_row_height <- 1.05
-heatmap_row_height <- 1
-heatmap_legend_row_height <- 0.22
-
-pdf_width <- 11
-pdf_height <- 14
-
-heatmap_legend_bar_width <- 7
-heatmap_legend_bar_height <- 0.45
 
 extract_final <- function(x) {
   mean(x[190000:200000], na.rm = TRUE)
@@ -64,22 +44,22 @@ read_mu_sweep <- function(save_path, mu_list, bias_list) {
     mu <- grid_df$mu[k]
     bias <- grid_df$bias[k]
     
-    file <- file.path(
-      save_path,
-      sprintf(
-        "Feedback_k%02d_i%02f_j%02f.RData",
-        1,
-        mu,
-        bias
+    result <- load_result(
+      file.path(
+        save_path,
+        sprintf(
+          "Feedback_k%02d_i%02f_j%02f.RData",
+          1,
+          mu,
+          bias
+        )
       )
     )
-    
-    result <- load_result(file)
     
     data.frame(
       bias = factor(bias, levels = bias_list),
       parameter = factor(mu, levels = mu_list),
-      accuracy = extract_final(result$accuracy)
+      interest_diversity = extract_final(result$interest_diversity)
     )
   }))
 }
@@ -94,22 +74,22 @@ read_belief_sweep <- function(save_path, belief_list, bias_list) {
     belief <- grid_df$belief[k]
     bias <- grid_df$bias[k]
     
-    file <- file.path(
-      save_path,
-      sprintf(
-        "Feedback_k%02d_i%02d_j%02f.RData",
-        1,
-        belief,
-        bias
+    result <- load_result(
+      file.path(
+        save_path,
+        sprintf(
+          "Feedback_k%02d_i%02d_j%02f.RData",
+          1,
+          belief,
+          bias
+        )
       )
     )
-    
-    result <- load_result(file)
     
     data.frame(
       bias = factor(bias, levels = bias_list),
       parameter = factor(belief, levels = belief_list),
-      accuracy = extract_final(result$accuracy)
+      interest_diversity = extract_final(result$interest_diversity)
     )
   }))
 }
@@ -156,7 +136,7 @@ make_heatmap <- function(data, y_title, title_text) {
     aes(
       x = bias,
       y = parameter,
-      fill = accuracy
+      fill = interest_diversity
     )
   ) +
     geom_tile(
@@ -170,9 +150,8 @@ make_heatmap <- function(data, y_title, title_text) {
       expand = c(0, 0)
     ) +
     scale_fill_viridis_c(
-      name = "Collective accuracy",
-      limits = c(0, 1),
-      labels = function(x) sprintf("%.2f", x)
+      name = "Interest diversity",
+      limits = c(0, 51)
     ) +
     labs(
       x = "Bias",
@@ -213,7 +192,7 @@ ai_bias_list <- c(
 
 human_bias_list <- 0
 
-df_acc_mu <- read_mu_sweep(
+df_div_mu <- read_mu_sweep(
   file.path(
     project_path,
     "AI_answers_question/mu_sweep"
@@ -222,7 +201,7 @@ df_acc_mu <- read_mu_sweep(
   ai_bias_list
 )
 
-df_acc_b <- read_belief_sweep(
+df_div_b <- read_belief_sweep(
   file.path(
     project_path,
     "AI_answers_question/belief_sweep"
@@ -231,7 +210,7 @@ df_acc_b <- read_belief_sweep(
   ai_bias_list
 )
 
-df_acc_mu_ori <- read_mu_sweep(
+df_div_mu_ori <- read_mu_sweep(
   file.path(
     project_path,
     "Original/mu_sweep"
@@ -240,7 +219,7 @@ df_acc_mu_ori <- read_mu_sweep(
   human_bias_list
 )
 
-df_acc_b_ori <- read_belief_sweep(
+df_div_b_ori <- read_belief_sweep(
   file.path(
     project_path,
     "Original/belief_sweep"
@@ -249,36 +228,29 @@ df_acc_b_ori <- read_belief_sweep(
   human_bias_list
 )
 
-p_acc_mu_ori <- make_heatmap(
-  df_acc_mu_ori,
-  y_title = "Mutation rate",
-  title_text = "Human-only CI"
+p_div_mu_ori <- make_heatmap(
+  df_div_mu_ori,
+  "Mutation rate",
+  "Without AI"
 )
 
-p_acc_mu <- make_heatmap(
-  df_acc_mu,
-  y_title = "Mutation rate",
-  title_text = "AI-assisted CI"
+p_div_mu <- make_heatmap(
+  df_div_mu,
+  "Mutation rate",
+  "With AI"
 )
 
-p_acc_b_ori <- make_heatmap(
-  df_acc_b_ori,
-  y_title = "Belief SD",
-  title_text = NULL
+p_div_b_ori <- make_heatmap(
+  df_div_b_ori,
+  "Belief SD",
+  NULL
 )
 
-p_acc_b <- make_heatmap(
-  df_acc_b,
-  y_title = "Belief SD",
-  title_text = NULL
+p_div_b <- make_heatmap(
+  df_div_b,
+  "Belief SD",
+  NULL
 )
-
-# 태그 A 추가
-tag_A <- make_tag_plot("A")
-tag_B <- make_tag_plot("B")
-tag_C <- make_tag_plot("C")
-tag_D <- make_tag_plot("D")
-tag_E <- make_tag_plot("E")
 
 trajectory_files <- c(
   file.path(
@@ -300,17 +272,17 @@ trajectory_files <- c(
 )
 
 trajectory_labels <- c(
-  "Human-only CI, mutation rate 0",
-  "Human-only CI, mutation rate 0.01",
-  "AI-assisted CI, mutation rate 0",
-  "AI-assisted CI, mutation rate 0.01"
+  "Without AI, mutation rate 0",
+  "Without AI, mutation rate 0.01",
+  "With AI, mutation rate 0",
+  "With AI, mutation rate 0.01"
 )
 
 trajectory_colors <- c(
-  "Human-only CI, mutation rate 0" = "#333333",
-  "Human-only CI, mutation rate 0.01" = "#3381A3",
-  "AI-assisted CI, mutation rate 0" = "#E76F51",
-  "AI-assisted CI, mutation rate 0.01" = "#7A5195"
+  "Without AI, mutation rate 0" = "#333333",
+  "Without AI, mutation rate 0.01" = "#3381A3",
+  "With AI, mutation rate 0" = "#E76F51",
+  "With AI, mutation rate 0.01" = "#7A5195"
 )
 
 trajectory_results <- lapply(
@@ -321,10 +293,10 @@ trajectory_results <- lapply(
 idx <- unique(c(
   seq(
     1,
-    length(trajectory_results[[1]]$accuracy),
+    length(trajectory_results[[1]]$interest_diversity),
     by = 100
   ),
-  length(trajectory_results[[1]]$accuracy)
+  length(trajectory_results[[1]]$interest_diversity)
 ))
 
 trajectory_data <- do.call(
@@ -332,7 +304,7 @@ trajectory_data <- do.call(
   lapply(seq_along(trajectory_results), function(i) {
     data.frame(
       Generation = idx,
-      Accuracy = trajectory_results[[i]]$accuracy[idx],
+      Interest_diversity = trajectory_results[[i]]$interest_diversity[idx],
       Trajectory = trajectory_labels[i]
     )
   })
@@ -343,42 +315,36 @@ trajectory_data$Trajectory <- factor(
   levels = trajectory_labels
 )
 
-# p_trj 수정: tag 속성 및 plot.tag 관련 theme 설정 제거
 p_trj <- ggplot(
   trajectory_data,
   aes(
     x = Generation,
-    y = Accuracy,
+    y = Interest_diversity,
     color = Trajectory
   )
 ) +
-  geom_line(
-    linewidth = trajectory_line_width
-  ) +
+  geom_line(linewidth = 2) +
   scale_color_manual(
     values = trajectory_colors
   ) +
   scale_x_continuous(
     limits = c(0, 1000000),
-    breaks = seq(
-      0,
-      1000000,
-      by = 250000
-    ),
-    labels = c(
-      "0", "25", "50", "75", "100"
-    ),
+    breaks = seq(0, 1000000, by = 250000),
+    labels = c("0", "25", "50", "75", "100"),
     expand = expansion(mult = c(0, 0))
+  ) +
+  coord_cartesian(
+    ylim = c(0, 51)
   ) +
   guides(
     color = guide_legend(
-      nrow = trajectory_legend_rows,
+      nrow = 2,
       byrow = TRUE
     )
   ) +
   labs(
     x = expression("Generation (" * 10^4 * ")"),
-    y = "Collective accuracy",
+    y = "Interest diversity",
     color = NULL
   ) +
   theme_classic() +
@@ -406,20 +372,14 @@ p_trj <- ggplot(
   )
 
 heatmap_legend <- cowplot::get_legend(
-  p_acc_mu +
+  p_div_mu +
     guides(
       fill = guide_colorbar(
         direction = "horizontal",
         title.position = "top",
         title.hjust = 0.5,
-        barwidth = unit(
-          heatmap_legend_bar_width,
-          "cm"
-        ),
-        barheight = unit(
-          heatmap_legend_bar_height,
-          "cm"
-        ),
+        barwidth = unit(7, "cm"),
+        barheight = unit(0.45, "cm"),
         frame.colour = "black",
         ticks.colour = "black"
       )
@@ -430,67 +390,47 @@ heatmap_legend <- cowplot::get_legend(
     )
 )
 
-p_acc_mu_ori <- p_acc_mu_ori +
+p_div_mu_ori <- p_div_mu_ori +
   theme(legend.position = "none")
 
-p_acc_mu <- p_acc_mu +
+p_div_mu <- p_div_mu +
   theme(legend.position = "none")
 
-p_acc_b_ori <- p_acc_b_ori +
+p_div_b_ori <- p_div_b_ori +
   theme(legend.position = "none")
 
-p_acc_b <- p_acc_b +
+p_div_b <- p_div_b +
   theme(legend.position = "none")
 
-legend_panel <- wrap_elements(
-  full = heatmap_legend
-)
-
-# 레이아웃 첫 줄을 A와 T(Trajectory plot)로 분리
-layout_design <- "
-ATTT
-####
-BHCI
-DJEK
-LLLL
-"
-
-# 레이아웃 매핑 수정
 p_combined <- wrap_plots(
-  A = tag_A,
+  A = make_tag_plot("A"),
   T = p_trj,
-  B = tag_B,
-  H = p_acc_mu_ori,
-  C = tag_C,
-  I = p_acc_mu,
-  D = tag_D,
-  J = p_acc_b_ori,
-  E = tag_E,
-  K = p_acc_b,
-  L = legend_panel,
-  design = layout_design,
-  widths = c(
-    left_tag_width,
-    human_heatmap_width,
-    heatmap_gap_width,
-    ai_heatmap_width
-  ),
-  heights = c(
-    trajectory_row_height,
-    vertical_gap_height,
-    heatmap_row_height,
-    heatmap_row_height,
-    heatmap_legend_row_height
-  )
+  B = make_tag_plot("B"),
+  H = p_div_mu_ori,
+  C = make_tag_plot("C"),
+  I = p_div_mu,
+  D = make_tag_plot("D"),
+  J = p_div_b_ori,
+  E = make_tag_plot("E"),
+  K = p_div_b,
+  L = wrap_elements(full = heatmap_legend),
+  design = "
+  ATTT
+  ####
+  BHCI
+  DJEK
+  LLLL
+  ",
+  widths = c(0.15, 0.12, 0.4, 1.62),
+  heights = c(1.05, 0.15, 1, 1, 0.22)
 )
 
 ggsave(
   output_path,
   p_combined,
-  width = pdf_width,
-  height = pdf_height,
-  device = grDevices::cairo_pdf,
+  width = 11,
+  height = 14,
   units = "in",
+  device = grDevices::cairo_pdf,
   bg = "white"
 )
-  

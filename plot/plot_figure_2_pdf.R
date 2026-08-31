@@ -13,10 +13,7 @@ trajectory_order <- c(
   "Counterfactual human CI"
 )
 
-incentive_order <- c(
-  "Feedback",
-  "Niche expert"
-)
+incentive_order <- c("Feedback", "Niche-expert")
 
 trajectory_colors <- c(
   "Without AI" = "#298C8C",
@@ -64,7 +61,7 @@ df_acc <- bind_rows(
     "Original/avg_niche.RData",
     "AI_knows_all/avg_niche_Acc70_bias0.36_error0.3.RData",
     "AI knows all",
-    "Niche expert"
+    "Niche-expert"
   ),
   make_panel_data(
     "Original/clu_feedback.RData",
@@ -76,7 +73,7 @@ df_acc <- bind_rows(
     "Original/clu_niche.RData",
     "AI_answers_question/clu_niche_Acc70_bias0.36_error0.3.RData",
     "AI answers question",
-    "Niche expert"
+    "Niche-expert"
   )
 )
 
@@ -184,7 +181,8 @@ make_box <- function(label, size, box_margin = margin()) {
       label = label,
       size = size,
       family = "Arial",
-      fontface = "bold"
+      fontface = "bold",
+      hjust = 0.5
     ) +
     xlim(0, 1) +
     ylim(0, 1) +
@@ -204,7 +202,7 @@ plot_A <- df_acc %>%
 
 plot_B <- df_acc %>%
   filter(AI_model == "AI knows all") %>%
-  make_panel("Niche expert", "B")
+  make_panel("Niche-expert", "B")
 
 plot_C <- df_acc %>%
   filter(AI_model == "AI answers question") %>%
@@ -212,7 +210,7 @@ plot_C <- df_acc %>%
 
 plot_D <- df_acc %>%
   filter(AI_model == "AI answers question") %>%
-  make_panel("Niche expert", "D")
+  make_panel("Niche-expert", "D")
 
 feedback_header <- make_box(
   "Feedback",
@@ -221,22 +219,70 @@ feedback_header <- make_box(
 )
 
 niche_header <- make_box(
-  "Niche expert",
+  "Niche-expert",
   size = 7,
   box_margin = margin(0, 6, 0, 6)
 )
 
-omniscient_label <- make_box(
-  "Omniscient AI",
-  size = 7.5,
-  box_margin = margin(0, 14, 0, 0)
-)
+omniscient_label <- ggplot() +
+  annotate(
+    "text",
+    x = 0.5,
+    y = 0.56,
+    label = "Omniscient AI",
+    size = 7.5,
+    family = "Arial",
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = 0.5,
+    y = 0.43,
+    label = "(Averaging)",
+    size = 6,
+    family = "Arial",
+    fontface = "bold"
+  ) +
+  xlim(0, 1) +
+  ylim(0, 1) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(
+      fill = "grey88",
+      color = NA
+    ),
+    plot.margin = margin(0, 14, 0, 0)
+  )
 
-chatbot_label <- make_box(
-  "Chatbot AI",
-  size = 7.5,
-  box_margin = margin(0, 14, 0, 0)
-)
+chatbot_label <- ggplot() +
+  annotate(
+    "text",
+    x = 0.5,
+    y = 0.56,
+    label = "Chatbot AI",
+    size = 7.5,
+    family = "Arial",
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = 0.5,
+    y = 0.43,
+    label = "(Clustering)",
+    size = 6,
+    family = "Arial",
+    fontface = "bold"
+  ) +
+  xlim(0, 1) +
+  ylim(0, 1) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(
+      fill = "grey88",
+      color = NA
+    ),
+    plot.margin = margin(0, 14, 0, 0)
+  )
 
 x_title <- wrap_elements(
   full = grid::textGrob(

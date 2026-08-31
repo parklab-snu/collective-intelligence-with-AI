@@ -24,24 +24,6 @@ heatmap_legend_text_size <- 12
 
 panel_tag_size <- 21
 
-trajectory_line_width <- 2
-trajectory_legend_rows <- 2
-
-left_tag_width <- 0.15
-human_heatmap_width <- 0.12
-heatmap_gap_width <- 0.4
-ai_heatmap_width <- 1.62
-
-trajectory_row_height <- 1.05
-heatmap_row_height <- 1
-heatmap_legend_row_height <- 0.22
-
-pdf_width <- 11
-pdf_height <- 14
-
-heatmap_legend_bar_width <- 7
-heatmap_legend_bar_height <- 0.45
-
 extract_final <- function(x) {
   mean(x[190000:200000], na.rm = TRUE)
 }
@@ -62,17 +44,17 @@ read_mu_sweep <- function(save_path, mu_list, bias_list) {
     mu <- grid_df$mu[k]
     bias <- grid_df$bias[k]
     
-    file <- file.path(
-      save_path,
-      sprintf(
-        "Feedback_k%02d_i%02f_j%02f.RData",
-        1,
-        mu,
-        bias
+    result <- load_result(
+      file.path(
+        save_path,
+        sprintf(
+          "Feedback_k%02d_i%02f_j%02f.RData",
+          1,
+          mu,
+          bias
+        )
       )
     )
-    
-    result <- load_result(file)
     
     data.frame(
       bias = factor(bias, levels = bias_list),
@@ -92,17 +74,17 @@ read_belief_sweep <- function(save_path, belief_list, bias_list) {
     belief <- grid_df$belief[k]
     bias <- grid_df$bias[k]
     
-    file <- file.path(
-      save_path,
-      sprintf(
-        "Feedback_k%02d_i%02d_j%02f.RData",
-        1,
-        belief,
-        bias
+    result <- load_result(
+      file.path(
+        save_path,
+        sprintf(
+          "Feedback_k%02d_i%02d_j%02f.RData",
+          1,
+          belief,
+          bias
+        )
       )
     )
-    
-    result <- load_result(file)
     
     data.frame(
       bias = factor(bias, levels = bias_list),
@@ -249,32 +231,27 @@ df_acc_b_ori <- read_belief_sweep(
 
 p_acc_mu_ori <- make_heatmap(
   df_acc_mu_ori,
-  y_title = "Mutation rate",
-  title_text = "Human-only CI"
+  "Mutation rate",
+  "Without AI"
 )
 
 p_acc_mu <- make_heatmap(
   df_acc_mu,
-  y_title = "Mutation rate",
-  title_text = "AI-assisted CI"
+  "Mutation rate",
+  "With AI"
 )
 
 p_acc_b_ori <- make_heatmap(
   df_acc_b_ori,
-  y_title = "Belief SD",
-  title_text = NULL
+  "Belief SD",
+  NULL
 )
 
 p_acc_b <- make_heatmap(
   df_acc_b,
-  y_title = "Belief SD",
-  title_text = NULL
+  "Belief SD",
+  NULL
 )
-
-tag_B <- make_tag_plot("B")
-tag_C <- make_tag_plot("C")
-tag_D <- make_tag_plot("D")
-tag_E <- make_tag_plot("E")
 
 trajectory_files <- c(
   file.path(
@@ -296,17 +273,17 @@ trajectory_files <- c(
 )
 
 trajectory_labels <- c(
-  "Human-only CI, mutation rate 0",
-  "Human-only CI, mutation rate 0.01",
-  "AI-assisted CI, mutation rate 0",
-  "AI-assisted CI, mutation rate 0.01"
+  "Without AI, mutation rate 0",
+  "Without AI, mutation rate 0.01",
+  "With AI, mutation rate 0",
+  "With AI, mutation rate 0.01"
 )
 
 trajectory_colors <- c(
-  "Human-only CI, mutation rate 0" = "#333333",
-  "Human-only CI, mutation rate 0.01" = "#3381A3",
-  "AI-assisted CI, mutation rate 0" = "#E76F51",
-  "AI-assisted CI, mutation rate 0.01" = "#7A5195"
+  "Without AI, mutation rate 0" = "#333333",
+  "Without AI, mutation rate 0.01" = "#3381A3",
+  "With AI, mutation rate 0" = "#E76F51",
+  "With AI, mutation rate 0.01" = "#7A5195"
 )
 
 trajectory_results <- lapply(
@@ -347,35 +324,26 @@ p_trj <- ggplot(
     color = Trajectory
   )
 ) +
-  geom_line(
-    linewidth = trajectory_line_width
-  ) +
+  geom_line(linewidth = 2) +
   scale_color_manual(
     values = trajectory_colors
   ) +
   scale_x_continuous(
     limits = c(0, 1000000),
-    breaks = seq(
-      0,
-      1000000,
-      by = 250000
-    ),
-    labels = c(
-      "0", "25", "50", "75", "100"
-    ),
+    breaks = seq(0, 1000000, by = 250000),
+    labels = c("0", "25", "50", "75", "100"),
     expand = expansion(mult = c(0, 0))
   ) +
   guides(
     color = guide_legend(
-      nrow = trajectory_legend_rows,
+      nrow = 2,
       byrow = TRUE
     )
   ) +
   labs(
     x = expression("Generation (" * 10^4 * ")"),
     y = "Collective accuracy",
-    color = NULL,
-    tag = "A"
+    color = NULL
   ) +
   theme_classic() +
   theme(
@@ -398,11 +366,6 @@ p_trj <- ggplot(
     ),
     legend.key.width = unit(1.5, "cm"),
     legend.spacing.x = unit(0.2, "cm"),
-    plot.tag = element_text(
-      size = panel_tag_size,
-      face = "bold"
-    ),
-    plot.tag.position = c(0.01, 0.99),
     plot.margin = margin(12, 10, 5, 10)
   )
 
@@ -413,14 +376,8 @@ heatmap_legend <- cowplot::get_legend(
         direction = "horizontal",
         title.position = "top",
         title.hjust = 0.5,
-        barwidth = unit(
-          heatmap_legend_bar_width,
-          "cm"
-        ),
-        barheight = unit(
-          heatmap_legend_bar_height,
-          "cm"
-        ),
+        barwidth = unit(7, "cm"),
+        barheight = unit(0.45, "cm"),
         frame.colour = "black",
         ticks.colour = "black"
       )
@@ -443,49 +400,35 @@ p_acc_b_ori <- p_acc_b_ori +
 p_acc_b <- p_acc_b +
   theme(legend.position = "none")
 
-legend_panel <- wrap_elements(
-  full = heatmap_legend
-)
-
-layout_design <- "
-AAAA
-BHCI
-DJEK
-LLLL
-"
-
 p_combined <- wrap_plots(
-  A = p_trj,
-  B = tag_B,
+  A = make_tag_plot("A"),
+  T = p_trj,
+  B = make_tag_plot("B"),
   H = p_acc_mu_ori,
-  C = tag_C,
+  C = make_tag_plot("C"),
   I = p_acc_mu,
-  D = tag_D,
+  D = make_tag_plot("D"),
   J = p_acc_b_ori,
-  E = tag_E,
+  E = make_tag_plot("E"),
   K = p_acc_b,
-  L = legend_panel,
-  design = layout_design,
-  widths = c(
-    left_tag_width,
-    human_heatmap_width,
-    heatmap_gap_width,
-    ai_heatmap_width
-  ),
-  heights = c(
-    trajectory_row_height,
-    heatmap_row_height,
-    heatmap_row_height,
-    heatmap_legend_row_height
-  )
+  L = wrap_elements(full = heatmap_legend),
+  design = "
+  ATTT
+  ####
+  BHCI
+  DJEK
+  LLLL
+  ",
+  widths = c(0.15, 0.12, 0.4, 1.62),
+  heights = c(1.05, 0.15, 1, 1, 0.22)
 )
 
 ggsave(
   output_path,
   p_combined,
-  width = pdf_width,
-  height = pdf_height,
-  device = grDevices::cairo_pdf,
+  width = 11,
+  height = 14,
   units = "in",
+  device = grDevices::cairo_pdf,
   bg = "white"
 )

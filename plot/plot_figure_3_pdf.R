@@ -12,60 +12,17 @@ font_family <- "Arial"
 x_title_size <- 16
 y_title_size <- 16
 axis_number_size <- 13
-
 direction_text_size <- 4
 legend_title_size <- 18
 legend_text_size <- 16
 panel_label_size <- 8
-
 header_text_size <- 6.2
 row_label_text_size <- 5.3
+aggregation_text_size <- 4.3
 
 line_width <- 1.2
 point_size <- 4
 panel_border_width <- 0.7
-
-panel_y_ranges <- list(
-  A = c(0, 1),
-  B = c(0, 1),
-  C = c(0, 1),
-  D = c(0, 1),
-  E = c(-0.4, 1),
-  F = c(0, 1),
-  G = c(0.4, 1),
-  H = c(0, 1)
-)
-
-lambda_offset <- 0.2
-lambda_arrow_gap <- 0.10
-direction_text_offset <- 0.10
-
-arrow_start <- -33
-arrow_end <- 33
-penalize_x <- -28
-incentivize_x <- 28
-
-arrow_line_width <- 0.7
-arrow_head_length <- 0.11
-
-panel_bottom_margin <- 40
-panel_side_margin <- 5
-panel_top_margin <- 0
-
-panel_aspect_ratio <- 0.9
-
-row_label_width <- 0.25
-row_label_top_margin <- 30
-row_label_bottom_margin <- 30
-row_label_left_margin <- 5
-row_label_right_margin <- 12
-
-column_gap_width <- 0.015
-header_height <- 0.16
-row_gap_height <- 0.0
-
-figure_width <- 18
-figure_height <- 8.5
 
 grid <- expand.grid(
   i = lambda_list,
@@ -137,8 +94,8 @@ read_stationary <- function(save_path, prefix, has_k) {
     mutate(
       bias_i = factor(
         bias_i,
-        levels = c(-0.4, -0.2, 0.2, 0.4),
-        labels = c("-0.4", "-0.2", "0.2", "0.4")
+        levels = bias_list,
+        labels = as.character(bias_list)
       )
     ) %>%
     arrange(lambda, bias_i)
@@ -195,7 +152,7 @@ single_theme <- theme_classic(
       fill = NA,
       linewidth = panel_border_width
     ),
-    aspect.ratio = panel_aspect_ratio,
+    #aspect.ratio = 0.9,
     axis.title.x = element_blank(),
     axis.title.y = element_text(
       size = y_title_size,
@@ -219,27 +176,15 @@ single_theme <- theme_classic(
       family = font_family
     ),
     legend.key.height = grid::unit(0.6, "cm"),
-    plot.margin = margin(
-      panel_top_margin,
-      panel_side_margin,
-      panel_bottom_margin,
-      panel_side_margin
-    )
+    plot.margin = margin(0, 5, 0, 5)
   )
 
 make_panel <- function(
     data,
     variable,
     y_label,
-    panel_label,
-    y_range
+    panel_label
 ) {
-  y_span <- diff(y_range)
-  
-  lambda_y <- y_range[1] - y_span * lambda_offset
-  arrow_y <- lambda_y - y_span * lambda_arrow_gap
-  direction_text_y <- arrow_y - y_span * direction_text_offset
-  
   ggplot(
     data,
     aes(
@@ -257,47 +202,6 @@ make_panel <- function(
     ) +
     geom_line(linewidth = line_width) +
     geom_point(size = point_size) +
-    annotate(
-      "text",
-      x = 0,
-      y = lambda_y,
-      label = "\u03bb",
-      size = x_title_size / ggplot2::.pt,
-      family = font_family,
-      color = "black"
-    ) +
-    annotate(
-      "segment",
-      x = arrow_start,
-      xend = arrow_end,
-      y = arrow_y,
-      yend = arrow_y,
-      linewidth = arrow_line_width,
-      color = "black",
-      arrow = grid::arrow(
-        ends = "both",
-        type = "closed",
-        length = grid::unit(arrow_head_length, "in")
-      )
-    ) +
-    annotate(
-      "text",
-      x = penalize_x,
-      y = direction_text_y,
-      label = "Penalize",
-      size = direction_text_size,
-      family = font_family,
-      color = "black"
-    ) +
-    annotate(
-      "text",
-      x = incentivize_x,
-      y = direction_text_y,
-      label = "Incentivize",
-      size = direction_text_size,
-      family = font_family,
-      color = "black"
-    ) +
     annotate(
       "text",
       x = Inf,
@@ -319,9 +223,14 @@ make_panel <- function(
       name = "Bias"
     ) +
     x_scale +
+    scale_y_continuous(
+      breaks = c(0, 0.5, 1),
+      labels = c("0.0", "0.5", "1.0"),
+      expand = expansion(mult = c(0, 0))
+    ) +
     coord_cartesian(
-      ylim = y_range,
-      clip = "off"
+      ylim = c(-0.05, 1.05),
+      clip = "on"
     ) +
     labs(
       x = NULL,
@@ -330,24 +239,90 @@ make_panel <- function(
     single_theme
 }
 
+make_x_annotation <- function() {
+  ggplot() +
+    annotate(
+      "text",
+      x = 0,
+      y = 0.82,
+      label = "\u03bb",
+      size = x_title_size / ggplot2::.pt,
+      family = font_family,
+      color = "black"
+    ) +
+    annotate(
+      "segment",
+      x = -33,
+      xend = 33,
+      y = 0.50,
+      yend = 0.52,
+      linewidth = 0.7,
+      color = "black",
+      arrow = grid::arrow(
+        ends = "both",
+        type = "closed",
+        length = grid::unit(0.11, "in")
+      )
+    ) +
+    annotate(
+      "text",
+      x = -28,
+      y = 0.13,
+      label = "Penalize",
+      size = direction_text_size,
+      family = font_family,
+      color = "black"
+    ) +
+    annotate(
+      "text",
+      x = 28,
+      y = 0.13,
+      label = "Incentivize",
+      size = direction_text_size,
+      family = font_family,
+      color = "black"
+    ) +
+    scale_x_continuous(
+      limits = c(-40, 40),
+      expand = expansion(mult = c(0, 0))
+    ) +
+    scale_y_continuous(
+      limits = c(0, 1),
+      expand = expansion(mult = c(0, 0))
+    ) +
+    theme_void(
+      base_family = font_family
+    ) +
+    theme(
+      plot.margin = margin(0, 5, 0, 5)
+    )
+}
+
 make_block <- function(data, panel_labels) {
   p_accuracy <- make_panel(
     data,
     "accuracy",
     "Collective accuracy",
-    panel_labels[1],
-    panel_y_ranges[[panel_labels[1]]]
+    panel_labels[1]
   )
   
   p_belief <- make_panel(
     data,
     "median_AI_belief",
     "Median reliance on AI",
-    panel_labels[2],
-    panel_y_ranges[[panel_labels[2]]]
+    panel_labels[2]
   )
   
-  p_accuracy | p_belief
+  (
+    p_accuracy /
+      make_x_annotation() +
+      plot_layout(heights = c(1, 0.22))
+  ) |
+    (
+      p_belief /
+        make_x_annotation() +
+        plot_layout(heights = c(1, 0.22))
+    )
 }
 
 make_header <- function(label) {
@@ -369,21 +344,29 @@ make_header <- function(label) {
         fill = "grey88",
         color = NA
       ),
-      plot.margin = margin(0, 18, 1, 18)
+      plot.margin = margin(0, 18, -20, 18)
     )
 }
 
-make_row_label <- function(label) {
+make_row_label <- function(label, aggregation) {
   ggplot() +
     annotate(
       "text",
       x = 0.5,
-      y = 0.5,
+      y = 0.54,
       label = label,
       size = row_label_text_size,
       family = font_family,
-      fontface = "bold",
-      lineheight = 0.9
+      fontface = "bold"
+    ) +
+    annotate(
+      "text",
+      x = 0.5,
+      y = 0.43,
+      label = aggregation,
+      size = aggregation_text_size,
+      family = font_family,
+      fontface = "bold"
     ) +
     xlim(0, 1) +
     ylim(0, 1) +
@@ -393,12 +376,7 @@ make_row_label <- function(label) {
         fill = "grey88",
         color = NA
       ),
-      plot.margin = margin(
-        row_label_top_margin,
-        row_label_right_margin,
-        row_label_bottom_margin,
-        row_label_left_margin
-      )
+      plot.margin = margin(30, 12, 30, 5)
     )
 }
 
@@ -423,30 +401,16 @@ block_chatbot_niche <- make_block(
 )
 
 feedback_header <- make_header("Feedback")
-niche_header <- make_header("Niche expert")
+niche_header <- make_header("Niche-expert")
 
-omniscient_label <- make_row_label("Omniscient AI")
-chatbot_label <- make_row_label("Chatbot AI")
-
-layout_design <- "
-ABCD
-EFGH
-IIII
-JKLM
-"
-
-layout_widths <- c(
-  row_label_width,
-  1,
-  column_gap_width,
-  1
+omniscient_label <- make_row_label(
+  "Omniscient AI",
+  "(Averaging)"
 )
 
-layout_heights <- c(
-  header_height,
-  1,
-  row_gap_height,
-  1
+chatbot_label <- make_row_label(
+  "Chatbot AI",
+  "(Clustering)"
 )
 
 base_plot <- (
@@ -464,9 +428,14 @@ base_plot <- (
     plot_spacer() +
     block_chatbot_niche +
     plot_layout(
-      design = layout_design,
-      widths = layout_widths,
-      heights = layout_heights,
+      design = "
+      ABCD
+      EFGH
+      IIII
+      JKLM
+      ",
+      widths = c(0.25, 1, 0.015, 1),
+      heights = c(0.16, 1, 0, 1),
       guides = "collect"
     )
 ) +
@@ -486,9 +455,10 @@ base_plot <- (
 ggsave(
   file.path(project_path, "Adv_all_cases.pdf"),
   base_plot,
-  width = figure_width,
-  height = figure_height,
+  width = 18,
+  height = 9,
   units = "in",
   device = grDevices::cairo_pdf,
   bg = "white"
 )
+

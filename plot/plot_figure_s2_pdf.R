@@ -92,7 +92,10 @@ x_scale <- scale_x_continuous(
   breaks = c(-0.6, -0.3, 0, 0.3, 0.6)
 )
 
-single_theme <- theme_classic(base_size = 11) +
+single_theme <- theme_classic(
+  base_family = "Arial",
+  base_size = 11
+) +
   theme(
     panel.border = element_rect(
       color = "black",
@@ -116,7 +119,7 @@ single_theme <- theme_classic(base_size = 11) +
       hjust = 0.5,
       margin = margin(b = 4)
     ),
-    plot.margin = margin(4, 4, 4, 4)
+    plot.margin = margin(4)
   )
 
 make_metric_plot <- function(
@@ -250,6 +253,7 @@ make_header <- function(label) {
       y = 0.5,
       label = label,
       size = 6.2,
+      family = "Arial",
       fontface = "bold"
     ) +
     xlim(0, 1) +
@@ -264,16 +268,25 @@ make_header <- function(label) {
     )
 }
 
-make_row_label <- function(label) {
+make_row_label <- function(label, aggregation) {
   ggplot() +
     annotate(
       "text",
       x = 0.5,
-      y = 0.5,
+      y = 0.56,
       label = label,
       size = 5.3,
-      fontface = "bold",
-      lineheight = 0.9
+      family = "Arial",
+      fontface = "bold"
+    ) +
+    annotate(
+      "text",
+      x = 0.5,
+      y = 0.43,
+      label = aggregation,
+      size = 4.3,
+      family = "Arial",
+      fontface = "bold"
     ) +
     xlim(0, 1) +
     ylim(0, 1) +
@@ -316,20 +329,17 @@ block_answers_niche <- make_block(
 )
 
 feedback_header <- make_header("Feedback")
-niche_header <- make_header("Niche expert")
+niche_header <- make_header("Niche-expert")
 
-knows_label <- make_row_label("Omniscient AI")
-answers_label <- make_row_label("Chatbot AI")
+knows_label <- make_row_label(
+  "Omniscient AI",
+  "(Averaging)"
+)
 
-layout_design <- "
-ABCD
-EFGH
-IIII
-JKLM
-"
-
-layout_widths <- c(0.25, 1, 0.015, 1)
-layout_heights <- c(0.12, 1, 0.025, 1)
+answers_label <- make_row_label(
+  "Chatbot AI",
+  "(Clustering)"
+)
 
 base_plot <- (
   plot_spacer() +
@@ -346,9 +356,14 @@ base_plot <- (
     plot_spacer() +
     block_answers_niche +
     plot_layout(
-      design = layout_design,
-      widths = layout_widths,
-      heights = layout_heights
+      design = "
+      ABCD
+      EFGH
+      IIII
+      JKLM
+      ",
+      widths = c(0.25, 1, 0.015, 1),
+      heights = c(0.12, 1, 0.025, 1)
     )
 ) +
   plot_annotation(

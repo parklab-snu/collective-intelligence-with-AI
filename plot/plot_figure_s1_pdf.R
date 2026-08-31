@@ -64,7 +64,7 @@ make_plot_data <- function(original_file, ai_file, by = 100) {
     )
   }
   
-  df <- bind_rows(
+  bind_rows(
     make_metric_df(
       "interest_diversity",
       "Interest diversity"
@@ -78,19 +78,17 @@ make_plot_data <- function(original_file, ai_file, by = 100) {
       "Collective variance"
     ),
     make_reliance_df()
-  )
-  
-  df$source <- factor(
-    df$source,
-    levels = legend_order
-  )
-  
-  df$Metric <- factor(
-    df$Metric,
-    levels = metric_order
-  )
-  
-  df
+  ) %>%
+    mutate(
+      source = factor(
+        source,
+        levels = legend_order
+      ),
+      Metric = factor(
+        Metric,
+        levels = metric_order
+      )
+    )
 }
 
 make_plot <- function(data) {
@@ -121,29 +119,12 @@ make_plot <- function(data) {
       values = my_colors
     ) +
     scale_x_continuous(
-      breaks = c(
-        0,
-        40000,
-        80000,
-        120000,
-        160000,
-        200000
-      ),
-      labels = c(
-        0,
-        4,
-        8,
-        12,
-        16,
-        20
-      )
+      breaks = c(0, 40000, 80000, 120000, 160000, 200000),
+      labels = c(0, 4, 8, 12, 16, 20)
     ) +
     labs(
-      x = expression(
-        Generation~"(" * "\u00D7" * 10^4 * ")"
-      ),
-      y = NULL,
-      color = "Type"
+      x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
+      y = NULL
     ) +
     theme_classic(
       base_family = "Arial"
@@ -152,8 +133,6 @@ make_plot <- function(data) {
       panel.grid = element_blank(),
       panel.background = element_blank(),
       plot.background = element_blank(),
-      legend.background = element_blank(),
-      legend.key = element_blank(),
       legend.position = "none",
       panel.border = element_rect(
         color = "black",
@@ -166,14 +145,6 @@ make_plot <- function(data) {
       ),
       axis.text = element_text(
         size = 12,
-        family = "Arial"
-      ),
-      legend.title = element_text(
-        size = 13,
-        family = "Arial"
-      ),
-      legend.text = element_text(
-        size = 11,
         family = "Arial"
       ),
       strip.text = element_text(
@@ -192,6 +163,7 @@ make_header <- function(label) {
       y = 0.5,
       label = label,
       size = 6.2,
+      family = "Arial",
       fontface = "bold"
     ) +
     xlim(0, 1) +
@@ -206,16 +178,25 @@ make_header <- function(label) {
     )
 }
 
-make_row_label <- function(label) {
+make_row_label <- function(label, aggregation) {
   ggplot() +
     annotate(
       "text",
       x = 0.5,
-      y = 0.5,
+      y = 0.56,
       label = label,
       size = 5.3,
-      fontface = "bold",
-      lineheight = 0.9
+      family = "Arial",
+      fontface = "bold"
+    ) +
+    annotate(
+      "text",
+      x = 0.5,
+      y = 0.43,
+      label = aggregation,
+      size = 4.3,
+      family = "Arial",
+      fontface = "bold"
     ) +
     xlim(0, 1) +
     ylim(0, 1) +
@@ -249,44 +230,23 @@ answers_niche_data <- make_plot_data(
   "AI_answers_question/clu_niche_Acc70_bias0.36_error0.3.RData"
 )
 
-plot_knows_feedback <- make_plot(
-  knows_feedback_data
-)
+plot_knows_feedback <- make_plot(knows_feedback_data)
+plot_knows_niche <- make_plot(knows_niche_data)
+plot_answers_feedback <- make_plot(answers_feedback_data)
+plot_answers_niche <- make_plot(answers_niche_data)
 
-plot_knows_niche <- make_plot(
-  knows_niche_data
-)
-
-plot_answers_feedback <- make_plot(
-  answers_feedback_data
-)
-
-plot_answers_niche <- make_plot(
-  answers_niche_data
-)
-
-feedback_header <- make_header(
-  "Feedback"
-)
-
-niche_header <- make_header(
-  "Niche expert"
-)
+feedback_header <- make_header("Feedback")
+niche_header <- make_header("Niche-expert")
 
 knows_label <- make_row_label(
-  "Omniscient AI"
+  "Omniscient AI",
+  "(Averaging)"
 )
 
 answers_label <- make_row_label(
-  "Chatbot AI"
+  "Chatbot AI",
+  "(Clustering)"
 )
-
-layout_design <- "
-ABCD
-EFGH
-IIII
-JKLM
-"
 
 base_plot <- (
   plot_spacer() +
@@ -303,7 +263,12 @@ base_plot <- (
     plot_spacer() +
     plot_answers_niche +
     plot_layout(
-      design = layout_design,
+      design = "
+      ABCD
+      EFGH
+      IIII
+      JKLM
+      ",
       widths = c(0.32, 1, 0.015, 1),
       heights = c(0.14, 1.2, 0.025, 1.2)
     )
@@ -319,10 +284,7 @@ base_plot <- (
   )
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary_Figure_1.pdf"
-  ),
+  file.path(save_path, "Supplementary_Figure_1.pdf"),
   base_plot,
   width = 14,
   height = 10.5,
@@ -330,3 +292,4 @@ ggsave(
   units = "in",
   bg = "white"
 )
+
