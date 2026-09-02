@@ -194,15 +194,15 @@ Instead, we use averaging aggregation, under which revised individual prediction
 Each generation consists of multiple round of predictions, and each player is rewarded a payoff according to the incentive structure (Figure 1C).
 For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff value rather than computing the payoffs for every round.
 We consider two incentive structures from previous work, ``feedback'' and ``niche-expert'', which have been shown to promote near-perfect collective accuracy in the absence of AI \cite{wang2025individual}.
-The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy: \js{$\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})$}.
-In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest: \js{$\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2$}.
-\js{Here, $\rho_{e_A}$ denotes the proportion of players interested in the same factor, thereby allowing the niche-expert structure to preserve interest diversity.}
+The feedback structure gives higher payoff to individuals who can push the collective prediction toward the true target, regardless of their individual predictive accuracy: $\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})$.
+In contrast, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest: $\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2$.
+Here, $\rho_{e_A}$ denotes the proportion of players interested in the same factor, thereby allowing the niche-expert structure to preserve interest diversity.
 We note collective intelligence fails to emerge under the combination of averaging aggregation with niche-expert structure in the absence of AI \cite{wang2025individual}.
 
 Through time, the group evolves by allowing each individual to imitate peers who received higher payoffs (Figure 1C).
-Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (the factor of interest, factor belief, and reliance on AI) of the other with a probability determined by the difference in their expected payoffs \js{(see the Simulations section in Methods)}.
+Specifically, after each generation, two individuals are randomly sampled, and one imitates all three strategies (the factor of interest, factor belief, and reliance on AI) of the other with a probability determined by the difference in their expected payoffs (Materials and Methods).
 Individual predictions are aggregated into a collective prediction $\hat{Y}$ based on the aggregation rules.
-Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction $\alpha_0$: \js{$1-\frac{\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}$}.
+Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction $\alpha_0$: $1-\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathbb{E}[(Y-\alpha_0)^2]$.
 Hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.
 
 This model now allows us to explore the impact of AI on CI depending on the mode of AI and the incentive structure.
@@ -215,7 +215,6 @@ Here, we begin by comparing the emergence of CI with and without AI and subseque
 \caption{
 \textbf{Comparison of collective accuracy with and without AI.} 
 Trajectories of collective accuracy when the group is assisted by the Omniscient AI (A,B) and Chatbot AI (C,D).
-\swp{Maybe we should also name the averaging rule below AI...}
 Here, feedback (A,C) and niche-expert (B,D) incentive structures are considered.
 Green lines represent trajectories of collective accuracy without AI assistance.
 Red lines represent trajectories of collective accuracy with AI assistance.
@@ -229,21 +228,21 @@ AI parameters: $b_i = 0.36$ and $\tau = 0.3$.
 To understand the impact of AI, we first compare collective dynamics with and without AI.
 First, consistent with \cite{wang2025individual}, simple imitation rules and incentive structures allow collective intelligence to emerge in the absence of AI (Fig. 2A,C,D).
 One exception is the use of simple averaging with niche-expert incentive structures, under which the collective accuracy of the population remains near zero. 
-\js{This is because enhancing individual accuracy causes individuals to predict close to the true coefficient of their interest, but simply averaging these predictions does not necessarily produce an accurate estimate of the full prediction target.}\swp{because...} (Fig. 2B) \swp{maybe need a supp figure}.
+\js{This is because enhancing individual accuracy causes individuals to predict close to the true coefficient of their interest, but simply averaging these predictions does not necessarily produce an accurate estimate of the full prediction target.} (Fig. 2B).
 
 We find that AI usage can have heterogeneous outcomes depending on its type.
 For example, the use of Omniscient AI can either preserve CI under the feedback incentive structure (Fig. 2A) or promote higher collective accuracy under the niche-expert incentive structure (Fig. 2B).
-These results are robust across different levels of AI accuracy and can be shown analytically by assuming a sufficiently large group of players (Fig. S1; see SI Evolutionary dynamics section).
+These results are robust across different levels of AI accuracy and can be shown analytically by assuming a sufficiently large group of players (Fig. S1; see SI Evolutionary dynamics section). \swp{TODO}
 
 In contrast, the use of Chatbot AI prevents the emergence of CI, thereby resulting in lower levels of collective accuracy (Fig. 2C, D).
 Under the feedback incentive structure, the use of Chatbot AI leads to a loss of diversity in the population's interest, making it impossible to account for effect of some causal factors (Fig. S1, S2).
-This causes an increase in collective variance and stochastic decrease in collective accuracy (Fig. 1, S1)\swp{Supp}.
+This causes an increase in collective variance and stochastic decrease in collective accuracy (Fig. 1, S1).
 We note that the loss of interest diversity may arise even in the absence of AI in finite populations (Fig. S3), but the use of Chatbot AI makes the group more vulnerable to such loss (Fig. S3, S4).
 Under the niche-expert incentive structure, the population becomes overly reliant on AI, causing the collective prediction to inherit the AI's bias (Fig. S2).
-This leads to an increase in collective bias and a decrease in collective accuracy (Fig. 2, S2) \swp{Supp}.
+This leads to an increase in collective bias and a decrease in collective accuracy (Fig. 2, S2).
 Interestingly, we find that the niche-expert structure can prevent the use of AI under specific assumptions about the relationship between the true coefficient and AI bias (Fig. S1).
 In this case, the population completely excludes AI assistance, allowing the CI to emerge eventually.
-However, this phenomenon can substantially delay the emergence of CI (Fig. S5) \swp{Supp}.
+However, this phenomenon can substantially delay the emergence of CI (Fig. S5).
 
 To investigate whether the group can retain its predictive ability when AI assistance suddenly becomes unavailable at any given time, we quantify counterfactual collective accuracy based on unrevised predictions.
 Across all scenarios, we find that the counterfactual collective accuracy is lower than the collective accuracy of the corresponding population.
