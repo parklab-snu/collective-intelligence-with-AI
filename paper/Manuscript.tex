@@ -151,7 +151,7 @@ Such discrepancy raises a question about whether directly incentivizing or penal
 These observations further highlight the importance of indentifying a robust incentive structure that can promote CI in the presence of personal AI assistants.
 Such incentive structure should seek to retain the benefits of AIs and prevent potential risk, such as preserving the diversity of individual opinions.
 
-To address these questions, we extend previous approaches for modeling CI, where each individual makes independent predictions for the outcome from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
+To address these questions, we extend previous approaches for modeling CI, where each individual participates in a prediction task from partial observations of underlying causal factors \cite{mann2017optimal,wang2025individual,hong2012incentives}.
 In particular, we allow each individual to independently consult with personal AI assistants and revise their predictions accordingly.
 The resulting model allows us to investigate the robustness of human CIs under different assumptions about the AI model's ability to make predictions as well as incentive structures that are associated with the prediction task.
 In doing so, we assess the impact of directly incentivizing or penalizing AI uses on CI and further suggest a balanced incentive structure that can maintain CI in the presence of AI.
@@ -171,9 +171,9 @@ We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the a
 \end{figure}
 
 We begin by extending previously established models of CI, in which a group of players participates in a prediction task (Figure 1): each player makes an individual prediction based on partial observations of the underlying causal factors, and the group forms a collective prediction by aggregating these individual predictions \cite{hong2012incentives, mann2017optimal,wang2025individual}.
-Specifically, the prediction target $(Y)$ is modeled as a linear combination of $M$ causal factors $x_i$, with fixed coefficients $\alpha_i$: $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution (Figure 1A).
-Then, each individual $A$ observes a single factor of their interest $x_{e_A}$ and makes a prediction based on their own belief $c_A$: $Y_{A} = c_A x_{e_A}$ (Figure 1B).
-We assume each individual can then independently consult their AI assistants and revise their prediction based on their reliance on AI $\beta_A$: $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$ (Figure 1B).
+Specifically, the prediction target, $Y$, is modeled as a linear combination of $M$ causal factors $x_i$, with fixed coefficients $\alpha_i$: $Y = \sum_{i = 1}^{M} \alpha_i x_i + \alpha_0$, where each factor is drawn from independent normal distribution (Figure 1A).
+Then, each individual $A$ observes a single factor of their interest $x_{e_A}$ and makes a prediction based on their own belief, $c_A$: $Y_{A} = c_A x_{e_A}$ (Figure 1B).
+We assume each individual can then independently consult their AI assistants and revise their prediction based on their reliance on AI, $\beta_A$: $Y_A^{re} = \beta_A Y_A^{AI} + (1 - \beta_A) Y_A$ (Figure 1B).
 The revised predictions are then aggregated using two alternative aggregation rules, averaging and clustering, to form collective prediction.
 
 To model AI, we assume that AI has already been trained on similar tasks and is able to make predictions based on partial or full observations of causal factors (Figure 1B).
@@ -185,11 +185,11 @@ In the other extreme, AI works like a chatbot, where the AI predicts the outcome
 $Y_{A}^{AI} = \alpha_{e_A}x_{e_A} + b_{e_{A}} + \epsilon$.
 Hereafter, we refer to these two types as `Omniscient AI' and `Chatbot AI', respectively.
 
-\js{We assume that appropriate aggregation rule for collective prediction depends on the type of AI.
-With Omniscient AI, each revised prediction contains information of all causal factors and therefore represents an estimate of the full prediction target.
-With Chatbot AI, each revised prediction remains an estimate of the contribution of a single factor to the target.
-Based on this distinction, we use averaging aggregation for Omniscient AI, in which revised individual predictions are simply averaged to form the collective prediction.
-For Chatbot AI, we use clustering aggregation, in which revised predictions are first averaged among individuals interested in the same factor, and then summed across factors.}
+We assume that appropriate aggregation rule for collective prediction depends on the type of AI.
+When Chatbot AI is used, each revised prediction depends on a single factor.
+Thus, we use clustering aggregation, under which revised predictions are first averaged among individuals who are interested in the same factor, and then summed across factors.
+When Omniscient AI is used, however, each revised prediction contains information about all causal factors, in which case clustering these predictions by interest would be inappropriate.
+Instead, we use averaging aggregation, under which revised individual predictions are averaged directly to form the collective prediction.
 
 Each generation consists of multiple round of predictions, and each player is rewarded a payoff according to the incentive structure (Figure 1C).
 For simplicity, we assume that a sufficiently large number of prediction rounds occurs within each generation, allowing us to use the expected payoff value rather than computing the payoffs for every round.
