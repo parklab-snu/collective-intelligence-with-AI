@@ -641,18 +641,20 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
 #        reliance_diversity = reliance_diversity)
 # }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/balanced_weight_sweep_2"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/balanced_sweep_random"
 
 #lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 #bias_list <- list(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
 #mu_list <- c(0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08)
 #belief_list <- c(8, 9, 10)
-#bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
-w_list <- c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
-belief_list <- c(1)
-for(i in belief_list){
-  for(j in w_list){
-    set.seed(42)  
+bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+#w_list <- c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
+#belief_list <- c(1)
+for(i in bias_list){
+  for(j in 1:30){
+    set.seed(NULL)
+    seed <- sample.int(.Machine$integer.max, 1)
+    set.seed(seed)
     m <- 50
     alpha <- runif(m+1, min = -5, max = 5)
     
@@ -674,7 +676,7 @@ for(i in belief_list){
       players <- cbind(interest, belief, AI_belief)
       
       bias_c <- rep(0, m+1)
-      bias_i <- rep(0.4, m+1)
+      bias_i <- rep(i, m+1)
       alpha_AI <- alpha + bias_c
       AI_error_sd <- 0.3
       
@@ -685,9 +687,9 @@ for(i in belief_list){
       AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
       cat("Accuracy:", AI_accuracy, "\n")
       
-      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda, w = j)
+      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda, w = 0.5)
       
-      filename <- sprintf("Balanced_j%02f.RData", j)
+      filename <- sprintf("Balanced_i%02f_j%02f.RData", i, j)
       filepath <- file.path(out_dir, filename)
       
       save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)

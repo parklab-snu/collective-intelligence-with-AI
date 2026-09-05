@@ -5,7 +5,7 @@ library(tidyverse)
 library(viridis)
 
 Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Original/avg_niche_seed42.RData"
-
+Figure_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 load(file.path(Simulation_path))
 
 set.seed(42)
@@ -78,7 +78,7 @@ p_difference <- ggplot(
   labs(
     x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
     y = NULL,
-    title = "Mean difference from the true coefficient"
+    title = "Mean absolute error from true coefficients"
   ) +
   common_theme
 
@@ -122,12 +122,12 @@ combined <- (
 
 ggsave(
   file.path(
-    dirname(Simulation_path),
-    "mean_difference_collective_accuracy_.pdf"
+    Figure_path,
+    "Supplementary figure 1.pdf"
   ),
   combined,
   width = 11,
-  height = 5.5,
+  height = 4.8,
   units = "in",
   device = grDevices::cairo_pdf,
   bg = "white"
