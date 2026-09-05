@@ -718,7 +718,7 @@ players <- cbind(interest, belief, AI_belief)
 
 bias_c <- rep(0, m+1)
 #bias_i <- runif(m+1, min = -1.0, max = 1.0)
-bias_i <- rep(0.4, m+1)
+bias_i <- rep(-0.6, m+1)
 alpha_AI <- alpha + bias_c
 AI_error_sd <- 0.3
 #corr<- cor(alpha, bias, method = "pearson")
@@ -728,9 +728,9 @@ cat("Accuracy:", AI_accuracy, "\n")
 
 lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda, mu = 0.1)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda, mu = 0.0)
 
-filename <- sprintf("clu_niche_seed42_b0.4_e0.3.RData")
+filename <- sprintf("clu_niche_b-0.6.RData")
 filepath <- file.path(out_dir, filename)
 
 save(Result, file = filepath)
