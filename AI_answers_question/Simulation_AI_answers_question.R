@@ -13,7 +13,7 @@ compute_p_revised_vec <- function(interest, belief, AI_belief, alpha_AI) {
 # Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
 compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, B_bar, alpha, sigma, bias, AI_error_sd,
-                               payoff_type, agg_type, C_const, N, lambda, alpha_AI) {
+                               payoff_type, agg_type, C_const, N, lambda, alpha_AI, w) {
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
   sigma_e <- sigma[k]
@@ -75,7 +75,9 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
       
       #(1-lambda)*(-rho_i * expr) + lambda*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
       #(1 / rho_i*50) * (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
-      {(-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/2
+      # original balanced {(-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/2
+      
+      {w*(-rho_i * expr) + (1-w)*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}
       
     } else if (payoff_type == "AI Feedback collective") {
       q     <- p_i - alpha_AI[k]               # p - alpha_AI,e
@@ -195,7 +197,7 @@ resync_state <- function(state, players, p_revised, m, N, alpha, sigma, bias, AI
 
 # main simulation
 main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd, agg_type = "clustering", payoff_type = "Feedback", s = 50, mu = 0, eps = 1e-12,
-                     resync_every = 1000, lambda) {
+                     resync_every = 1000, lambda, w) {
   # compute constants and initialize state values
   denom <- sum((alpha[-1] * sigma[-1])^2)
   C_const <- sum(alpha^2 * sigma^2)
@@ -264,9 +266,9 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
     if (r1 >= mu) {
       # compute payoff of two players
       payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
-                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI)
+                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI, w)
       payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
-                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI)
+                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI, w)
       
       p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
       r2 <- runif(1)
@@ -639,15 +641,17 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
 #        reliance_diversity = reliance_diversity)
 # }
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/belief_sweep"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/balanced_weight_sweep_2"
 
 #lambda_list <- list(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 #bias_list <- list(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
 #mu_list <- c(0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08)
-belief_list <- c(8, 9, 10)
-bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+#belief_list <- c(8, 9, 10)
+#bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+w_list <- c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
+belief_list <- c(1)
 for(i in belief_list){
-  for(j in bias_list){
+  for(j in w_list){
     set.seed(42)  
     m <- 50
     alpha <- runif(m+1, min = -5, max = 5)
@@ -660,7 +664,7 @@ for(i in belief_list){
       set.seed(1)
       N <- 10000
       G <- 200000
-      belief <- rnorm(N, mean = 0, sd = i)
+      belief <- rnorm(N, mean = 0, sd = 5)
       #Sample initial interest (SRS form 0 to 50)
       interest <- sample(0:m, size = N, replace = TRUE)
       #Sample initial AI belief
@@ -670,7 +674,7 @@ for(i in belief_list){
       players <- cbind(interest, belief, AI_belief)
       
       bias_c <- rep(0, m+1)
-      bias_i <- rep(j, m+1)
+      bias_i <- rep(0.4, m+1)
       alpha_AI <- alpha + bias_c
       AI_error_sd <- 0.3
       
@@ -681,9 +685,9 @@ for(i in belief_list){
       AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
       cat("Accuracy:", AI_accuracy, "\n")
       
-      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
+      Result<- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda, w = j)
       
-      filename <- sprintf("Feedback_k%02d_i%02d_j%02f.RData", k, i, j)
+      filename <- sprintf("Balanced_j%02f.RData", j)
       filepath <- file.path(out_dir, filename)
       
       save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
@@ -705,7 +709,7 @@ alpha <- runif(m+1, min = -5, max = 5)
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
 N <- 10000
-G <- 1000000
+G <- 200000
 belief <- rnorm(N, mean = 0, sd = 5)
 #Sample initial interest (SRS form 0 to 50)
 interest <- sample(0:m, size = N, replace = TRUE)
@@ -727,7 +731,7 @@ cat("Accuracy:", AI_accuracy, "\n")
 
 lambda <- 0
 
-Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda, mu = 0.00)
+Result <- main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda, mu = 0.00, w = 0.99)
 
 players <- Result$players_intime[1000,,]
 players[players[, 1] == 0, ]

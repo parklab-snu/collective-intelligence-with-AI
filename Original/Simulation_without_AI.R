@@ -246,7 +246,7 @@ sigma <- c(1, sigma)
 
 # build players
 # number of players
-N <- 10000
+N <- 100000
 # sample initial belief (Sample from normal distribution)
 belief <- rnorm(N, mean = 0, sd = 5)
 # sample initial interest (SRS form 0 to 50)
@@ -255,15 +255,15 @@ interest <- sample(0:m, size = N, replace = TRUE)
 players <- cbind(interest, belief)
 
 # run simulation
-G <- 1000000
+G <- 200000
 
 # agg_type = "clustering" / "averaging"
 # payoff_type = "Expert" / Niche expert" / "Feedback"
-Result <- main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback', mu = 0.00)
+Result <- main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert', mu = 0.00)
 
 out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Original"
 
-filename <- sprintf("mu_0.00.RData")
+filename <- sprintf("clu_niche_100k_pop.RData")
 filepath <- file.path(out_dir, filename)
 
 save(Result, file = filepath)
@@ -273,20 +273,16 @@ library(tidyr)
 library(dplyr)
 # exploratory visualization
 accuracy <- Result$accuracy
-median_AI_belief <- Result$median_AI_belief
-
-median_AI_belief[900000]
 
 df <- data.frame(
   Generation = seq_along(accuracy),
   Accuracy = accuracy,
-  Reliance = median_AI_belief,
   source = "clustering_feedback_AI"
 )
 
 df_long <- pivot_longer(
   df,
-  cols = c(Accuracy, Reliance),
+  cols = c(Accuracy),
   names_to = "metric",
   values_to = "value"
 )
@@ -295,8 +291,7 @@ plot <- ggplot(df_long, aes(x = Generation, y = value, color = metric, linetype 
   geom_line(linewidth = 1) +
   facet_wrap(~metric, scales = "free_y", ncol = 1) +
   scale_color_manual(values = c(
-    "Accuracy" = "blue",
-    "Reliance" = "red"
+    "Accuracy" = "blue"
   )) +
   labs(title = "Clustering Feedback AI")
 
