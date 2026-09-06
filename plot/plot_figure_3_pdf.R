@@ -3,6 +3,7 @@ library(dplyr)
 library(patchwork)
 
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
 lambda_list <- c(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 bias_list <- c(-0.4, -0.2, 0.2, 0.4)
@@ -453,7 +454,7 @@ base_plot <- (
   )
 
 ggsave(
-  file.path(project_path, "Adv_all_cases.pdf"),
+  file.path(save_path, "Figure 3.pdf"),
   base_plot,
   width = 18,
   height = 9,

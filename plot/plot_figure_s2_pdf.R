@@ -1,8 +1,11 @@
+library(ggh4x)
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 library(patchwork)
 
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Figures"
 
 answers_feedback_path <- file.path(
   project_path,
@@ -25,6 +28,15 @@ knows_niche_path <- file.path(
 )
 
 bias_list <- seq(-0.6, 0.6, by = 0.1)
+
+metric_order <- c(
+  "Collective accuracy",
+  "Counterfactual human CI",
+  "Median reliance on AI",
+  "Collective variance",
+  "Collective bias",
+  "Interest Diversity"
+)
 
 read_stationary <- function(path, filename) {
   df <- bind_rows(lapply(bias_list, function(i) {
@@ -50,106 +62,110 @@ read_stationary <- function(path, filename) {
   }))
   
   df %>%
-    filter(Generation >= 190000, Generation <= 200000) %>%
+    filter(
+      Generation >= 190000,
+      Generation <= 200000
+    ) %>%
     group_by(bias_i) %>%
     summarise(
-      accuracy = mean(accuracy),
-      human_accuracy = mean(human_accuracy),
-      median_AI_belief = mean(median_AI_belief),
-      bias_sq = mean(bias_sq),
-      variance = mean(variance),
-      interest_diversity = mean(interest_diversity),
+      accuracy = mean(accuracy, na.rm = TRUE),
+      human_accuracy = mean(human_accuracy, na.rm = TRUE),
+      median_AI_belief = mean(median_AI_belief, na.rm = TRUE),
+      bias_sq = mean(bias_sq, na.rm = TRUE),
+      variance = mean(variance, na.rm = TRUE),
+      interest_diversity = mean(interest_diversity, na.rm = TRUE),
       .groups = "drop"
     ) %>%
     arrange(bias_i)
 }
 
+to_long <- function(data) {
+  data %>%
+    rename(
+      `Collective accuracy` = accuracy,
+      `Counterfactual human CI` = human_accuracy,
+      `Median reliance on AI` = median_AI_belief,
+      `Collective variance` = variance,
+      `Collective bias` = bias_sq,
+      `Interest Diversity` = interest_diversity
+    ) %>%
+    pivot_longer(
+      cols = -bias_i,
+      names_to = "Metric",
+      values_to = "Value"
+    ) %>%
+    mutate(
+      Metric = factor(
+        Metric,
+        levels = metric_order
+      )
+    )
+}
+
 answers_feedback <- read_stationary(
   answers_feedback_path,
   "adv_feedback_k%02d_i%03d_j%02f.RData"
-)
+) %>%
+  to_long()
 
 answers_niche <- read_stationary(
   answers_niche_path,
   "adv_niche_k%02d_i%03d_j%02f.RData"
-)
+) %>%
+  to_long()
 
 knows_feedback <- read_stationary(
   knows_feedback_path,
   "adv_feedback_k%02d_i%03d_j%02f.RData"
-)
+) %>%
+  to_long()
 
 knows_niche <- read_stationary(
   knows_niche_path,
   "adv_feedback_k%02d_i%03d_j%02f.RData"
-)
+) %>%
+  to_long()
 
 line_width <- 1
 point_size <- 3.4
-color1 <- "#00658d"
+color1 <- "#D55E00"
 
-x_scale <- scale_x_continuous(
-  breaks = c(-0.6, -0.3, 0, 0.3, 0.6)
-)
-
-single_theme <- theme_classic(
-  base_family = "Arial",
-  base_size = 11
-) +
-  theme(
-    panel.border = element_rect(
-      color = "black",
-      fill = NA,
-      linewidth = 0.65
-    ),
-    axis.title.x = element_text(
-      size = 12,
-      margin = margin(t = 6)
-    ),
-    axis.text = element_text(
-      size = 10,
-      color = "black"
-    ),
-    axis.ticks = element_line(
-      color = "black",
-      linewidth = 0.5
-    ),
-    plot.title = element_text(
-      size = 11.5,
-      hjust = 0.5,
-      margin = margin(b = 4)
-    ),
-    plot.margin = margin(4)
-  )
-
-make_metric_plot <- function(
+make_plot <- function(
     data,
-    metric,
-    title,
-    ylim = NULL,
-    hide_x = FALSE,
-    reference = FALSE,
+    variance_limit,
+    bias_limit,
     reference_y = 1
 ) {
-  p <- ggplot(
+  
+  ggplot(
     data,
     aes(
       x = bias_i,
-      y = .data[[metric]]
+      y = Value
     )
-  )
-  
-  if (reference) {
-    p <- p +
-      geom_hline(
-        yintercept = reference_y,
-        linetype = "dashed",
-        linewidth = 0.8,
-        color = "#7E7E7E"
-      )
-  }
-  
-  p <- p +
+  ) +
+    geom_hline(
+      data = data.frame(
+        Metric = factor(
+          c(
+            "Collective accuracy",
+            "Counterfactual human CI"
+          ),
+          levels = metric_order
+        ),
+        reference_y = c(
+          reference_y,
+          reference_y
+        )
+      ),
+      aes(
+        yintercept = reference_y
+      ),
+      linetype = "dashed",
+      linewidth = 0.8,
+      color = "#7E7E7E",
+      inherit.aes = FALSE
+    ) +
     geom_line(
       linewidth = line_width,
       color = color1
@@ -158,91 +174,99 @@ make_metric_plot <- function(
       size = point_size,
       color = color1
     ) +
-    x_scale +
-    labs(
-      x = if (hide_x) NULL else "Bias",
-      y = NULL,
-      title = title
+    facet_wrap(
+      ~ Metric,
+      ncol = 3,
+      scales = "free_y"
     ) +
-    single_theme
-  
-  if (!is.null(ylim)) {
-    p <- p +
-      coord_cartesian(ylim = ylim)
-  }
-  
-  if (hide_x) {
-    p <- p +
-      theme(
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
+    facetted_pos_scales(
+      y = list(
+        Metric == "Collective accuracy" ~
+          scale_y_continuous(
+            limits = c(0, 1),
+            breaks = c(0, 0.25, 0.5, 0.75, 1)
+          ),
+        
+        Metric == "Median reliance on AI" ~
+          scale_y_continuous(
+            limits = c(0, 1),
+            breaks = c(0, 0.25, 0.5, 0.75, 1)
+          ),
+        
+        Metric == "Collective variance" ~
+          scale_y_continuous(
+            limits = variance_limit
+          ),
+        
+        Metric == "Collective bias" ~
+          scale_y_continuous(
+            limits = bias_limit
+          ),
+        
+        Metric == "Interest Diversity" ~
+          scale_y_continuous(
+            limits = c(0, 51)
+          )
       )
-  }
-  
-  p
-}
-
-make_block <- function(
-    data,
-    variance_limit,
-    bias_limit,
-    reference_y = 1
-) {
-  p_accuracy <- make_metric_plot(
-    data,
-    "accuracy",
-    "Collective accuracy",
-    ylim = c(0, 1),
-    hide_x = TRUE,
-    reference = TRUE,
-    reference_y = reference_y
-  )
-  
-  p_hacc <- make_metric_plot(
-    data,
-    "human_accuracy",
-    "Counterfactual human CI",
-    hide_x = TRUE,
-    reference = TRUE,
-    reference_y = reference_y
-  )
-  
-  p_belief <- make_metric_plot(
-    data,
-    "median_AI_belief",
-    "Median reliance on AI",
-    ylim = c(0, 1),
-    hide_x = TRUE
-  )
-  
-  p_var <- make_metric_plot(
-    data,
-    "variance",
-    "Collective variance",
-    ylim = variance_limit
-  ) +
-    labs(x = NULL)
-  
-  p_bias <- make_metric_plot(
-    data,
-    "bias_sq",
-    "Collective bias",
-    ylim = bias_limit
-  )
-  
-  p_div <- make_metric_plot(
-    data,
-    "interest_diversity",
-    "Interest Diversity",
-    ylim = c(0, 51)
-  ) +
-    labs(x = NULL)
-  
-  (
-    p_accuracy | p_hacc | p_belief
-  ) / (
-    p_var | p_bias | p_div
-  )
+    ) +
+    scale_x_continuous(
+      limits = c(-0.6, 0.6),
+      breaks = c(-0.6, -0.3, 0, 0.3, 0.6),
+      labels = c(
+        "-0.6",
+        "-0.3",
+        "0",
+        "0.3",
+        "0.6"
+      ),
+      expand = expansion(
+        mult = c(0, 0)
+      )
+    ) +
+    labs(
+      x = "Bias",
+      y = NULL
+    ) +
+    theme_classic(
+      base_family = "Arial",
+      base_size = 11
+    ) +
+    theme(
+      panel.grid = element_blank(),
+      panel.background = element_blank(),
+      plot.background = element_blank(),
+      panel.border = element_rect(
+        color = "black",
+        fill = NA,
+        linewidth = 0.65
+      ),
+      axis.title.x = element_text(
+        size = 12,
+        margin = margin(t = 6)
+      ),
+      axis.text = element_text(
+        size = 10,
+        color = "black"
+      ),
+      axis.ticks = element_line(
+        color = "black",
+        linewidth = 0.5
+      ),
+      strip.text = element_text(
+        size = 11.5,
+        family = "Arial"
+      ),
+      strip.background = element_blank(),
+      panel.spacing.x = grid::unit(
+        0.55,
+        "cm"
+      ),
+      panel.spacing.y = grid::unit(
+        0.45,
+        "cm"
+      ),
+      plot.margin = margin(4)
+    )
 }
 
 make_header <- function(label) {
@@ -264,11 +288,19 @@ make_header <- function(label) {
         fill = "grey88",
         color = NA
       ),
-      plot.margin = margin(0, 20, 6, 20)
+      plot.margin = margin(
+        0,
+        20,
+        6,
+        20
+      )
     )
 }
 
-make_row_label <- function(label, aggregation) {
+make_row_label <- function(
+    label,
+    aggregation
+) {
   ggplot() +
     annotate(
       "text",
@@ -296,40 +328,50 @@ make_row_label <- function(label, aggregation) {
         fill = "grey88",
         color = NA
       ),
-      plot.margin = margin(25, 16, 25, 8)
+      plot.margin = margin(
+        25,
+        16,
+        25,
+        8
+      )
     )
 }
 
-block_knows_feedback <- make_block(
+plot_knows_feedback <- make_plot(
   knows_feedback,
   variance_limit = c(0, 160),
   bias_limit = c(0, 160),
   reference_y = 1
 )
 
-block_knows_niche <- make_block(
+plot_knows_niche <- make_plot(
   knows_niche,
   variance_limit = c(0, 160),
   bias_limit = c(0, 160),
   reference_y = 0
 )
 
-block_answers_feedback <- make_block(
+plot_answers_feedback <- make_plot(
   answers_feedback,
   variance_limit = c(0, 1000),
   bias_limit = c(0, 800),
   reference_y = 1
 )
 
-block_answers_niche <- make_block(
+plot_answers_niche <- make_plot(
   answers_niche,
   variance_limit = c(0, 1000),
   bias_limit = c(0, 800),
   reference_y = 1
 )
 
-feedback_header <- make_header("Feedback")
-niche_header <- make_header("Niche-expert")
+feedback_header <- make_header(
+  "Feedback"
+)
+
+niche_header <- make_header(
+  "Niche-expert"
+)
 
 knows_label <- make_row_label(
   "Omniscient AI",
@@ -346,15 +388,18 @@ base_plot <- (
     feedback_header +
     plot_spacer() +
     niche_header +
+    
     knows_label +
-    block_knows_feedback +
+    plot_knows_feedback +
     plot_spacer() +
-    block_knows_niche +
+    plot_knows_niche +
+    
     plot_spacer() +
     answers_label +
-    block_answers_feedback +
+    plot_answers_feedback +
     plot_spacer() +
-    block_answers_niche +
+    plot_answers_niche +
+    
     plot_layout(
       design = "
       ABCD
@@ -362,8 +407,18 @@ base_plot <- (
       IIII
       JKLM
       ",
-      widths = c(0.25, 1, 0.015, 1),
-      heights = c(0.12, 1, 0.025, 1)
+      widths = c(
+        0.25,
+        1,
+        0.015,
+        1
+      ),
+      heights = c(
+        0.12,
+        1,
+        0.025,
+        1
+      )
     )
 ) +
   plot_annotation(
@@ -377,7 +432,10 @@ base_plot <- (
   )
 
 ggsave(
-  file.path(project_path, "Supplementary_Figure_2.pdf"),
+  file.path(
+    save_path,
+    "Supplementary figure 2.pdf"
+  ),
   base_plot,
   width = 18,
   height = 10.5,

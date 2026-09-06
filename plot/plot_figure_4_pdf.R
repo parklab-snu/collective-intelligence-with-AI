@@ -2,15 +2,16 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Figure4"
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Figure4"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
 feedback_env <- new.env()
 niche_env <- new.env()
 balanced_env <- new.env()
 
-load(file.path(save_path, "Feedback_sequential.RData"), envir = feedback_env)
-load(file.path(save_path, "Niche_sequential.RData"), envir = niche_env)
-load(file.path(save_path, "Balanced_sequential.RData"), envir = balanced_env)
+load(file.path(project_path, "Feedback_sequential.RData"), envir = feedback_env)
+load(file.path(project_path, "Niche_sequential.RData"), envir = niche_env)
+load(file.path(project_path, "Balanced_sequential.RData"), envir = balanced_env)
 
 feedback_result <- feedback_env$Result
 niche_result <- niche_env$Result
@@ -379,7 +380,7 @@ final_plot <- (
 ggsave(
   file.path(
     save_path,
-    "trajectory_and_player_distributions_s_r_dash.pdf"
+    "Figure 4.pdf"
   ),
   final_plot,
   width = 16,

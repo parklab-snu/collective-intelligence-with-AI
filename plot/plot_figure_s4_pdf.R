@@ -4,10 +4,11 @@ library(cowplot)
 library(grid)
 
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
 output_path <- file.path(
   project_path,
-  "trajectory_and_accuracy_heatmaps.pdf"
+  "trajectory_and_interest_diversity_heatmaps.pdf"
 )
 
 font_family <- "Arial"
@@ -59,7 +60,7 @@ read_mu_sweep <- function(save_path, mu_list, bias_list) {
     data.frame(
       bias = factor(bias, levels = bias_list),
       parameter = factor(mu, levels = mu_list),
-      accuracy = extract_final(result$accuracy)
+      interest_diversity = extract_final(result$interest_diversity)
     )
   }))
 }
@@ -89,7 +90,7 @@ read_belief_sweep <- function(save_path, belief_list, bias_list) {
     data.frame(
       bias = factor(bias, levels = bias_list),
       parameter = factor(belief, levels = belief_list),
-      accuracy = extract_final(result$accuracy)
+      interest_diversity = extract_final(result$interest_diversity)
     )
   }))
 }
@@ -136,7 +137,7 @@ make_heatmap <- function(data, y_title, title_text) {
     aes(
       x = bias,
       y = parameter,
-      fill = accuracy
+      fill = interest_diversity
     )
   ) +
     geom_tile(
@@ -150,9 +151,8 @@ make_heatmap <- function(data, y_title, title_text) {
       expand = c(0, 0)
     ) +
     scale_fill_viridis_c(
-      name = "Collective accuracy",
-      limits = c(0, 1),
-      labels = function(x) sprintf("%.2f", x)
+      name = "Interest diversity",
+      limits = c(0, 51)
     ) +
     labs(
       x = "Bias",
@@ -193,7 +193,7 @@ ai_bias_list <- c(
 
 human_bias_list <- 0
 
-df_acc_mu <- read_mu_sweep(
+df_div_mu <- read_mu_sweep(
   file.path(
     project_path,
     "AI_answers_question/mu_sweep"
@@ -202,7 +202,7 @@ df_acc_mu <- read_mu_sweep(
   ai_bias_list
 )
 
-df_acc_b <- read_belief_sweep(
+df_div_b <- read_belief_sweep(
   file.path(
     project_path,
     "AI_answers_question/belief_sweep"
@@ -211,7 +211,7 @@ df_acc_b <- read_belief_sweep(
   ai_bias_list
 )
 
-df_acc_mu_ori <- read_mu_sweep(
+df_div_mu_ori <- read_mu_sweep(
   file.path(
     project_path,
     "Original/mu_sweep"
@@ -220,7 +220,7 @@ df_acc_mu_ori <- read_mu_sweep(
   human_bias_list
 )
 
-df_acc_b_ori <- read_belief_sweep(
+df_div_b_ori <- read_belief_sweep(
   file.path(
     project_path,
     "Original/belief_sweep"
@@ -229,26 +229,26 @@ df_acc_b_ori <- read_belief_sweep(
   human_bias_list
 )
 
-p_acc_mu_ori <- make_heatmap(
-  df_acc_mu_ori,
+p_div_mu_ori <- make_heatmap(
+  df_div_mu_ori,
   "Mutation rate",
   "Without AI"
 )
 
-p_acc_mu <- make_heatmap(
-  df_acc_mu,
+p_div_mu <- make_heatmap(
+  df_div_mu,
   "Mutation rate",
   "With AI"
 )
 
-p_acc_b_ori <- make_heatmap(
-  df_acc_b_ori,
+p_div_b_ori <- make_heatmap(
+  df_div_b_ori,
   "Belief SD",
   NULL
 )
 
-p_acc_b <- make_heatmap(
-  df_acc_b,
+p_div_b <- make_heatmap(
+  df_div_b,
   "Belief SD",
   NULL
 )
@@ -272,18 +272,14 @@ trajectory_files <- c(
   )
 )
 
-trajectory_labels <- c(
-  "Without AI, mutation rate 0",
-  "Without AI, mutation rate 0.01",
-  "With AI, mutation rate 0",
-  "With AI, mutation rate 0.01"
+trajectory_colors <- c(
+  "Without AI" = "#3381A3",
+  "With AI" = "#E76F51"
 )
 
-trajectory_colors <- c(
-  "Without AI, mutation rate 0" = "#333333",
-  "Without AI, mutation rate 0.01" = "#3381A3",
-  "With AI, mutation rate 0" = "#E76F51",
-  "With AI, mutation rate 0.01" = "#7A5195"
+trajectory_linewidths <- c(
+  "Mutation rate 0" = 2.2,
+  "Mutation rate 0.01" = 1.1
 )
 
 trajectory_results <- lapply(
@@ -294,39 +290,63 @@ trajectory_results <- lapply(
 idx <- unique(c(
   seq(
     1,
-    length(trajectory_results[[1]]$accuracy),
+    length(trajectory_results[[1]]$interest_diversity),
     by = 100
   ),
-  length(trajectory_results[[1]]$accuracy)
+  length(trajectory_results[[1]]$interest_diversity)
 ))
+
+trajectory_ai <- c(
+  "Without AI",
+  "Without AI",
+  "With AI",
+  "With AI"
+)
+
+trajectory_mutation <- c(
+  "Mutation rate 0",
+  "Mutation rate 0.01",
+  "Mutation rate 0",
+  "Mutation rate 0.01"
+)
 
 trajectory_data <- do.call(
   rbind,
   lapply(seq_along(trajectory_results), function(i) {
     data.frame(
       Generation = idx,
-      Accuracy = trajectory_results[[i]]$accuracy[idx],
-      Trajectory = trajectory_labels[i]
+      Interest_diversity = trajectory_results[[i]]$interest_diversity[idx],
+      AI = trajectory_ai[i],
+      Mutation_rate = trajectory_mutation[i]
     )
   })
 )
 
-trajectory_data$Trajectory <- factor(
-  trajectory_data$Trajectory,
-  levels = trajectory_labels
+trajectory_data$AI <- factor(
+  trajectory_data$AI,
+  levels = c("Without AI", "With AI")
+)
+
+trajectory_data$Mutation_rate <- factor(
+  trajectory_data$Mutation_rate,
+  levels = c("Mutation rate 0", "Mutation rate 0.01")
 )
 
 p_trj <- ggplot(
   trajectory_data,
   aes(
     x = Generation,
-    y = Accuracy,
-    color = Trajectory
+    y = Interest_diversity,
+    color = AI,
+    linewidth = Mutation_rate
   )
 ) +
-  geom_line(linewidth = 2) +
+  geom_line() +
   scale_color_manual(
     values = trajectory_colors
+  ) +
+  scale_linewidth_manual(
+    values = trajectory_linewidths
   ) +
   scale_x_continuous(
     limits = c(0, 1000000),
@@ -334,16 +354,23 @@ p_trj <- ggplot(
     labels = c("0", "25", "50", "75", "100"),
     expand = expansion(mult = c(0, 0))
   ) +
+  coord_cartesian(
+    ylim = c(0, 51)
+  ) +
   guides(
     color = guide_legend(
-      nrow = 2,
-      byrow = TRUE
+      order = 1,
+      override.aes = list(linewidth = 2.2)
+    ),
+    linewidth = guide_legend(
+      order = 2
     )
   ) +
   labs(
     x = expression("Generation (" * 10^4 * ")"),
-    y = "Collective accuracy",
-    color = NULL
+    y = "Interest diversity",
+    color = NULL,
+    linewidth = NULL
   ) +
   theme_classic() +
   theme(
@@ -370,7 +397,7 @@ p_trj <- ggplot(
   )
 
 heatmap_legend <- cowplot::get_legend(
-  p_acc_mu +
+  p_div_mu +
     guides(
       fill = guide_colorbar(
         direction = "horizontal",
@@ -388,29 +415,29 @@ heatmap_legend <- cowplot::get_legend(
     )
 )
 
-p_acc_mu_ori <- p_acc_mu_ori +
+p_div_mu_ori <- p_div_mu_ori +
   theme(legend.position = "none")
 
-p_acc_mu <- p_acc_mu +
+p_div_mu <- p_div_mu +
   theme(legend.position = "none")
 
-p_acc_b_ori <- p_acc_b_ori +
+p_div_b_ori <- p_div_b_ori +
   theme(legend.position = "none")
 
-p_acc_b <- p_acc_b +
+p_div_b <- p_div_b +
   theme(legend.position = "none")
 
 p_combined <- wrap_plots(
   A = make_tag_plot("A"),
   T = p_trj,
   B = make_tag_plot("B"),
-  H = p_acc_mu_ori,
+  H = p_div_mu_ori,
   C = make_tag_plot("C"),
-  I = p_acc_mu,
+  I = p_div_mu,
   D = make_tag_plot("D"),
-  J = p_acc_b_ori,
+  J = p_div_b_ori,
   E = make_tag_plot("E"),
-  K = p_acc_b,
+  K = p_div_b,
   L = wrap_elements(full = heatmap_legend),
   design = "
   ATTT
@@ -424,7 +451,10 @@ p_combined <- wrap_plots(
 )
 
 ggsave(
-  output_path,
+  file.path(
+    save_path,
+    "Supplementary figure 4.pdf"
+  ),
   p_combined,
   width = 11,
   height = 14,
@@ -432,3 +462,4 @@ ggsave(
   device = grDevices::cairo_pdf,
   bg = "white"
 )
+

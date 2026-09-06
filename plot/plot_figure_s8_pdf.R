@@ -1,214 +1,111 @@
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(tidyverse)
+library(viridis)
 
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/balanced_sweep_random"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
-balanced_weight_path <- file.path(
-  project_path,
-  "AI_answers_question/balanced_weight_sweep"
-)
+bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
 
-w_list <- c(
-  0.1, 0.2, 0.3, 0.4, 0.5,
-  0.6, 0.7, 0.8, 0.9
-)
+result_list <- list()
 
-read_balanced_weight_stationary <- function(path) {
-  df <- bind_rows(lapply(w_list, function(j) {
-    env <- new.env()
-
-    load(
-      file.path(
-        path,
-        sprintf("Balanced_j%02f.RData", j)
-      ),
-      envir = env
+for(i in bias_list){
+  for(j in 1:30){
+    filename <- sprintf("Balanced_i%02f_j%02f.RData", i, j)
+    filepath <- file.path(Simulation_path, filename)
+    
+    load(filepath)
+    
+    mean_reliance <- mean(
+      Result$median_AI_belief[190000:200000],
+      na.rm = TRUE
     )
-
-    result <- env$Result
-
-    data.frame(
-      balancing_weight = j,
-      Generation = seq_along(result$accuracy),
-      accuracy = result$accuracy,
-      human_accuracy = result$human_accuracy,
-      median_AI_belief = result$median_AI_belief,
-      bias_sq = result$bias_sq,
-      variance = result$variance,
-      interest_diversity = result$interest_diversity
+    
+    result_list[[length(result_list) + 1]] <- data.frame(
+      bias = i,
+      replicate = j,
+      median_reliance = mean_reliance
     )
-  }))
-
-  df %>%
-    filter(
-      Generation >= 190000,
-      Generation <= 200000
-    ) %>%
-    group_by(balancing_weight) %>%
-    summarise(
-      accuracy = mean(accuracy, na.rm = TRUE),
-      human_accuracy = mean(human_accuracy, na.rm = TRUE),
-      median_AI_belief = mean(median_AI_belief, na.rm = TRUE),
-      bias_sq = mean(bias_sq, na.rm = TRUE),
-      variance = mean(variance, na.rm = TRUE),
-      interest_diversity = mean(interest_diversity, na.rm = TRUE),
-      .groups = "drop"
-    ) %>%
-    arrange(balancing_weight)
+  }
 }
 
-df <- read_balanced_weight_stationary(
-  balanced_weight_path
-)
+result_df <- bind_rows(result_list)
 
-x_scale <- scale_x_continuous(
-  breaks = c(
-    0.1, 0.3, 0.5, 0.7, 0.9
-  ),
-  limits = c(0.1, 0.9)
-)
-
-single_theme <- theme_classic() +
+common_theme <- theme_classic(
+  base_family = "Arial"
+) +
   theme(
-    panel.grid = element_blank(),
-    panel.background = element_blank(),
-    plot.background = element_blank(),
     panel.border = element_rect(
       color = "black",
       fill = NA,
-      linewidth = 1
+      linewidth = 0.9
     ),
-    axis.title = element_text(
-      size = 20
-    ),
+    axis.title = element_text(size = 17),
     axis.text = element_text(
-      size = 16,
+      size = 14,
       color = "black"
     ),
-    axis.title.x.top = element_text(
-      margin = margin(b = 8)
+    axis.ticks = element_line(
+      color = "black",
+      linewidth = 0.7
     ),
-    axis.title.x.bottom = element_text(
-      margin = margin(t = 8)
-    ),
+    legend.text = element_text(size = 13),
+    legend.key.width = grid::unit(1.5, "cm"),
     plot.title = element_text(
-      size = 18,
+      size = 17,
+      face = "bold",
       hjust = 0.5
     )
   )
 
-make_metric_plot <- function(
-    metric,
-    title,
-    ylim = NULL,
-    hide_x = FALSE
-) {
-  p <- ggplot(
-    df,
-    aes(
-      x = balancing_weight,
-      y = .data[[metric]]
-    )
+p_reliance <- ggplot(
+  result_df,
+  aes(x = bias, y = median_reliance, group = bias)
+) +
+  geom_jitter(
+    width = 0.012,
+    height = 0,
+    size = 2.2,
+    alpha = 0.5,
+    color = "grey75"
   ) +
-    geom_line(
-      linewidth = 1.2,
-      color = "#C173C3"
-    ) +
-    geom_point(
-      size = 5,
-      color = "#C173C3"
-    ) +
-    x_scale +
-    labs(
-      x = if (hide_x) NULL else "Balancing weight",
-      y = NULL,
-      title = title
-    ) +
-    single_theme
-
-  if (!is.null(ylim)) {
-    p <- p +
-      coord_cartesian(
-        ylim = ylim
-      )
-  }
-
-  if (hide_x) {
-    p <- p +
-      theme(
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        plot.margin = margin(
-          5.5, 5.5, 30, 5.5
-        )
-      )
-  }
-
-  p
-}
-
-p_accuracy <- make_metric_plot(
-  "accuracy",
-  "Collective accuracy",
-  ylim = c(0, 1),
-  hide_x = TRUE
-)
-
-p_hacc <- make_metric_plot(
-  "human_accuracy",
-  "Counterfactual human CI",
-  hide_x = TRUE
-)
-
-p_belief <- make_metric_plot(
-  "median_AI_belief",
-  "Median reliance on AI",
-  ylim = c(0, 1),
-  hide_x = TRUE
-)
-
-p_var <- make_metric_plot(
-  "variance",
-  "Collective variance",
-  ylim = c(0, 1000)
-) +
+  geom_boxplot(
+    width = 0.055,
+    outlier.shape = NA,
+    fill = NA,
+    linewidth = 1,
+    color = "#98489E"
+  ) +
+  scale_x_continuous(
+    limits = c(-0.7, 0.7),
+    breaks = c(-0.6, -0.3, 0, 0.3, 0.6),
+    labels = c("-0.6", "-0.3", "0", "0.3", "0.6"),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  scale_y_continuous(
+    breaks = c(0, 0.5, 1),
+    labels = c("0.0", "0.5", "1.0"),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  coord_cartesian(
+    ylim = c(-0.05, 1.05)
+  ) +
   labs(
-    x = NULL
-  )
-
-p_bias <- make_metric_plot(
-  "bias_sq",
-  "Collective bias",
-  ylim = c(0, 800)
-)
-
-p_div <- make_metric_plot(
-  "interest_diversity",
-  "Interest Diversity",
-  ylim = c(0, 51)
-) +
-  labs(
-    x = NULL
-  )
-
-p_combined <- (
-  p_accuracy | p_hacc | p_belief
-) / (
-  p_var | p_bias | p_div
-) +
-  plot_layout(
-    axis_titles = "collect_x"
-  )
+    x = "Bias",
+    y = "Median reliance on AI"
+  ) +
+  common_theme
 
 ggsave(
   file.path(
-    project_path,
-    "balanced_weight_sweep.pdf"
+    Save_path,
+    "Supplementary figure 8.pdf"
   ),
-  p_combined,
-  width = 13,
-  height = 8,
+  p_reliance,
+  width = 5.5,
+  height = 4.8,
   units = "in",
   device = grDevices::cairo_pdf,
   bg = "white"

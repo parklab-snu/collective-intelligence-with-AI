@@ -1,295 +1,135 @@
-library(ggh4x)
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(tidyverse)
+library(viridis)
 
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/"
+Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Original/avg_niche_seed42.RData"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
-legend_order <- c(
-  "Human-only CI",
-  "AI-assisted CI"
+load(file.path(Simulation_path))
+
+set.seed(42)
+m <- 50
+alpha <- runif(m+1, min = -5, max = 5)
+
+players_intime <- Result$players_intime
+
+result <- t(sapply(seq_len(dim(players_intime)[1]), function(i) {
+  tapply(players_intime[i, , 2], players_intime[i, , 1], mean)
+}))
+
+abs_delta <- abs(sweep(result, 2, alpha, FUN = "-"))
+mean_delta <- rowMeans(abs_delta, na.rm = TRUE)
+
+accuracy <- Result$accuracy
+
+mean_delta_df <- data.frame(
+  Generation = seq(0, 200000, length.out = 100),
+  mean_abs_delta = mean_delta[1:100]
 )
 
-metric_order <- c(
-  "Interest diversity",
-  "Median reliance on AI",
-  "Collective bias",
-  "Collective variance"
+accuracy_df <- data.frame(
+  Generation = 0:200000,
+  accuracy = Result$accuracy[1:200001]
 )
 
-my_colors <- c(
-  "Human-only CI" = "#298C8C",
-  "AI-assisted CI" = "#A00000"
-)
-
-make_plot_data <- function(original_file, ai_file, by = 100) {
-  original_env <- new.env()
-  ai_env <- new.env()
-  
-  load(file.path(save_path, original_file), envir = original_env)
-  load(file.path(save_path, ai_file), envir = ai_env)
-  
-  original_result <- original_env$Result
-  ai_result <- ai_env$Result
-  
-  idx <- seq(1, 200000, by = by)
-  
-  make_metric_df <- function(metric_name, metric_label) {
-    data.frame(
-      Generation = rep(idx, 2),
-      Value = c(
-        original_result[[metric_name]][idx],
-        ai_result[[metric_name]][idx]
-      ),
-      source = rep(
-        c("Human-only CI", "AI-assisted CI"),
-        each = length(idx)
-      ),
-      Metric = metric_label
-    )
-  }
-  
-  make_reliance_df <- function() {
-    data.frame(
-      Generation = rep(idx, 2),
-      Value = c(
-        rep(0, length(idx)),
-        ai_result$median_AI_belief[idx]
-      ),
-      source = rep(
-        c("Human-only CI", "AI-assisted CI"),
-        each = length(idx)
-      ),
-      Metric = "Median reliance on AI"
-    )
-  }
-  
-  bind_rows(
-    make_metric_df(
-      "interest_diversity",
-      "Interest diversity"
-    ),
-    make_metric_df(
-      "bias_sq",
-      "Collective bias"
-    ),
-    make_metric_df(
-      "variance",
-      "Collective variance"
-    ),
-    make_reliance_df()
-  ) %>%
-    mutate(
-      source = factor(
-        source,
-        levels = legend_order
-      ),
-      Metric = factor(
-        Metric,
-        levels = metric_order
-      )
-    )
-}
-
-make_plot <- function(data) {
-  ggplot(
-    data,
-    aes(
-      x = Generation,
-      y = Value,
-      color = source
-    )
-  ) +
-    geom_line(
-      linewidth = 1.5,
-      lineend = "round"
-    ) +
-    facet_wrap(
-      ~ Metric,
-      ncol = 2,
-      scales = "free_y"
-    ) +
-    facetted_pos_scales(
-      y = list(
-        Metric == "Interest diversity" ~
-          scale_y_continuous(limits = c(0, 51))
-      )
-    ) +
-    scale_color_manual(
-      values = my_colors
-    ) +
-    scale_x_continuous(
-      breaks = c(0, 40000, 80000, 120000, 160000, 200000),
-      labels = c(0, 4, 8, 12, 16, 20)
-    ) +
-    labs(
-      x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
-      y = NULL
-    ) +
-    theme_classic(
-      base_family = "Arial"
-    ) +
-    theme(
-      panel.grid = element_blank(),
-      panel.background = element_blank(),
-      plot.background = element_blank(),
-      legend.position = "none",
-      panel.border = element_rect(
-        color = "black",
-        fill = NA,
-        linewidth = 1
-      ),
-      axis.title = element_text(
-        size = 12,
-        family = "Arial"
-      ),
-      axis.text = element_text(
-        size = 12,
-        family = "Arial"
-      ),
-      strip.text = element_text(
-        size = 11,
-        family = "Arial"
-      ),
-      strip.background = element_blank()
-    )
-}
-
-make_header <- function(label) {
-  ggplot() +
-    annotate(
-      "text",
-      x = 0.5,
-      y = 0.5,
-      label = label,
-      size = 6.2,
-      family = "Arial",
-      fontface = "bold"
-    ) +
-    xlim(0, 1) +
-    ylim(0, 1) +
-    theme_void() +
-    theme(
-      panel.background = element_rect(
-        fill = "grey88",
-        color = NA
-      ),
-      plot.margin = margin(0, 25, 6, 20)
-    )
-}
-
-make_row_label <- function(label, aggregation) {
-  ggplot() +
-    annotate(
-      "text",
-      x = 0.5,
-      y = 0.56,
-      label = label,
-      size = 5.3,
-      family = "Arial",
-      fontface = "bold"
-    ) +
-    annotate(
-      "text",
-      x = 0.5,
-      y = 0.43,
-      label = aggregation,
-      size = 4.3,
-      family = "Arial",
-      fontface = "bold"
-    ) +
-    xlim(0, 1) +
-    ylim(0, 1) +
-    theme_void() +
-    theme(
-      panel.background = element_rect(
-        fill = "grey88",
-        color = NA
-      ),
-      plot.margin = margin(25, 16, 25, 8)
-    )
-}
-
-knows_feedback_data <- make_plot_data(
-  "Original/avg_feedback.RData",
-  "AI_knows_all/avg_feedback_Acc70_bias0.36_error0.3.RData"
-)
-
-knows_niche_data <- make_plot_data(
-  "Original/avg_niche.RData",
-  "AI_knows_all/avg_niche_Acc70_bias0.36_error0.3.RData"
-)
-
-answers_feedback_data <- make_plot_data(
-  "Original/clu_feedback.RData",
-  "AI_answers_question/clu_feedback_Acc70_bias0.36_error0.3.RData"
-)
-
-answers_niche_data <- make_plot_data(
-  "Original/clu_niche.RData",
-  "AI_answers_question/clu_niche_Acc70_bias0.36_error0.3.RData"
-)
-
-plot_knows_feedback <- make_plot(knows_feedback_data)
-plot_knows_niche <- make_plot(knows_niche_data)
-plot_answers_feedback <- make_plot(answers_feedback_data)
-plot_answers_niche <- make_plot(answers_niche_data)
-
-feedback_header <- make_header("Feedback")
-niche_header <- make_header("Niche-expert")
-
-knows_label <- make_row_label(
-  "Omniscient AI",
-  "(Averaging)"
-)
-
-answers_label <- make_row_label(
-  "Chatbot AI",
-  "(Clustering)"
-)
-
-base_plot <- (
-  plot_spacer() +
-    feedback_header +
-    plot_spacer() +
-    niche_header +
-    knows_label +
-    plot_knows_feedback +
-    plot_spacer() +
-    plot_knows_niche +
-    plot_spacer() +
-    answers_label +
-    plot_answers_feedback +
-    plot_spacer() +
-    plot_answers_niche +
-    plot_layout(
-      design = "
-      ABCD
-      EFGH
-      IIII
-      JKLM
-      ",
-      widths = c(0.32, 1, 0.015, 1),
-      heights = c(0.14, 1.2, 0.025, 1.2)
-    )
+common_theme <- theme_classic(
+  base_family = "Arial"
 ) +
-  plot_annotation(
-    theme = theme(
-      plot.background = element_rect(
-        fill = "white",
-        color = NA
-      ),
-      plot.margin = margin(0)
+  theme(
+    panel.border = element_rect(
+      color = "black",
+      fill = NA,
+      linewidth = 0.9
+    ),
+    axis.title = element_text(size = 17),
+    axis.text = element_text(
+      size = 14,
+      color = "black"
+    ),
+    axis.ticks = element_line(
+      color = "black",
+      linewidth = 0.7
+    ),
+    legend.text = element_text(size = 13),
+    legend.key.width = grid::unit(1.5, "cm"),
+    plot.title = element_text(
+      size = 17,
+      face = "bold",
+      hjust = 0.5
     )
   )
 
+p_difference <- ggplot(
+  mean_delta_df,
+  aes(x = Generation, y = mean_abs_delta)
+) +
+  geom_line(
+    linewidth = 1.5,
+    lineend = "round",
+    color = "#0072B2"
+  ) +
+  scale_x_continuous(
+    limits = c(0, 200000),
+    breaks = c(0, 50000, 100000, 150000, 200000),
+    labels = c(0, 5, 10, 15, 20),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  labs(
+    x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
+    y = NULL,
+    title = "Mean absolute error from true coefficients"
+  ) +
+  common_theme
+
+p_accuracy <- ggplot(
+  accuracy_df,
+  aes(x = Generation, y = accuracy)
+) +
+  geom_line(
+    linewidth = 1.5,
+    lineend = "round",
+    color = "#0072B2"
+  ) +
+  scale_x_continuous(
+    limits = c(0, 200000),
+    breaks = c(0, 50000, 100000, 150000, 200000),
+    labels = c(0, 5, 10, 15, 20),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  scale_y_continuous(
+    breaks = c(0, 0.5, 1),
+    labels = c("0.0", "0.5", "1.0"),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  coord_cartesian(
+    ylim = c(-0.05, 1.05)
+  ) +
+  labs(
+    x = expression(Generation~"(" * "\u00D7" * 10^4 * ")"),
+    y = NULL,
+    title = "Collective accuracy"
+  ) +
+  common_theme
+
+combined <- (
+  p_difference |
+    p_accuracy
+) +
+  plot_layout(
+    guides = "collect"
+  )
+
 ggsave(
-  file.path(save_path, "Supplementary_Figure_1.pdf"),
-  base_plot,
-  width = 14,
-  height = 10.5,
-  device = grDevices::cairo_pdf,
+  file.path(
+    save_path,
+    "Supplementary figure 1.pdf"
+  ),
+  combined,
+  width = 11,
+  height = 4.8,
   units = "in",
+  device = grDevices::cairo_pdf,
   bg = "white"
 )
-

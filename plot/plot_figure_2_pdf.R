@@ -3,8 +3,8 @@ library(dplyr)
 library(tidyr)
 library(patchwork)
 
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/"
-
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/"
+save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Figures/"
 idx <- unique(c(seq(1, 200000, by = 100), 200000))
 
 trajectory_order <- c(
@@ -16,14 +16,14 @@ trajectory_order <- c(
 incentive_order <- c("Feedback", "Niche-expert")
 
 trajectory_colors <- c(
-  "Without AI" = "#298C8C",
-  "With AI" = "#A00000",
-  "Counterfactual human CI" = "#A6A6A6"
+  "Without AI" = "#0072B2",
+  "With AI" = "#D55E00",
+  "Counterfactual human CI" = "#999999"
 )
 
 read_result <- function(file) {
   env <- new.env()
-  load(file.path(save_path, file), envir = env)
+  load(file.path(project_path, file), envir = env)
   env$Result
 }
 
@@ -335,11 +335,20 @@ combined_plot <- (
   )
 
 ggsave(
-  file.path(save_path, "accuracy_trajectories_combined.pdf"),
+  file.path(save_path, "Figure 2.pdf"),
   combined_plot,
   width = 14,
   height = 10.5,
   units = "in",
   device = cairo_pdf,
+  bg = "white"
+)
+
+
+ggsave(
+  file.path(save_path, "Figure 2.png"),
+  combined_plot,
+  width = 14,
+  height = 10.5,
   bg = "white"
 )

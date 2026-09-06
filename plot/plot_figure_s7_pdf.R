@@ -5,36 +5,32 @@ library(patchwork)
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
 save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
-feedback_path <- file.path(
+balanced_weight_path <- file.path(
   project_path,
-  "AI_answers_question/Feedback_biassweep"
+  "AI_answers_question/balanced_weight_sweep"
 )
 
-niche_path <- file.path(
-  project_path,
-  "AI_answers_question/Nicheexpert_biassweep"
+w_list <- c(
+  0.1, 0.2, 0.3, 0.4, 0.5,
+  0.6, 0.7, 0.8, 0.9
 )
 
-balanced_path <- file.path(
-  project_path,
-  "AI_answers_question/Balanced_biassweep"
-)
-
-bias_list <- seq(-0.6, 0.6, by = 0.1)
-
-read_stationary <- function(path, filename, source) {
-  df <- bind_rows(lapply(bias_list, function(i) {
+read_balanced_weight_stationary <- function(path) {
+  df <- bind_rows(lapply(w_list, function(j) {
     env <- new.env()
-    
+
     load(
-      file.path(path, sprintf(filename, 1, 0, i)),
+      file.path(
+        path,
+        sprintf("Balanced_j%02f.RData", j)
+      ),
       envir = env
     )
-    
+
     result <- env$Result
-    
+
     data.frame(
-      bias_i = i,
+      balancing_weight = j,
       Generation = seq_along(result$accuracy),
       accuracy = result$accuracy,
       human_accuracy = result$human_accuracy,
@@ -44,61 +40,34 @@ read_stationary <- function(path, filename, source) {
       interest_diversity = result$interest_diversity
     )
   }))
-  
+
   df %>%
-    filter(Generation >= 190000, Generation <= 200000) %>%
-    group_by(bias_i) %>%
+    filter(
+      Generation >= 190000,
+      Generation <= 200000
+    ) %>%
+    group_by(balancing_weight) %>%
     summarise(
-      source = source,
-      accuracy = mean(accuracy),
-      human_accuracy = mean(human_accuracy),
-      median_AI_belief = mean(median_AI_belief),
-      bias_sq = mean(bias_sq),
-      variance = mean(variance),
-      interest_diversity = mean(interest_diversity),
+      accuracy = mean(accuracy, na.rm = TRUE),
+      human_accuracy = mean(human_accuracy, na.rm = TRUE),
+      median_AI_belief = mean(median_AI_belief, na.rm = TRUE),
+      bias_sq = mean(bias_sq, na.rm = TRUE),
+      variance = mean(variance, na.rm = TRUE),
+      interest_diversity = mean(interest_diversity, na.rm = TRUE),
       .groups = "drop"
     ) %>%
-    arrange(bias_i)
+    arrange(balancing_weight)
 }
 
-stationary_feedback <- read_stationary(
-  feedback_path,
-  "adv_feedback_k%02d_i%03d_j%02f.RData",
-  "Feedback"
-)
-
-stationary_niche <- read_stationary(
-  niche_path,
-  "adv_niche_k%02d_i%03d_j%02f.RData",
-  "Niche-expert"
-)
-
-stationary_balanced <- read_stationary(
-  balanced_path,
-  "Balanced_k%02d_i%02f_j%02f.RData",
-  "Balanced"
-)
-
-df <- bind_rows(
-  stationary_feedback,
-  stationary_niche,
-  stationary_balanced
-)
-
-my_colors <- c(
-  "Feedback" = "#3A85A6",
-  "Niche-expert" = "#FC8644",
-  "Balanced" = "#C173C3"
-)
-
-my_shapes <- c(
-  "Feedback" = 17,
-  "Niche-expert" = 15,
-  "Balanced" = 16
+df <- read_balanced_weight_stationary(
+  balanced_weight_path
 )
 
 x_scale <- scale_x_continuous(
-  breaks = c(-0.6, -0.3, 0, 0.3, 0.6)
+  breaks = c(
+    0.1, 0.3, 0.5, 0.7, 0.9
+  ),
+  limits = c(0.1, 0.9)
 )
 
 single_theme <- theme_classic() +
@@ -106,14 +75,14 @@ single_theme <- theme_classic() +
     panel.grid = element_blank(),
     panel.background = element_blank(),
     plot.background = element_blank(),
-    legend.background = element_blank(),
-    legend.key = element_blank(),
     panel.border = element_rect(
       color = "black",
       fill = NA,
       linewidth = 1
     ),
-    axis.title = element_text(size = 20),
+    axis.title = element_text(
+      size = 20
+    ),
     axis.text = element_text(
       size = 16,
       color = "black"
@@ -124,9 +93,6 @@ single_theme <- theme_classic() +
     axis.title.x.bottom = element_text(
       margin = margin(t = 8)
     ),
-    legend.title = element_text(size = 18),
-    legend.text = element_text(size = 15),
-    legend.key.height = grid::unit(0.7, "cm"),
     plot.title = element_text(
       size = 18,
       hjust = 0.5
@@ -142,44 +108,44 @@ make_metric_plot <- function(
   p <- ggplot(
     df,
     aes(
-      x = bias_i,
-      y = .data[[metric]],
-      color = source,
-      shape = source
+      x = balancing_weight,
+      y = .data[[metric]]
     )
   ) +
-    geom_line(linewidth = 1.2) +
-    geom_point(size = 5) +
+    geom_line(
+      linewidth = 1.2,
+      color = "#C173C3"
+    ) +
+    geom_point(
+      size = 5,
+      color = "#C173C3"
+    ) +
     x_scale +
-    scale_color_manual(
-      values = my_colors,
-      name = "Incentive"
-    ) +
-    scale_shape_manual(
-      values = my_shapes,
-      name = "Incentive"
-    ) +
     labs(
-      x = if (hide_x) NULL else "Bias",
+      x = if (hide_x) NULL else "Balancing weight",
       y = NULL,
       title = title
     ) +
     single_theme
-  
+
   if (!is.null(ylim)) {
     p <- p +
-      coord_cartesian(ylim = ylim)
+      coord_cartesian(
+        ylim = ylim
+      )
   }
-  
+
   if (hide_x) {
     p <- p +
       theme(
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
-        plot.margin = margin(5.5, 5.5, 30, 5.5)
+        plot.margin = margin(
+          5.5, 5.5, 30, 5.5
+        )
       )
   }
-  
+
   p
 }
 
@@ -208,7 +174,9 @@ p_var <- make_metric_plot(
   "Collective variance",
   ylim = c(0, 1000)
 ) +
-  labs(x = NULL)
+  labs(
+    x = NULL
+  )
 
 p_bias <- make_metric_plot(
   "bias_sq",
@@ -221,7 +189,9 @@ p_div <- make_metric_plot(
   "Interest Diversity",
   ylim = c(0, 51)
 ) +
-  labs(x = NULL)
+  labs(
+    x = NULL
+  )
 
 p_combined <- (
   p_accuracy | p_hacc | p_belief
@@ -229,15 +199,14 @@ p_combined <- (
   p_var | p_bias | p_div
 ) +
   plot_layout(
-    guides = "collect",
     axis_titles = "collect_x"
-  ) &
-  theme(
-    legend.position = "right"
   )
 
 ggsave(
-  file.path(save_path, "Supplementary figure 6.pdf"),
+  file.path(
+    save_path,
+    "Supplementary figure 7.pdf"
+  ),
   p_combined,
   width = 13,
   height = 8,
