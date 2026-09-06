@@ -316,7 +316,7 @@ However the niche-expert structure cannot prevent collective bias because, withi
 Therefore, when the two incentive structures are combined, the population achieves CI by maintaining interest diversity while limiting collective bias (Fig. 4A, S6).
 Under the balanced structure, individuals remain more evenly distributed across causal factors, and their beliefs lie closer to the true coefficients than under either incentive structure alone (Fig. 4C--E). 
 The balanced structure also produces higher counterfactual collective accuracy than the feedback or niche-expert structure (Fig. 4B, S6).
-These patterns are robust to how the two incentive structures are weighted when combined (Fig. S7), and are driven by the emergent property of the balanced structure, under which the population increases its reliance on AI as AI becomes more accurate (Fig S9).
+These patterns are robust to how the two incentive structures are weighted when combined (Fig. S7), and are driven by the emergent property of the balanced structure, under which the population increases its reliance on AI as AI becomes more accurate (Fig S8).
 
 \swp{may need some robustness check rather than a case study...}
 
@@ -1209,6 +1209,22 @@ Although the evaluation metrics vary as the balancing weight changes from 0.1 to
 Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
 AI parameters: $b_i = 0.4$, $\tau = 0.3$, chatbot AI is used.
+}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 8.pdf}
+\caption{
+\textbf{Balanced structure shows well-calibrated reliance on AI.}
+Median reliance on AI across varying levels of AI bias.
+Thirty randomly initialized simulations were performed for each bias level.
+Each dot represents a single simulation, and the box plots show the median and interquartile range (IQR) for each bias level.
+The balanced structure shows well-calibrated reliance on AI, with reliance increasing as AI bias decreases.
+Prediction target parameters: $m = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
+AI parameters: $\tau = 0.3$, chatbot AI is used.
 }
 \end{figure}
 
