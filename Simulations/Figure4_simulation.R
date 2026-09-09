@@ -1,3 +1,4 @@
+#Set your project path
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
 
 Chatbot_AI <- new.env()
@@ -7,14 +8,14 @@ source(
   local = Chatbot_AI
 )
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/Figure4_simulation"
+out_dir <- file.path(project_path, "Simulations", "Figure4_simulation")
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
 #=========================================================================
 #Clustering aggregation
 set.seed(42)  
 m <- 50
-alpha <- runif(m+1, min = -5, max = 5)
+alpha <- seq(5, -5, length = 51)
 sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
 N <- 10000
@@ -32,26 +33,26 @@ bias_i <- rep(0.4, m+1)
 AI_error_sd <- 0.3
 
 #Chatbot AI under feedback structure
-chatbot_feedback <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
+Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
 
 filename <- sprintf("chatbot_feedback_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(chatbot_feedback, file = filepath)
+save(Result, file = filepath)
 
 
 #Chatbot AI under niche-expert structure
-chatbot_niche <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
+Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
 
 filename <- sprintf("chatbot_niche_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(chatbot_niche, file = filepath)
+save(Result, file = filepath)
 
 #Chatbot AI under balanced structure
-chatbot_balanced <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced')
+Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced')
 
 filename <- sprintf("chatbot_balanced_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(chatbot_balanced, file = filepath)
+save(Result, file = filepath)

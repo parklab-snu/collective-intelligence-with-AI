@@ -3,8 +3,9 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
+#Set your project path
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- file.path(project_path, "Figures/")s
 
 legend_order <- c(
   "Without AI",

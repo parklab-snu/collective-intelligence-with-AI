@@ -4,10 +4,11 @@ library(patchwork)
 library(tidyverse)
 library(viridis)
 
-Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
+#Set your project path
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- file.path(project_path, "Figures/")
 
-load(file.path(Simulation_path))
+load(file.path(project_path, "Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData"))
 
 set.seed(42)
 m <- 50

@@ -3,8 +3,9 @@ library(dplyr)
 library(tidyr)
 library(patchwork)
 
+#Set your project path
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Figures/"
+save_path <- file.path(project_path, "Figures/")
 idx <- unique(c(seq(1, 200000, by = 100), 200000))
 
 trajectory_order <- c(

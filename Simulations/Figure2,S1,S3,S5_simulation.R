@@ -1,3 +1,4 @@
+#Set your project path
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
 
 Chatbot_AI <- new.env()
@@ -19,7 +20,7 @@ source(
   local = Without_AI
 )
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/Figure2,S1,S3,S5_simulation"
+out_dir <- file.path(project_path, "Simulations", "Figure2,S1,S3,S5_simulation")
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
 #=========================================================================

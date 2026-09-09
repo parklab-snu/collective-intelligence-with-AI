@@ -2,8 +2,9 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
+#Set your project path
 project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
+save_path <- file.path(project_path, "Figures/")
 
 lambda_list <- c(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 bias_list <- c(-0.4, -0.2, 0.2, 0.4)

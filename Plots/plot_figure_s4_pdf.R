@@ -2,14 +2,9 @@ library(ggplot2)
 library(patchwork)
 library(cowplot)
 library(grid)
-
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
-
-output_path <- file.path(
-  project_path,
-  "Figures"
-)
+#Set your project path
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- file.path(project_path, "Figures/")
 
 font_family <- "Arial"
 
@@ -35,7 +30,7 @@ load_result <- function(file) {
   env$Result
 }
 
-read_mu_sweep <- function(save_path, mu_list, bias_list) {
+read_mu_sweep <- function(simulation_path, mu_list, bias_list) {
   grid_df <- expand.grid(
     mu = mu_list,
     bias = bias_list
@@ -47,7 +42,7 @@ read_mu_sweep <- function(save_path, mu_list, bias_list) {
     
     result <- load_result(
       file.path(
-        save_path,
+        simulation_path,
         sprintf(
           "chatbot_feedback_i%02f_j%02f.RData",
           bias,
@@ -64,7 +59,7 @@ read_mu_sweep <- function(save_path, mu_list, bias_list) {
   }))
 }
 
-read_belief_sweep <- function(save_path, belief_list, bias_list) {
+read_belief_sweep <- function(simulation_path, belief_list, bias_list) {
   grid_df <- expand.grid(
     belief = belief_list,
     bias = bias_list
@@ -76,7 +71,7 @@ read_belief_sweep <- function(save_path, belief_list, bias_list) {
     
     result <- load_result(
       file.path(
-        save_path,
+        simulation_path,
         sprintf(
           "chatbot_feedback_i%02f_j%02f.RData",
           bias,
@@ -93,11 +88,11 @@ read_belief_sweep <- function(save_path, belief_list, bias_list) {
   }))
 }
 
-read_mu_sweep_ori <- function(save_path, mu_list) {
+read_mu_sweep_ori <- function(simulation_path, mu_list) {
   do.call(rbind, lapply(mu_list, function(mu) {
     result <- load_result(
       file.path(
-        save_path,
+        simulation_path,
         sprintf(
           "without_feedback_j%02f.RData",
           mu
@@ -113,11 +108,11 @@ read_mu_sweep_ori <- function(save_path, mu_list) {
   }))
 }
 
-read_belief_sweep_ori <- function(save_path, belief_list) {
+read_belief_sweep_ori <- function(simulation_path, belief_list) {
   do.call(rbind, lapply(belief_list, function(belief) {
     result <- load_result(
       file.path(
-        save_path,
+        simulation_path,
         sprintf(
           "without_feedback_j%02f.RData",
           belief

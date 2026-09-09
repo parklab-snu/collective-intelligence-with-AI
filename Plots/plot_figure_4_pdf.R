@@ -2,22 +2,23 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/Figure4"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
+#Set your project path
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- file.path(project_path, "Figures/")
 
 feedback_env <- new.env()
 niche_env <- new.env()
 balanced_env <- new.env()
 
-load(file.path(project_path, "Feedback_sequential.RData"), envir = feedback_env)
-load(file.path(project_path, "Niche_sequential.RData"), envir = niche_env)
-load(file.path(project_path, "Balanced_sequential.RData"), envir = balanced_env)
+load(file.path(project_path, "Simulations/Figure4_simulation/chatbot_feedback_0.4.RData"), envir = feedback_env)
+load(file.path(project_path, "Simulations/Figure4_simulation/chatbot_niche_0.4.RData"), envir = niche_env)
+load(file.path(project_path, "Simulations/Figure4_simulation/chatbot_balanced_0.4.RData"), envir = balanced_env)
 
 feedback_result <- feedback_env$Result
 niche_result <- niche_env$Result
 balanced_result <- balanced_env$Result
 
-generation <- seq(1000, 200000, by = 1000)
+generation <- seq_len(200000)
 
 incentive_order <- c(
   "Feedback",
@@ -182,9 +183,9 @@ balanced_players <- as.data.frame(
   balanced_result$players_intime[200, , ]
 )
 
-median_reliance_feedback <- feedback_result$median_AI_belief[200]
-median_reliance_niche <- niche_result$median_AI_belief[200]
-median_reliance_balanced <- balanced_result$median_AI_belief[200]
+median_reliance_feedback <- feedback_result$median_AI_belief[200000]
+median_reliance_niche <- niche_result$median_AI_belief[200000]
+median_reliance_balanced <- balanced_result$median_AI_belief[200000]
 
 scatter_theme <- theme_classic(
   base_family = "Arial",
@@ -246,7 +247,7 @@ make_belief_plot <- function(data, incentive, y_label) {
       expand = expansion(add = 1.5)
     ) +
     scale_y_continuous(
-      limits = c(-15, 15),
+      limits = c(-16, 16),
       breaks = c(-15, 0, 15),
       expand = expansion(add = 1)
     ) +

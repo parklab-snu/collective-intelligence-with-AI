@@ -4,8 +4,11 @@ library(patchwork)
 library(tidyverse)
 library(viridis)
 
-Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/FigureS8_simulation"
-save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
+#Set your project path
+project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+save_path <- file.path(project_path, "Figures/")
+
+Simulation_path <- file.path(project_path, "Simulations/FigureS8_simulation")
 
 bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
 
