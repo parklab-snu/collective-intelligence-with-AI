@@ -50,7 +50,7 @@ Contains functions for simulations without AI. In-place updating and periodic re
 
 ### `Figure2,S1,S3,S5_simulation.R`
 
-Runs the simulations for Figures 2, S1, S3, and S5. The script performs eight simulations using different combinations of AI models and aggregation rules.
+Runs the simulations for Figures 2, S1, S3, and S5. The script performs eight simulations using different combinations of AI models and incentive structures.
 
 ### `Figure3_simulation.R`
 
@@ -66,7 +66,7 @@ Runs the simulations for Figures S2 and S5. The script performs 52 simulation ru
 
 ### `FigureS4_simulation.R`
 
-Runs the simulations for Figure S4. The script performs 228 simulation runs: four simulations for the trajectory plots and 224 simulations for the interest-diversity heatmaps. Simulations vary the mutation rate, initial belief standard deviation, and AI bias.
+Runs the simulations for Figure S4. The script performs 228 simulation runs: four simulations for the trajectory plots and 224 simulations for the interest diversity heatmaps. Simulations vary the mutation rate, initial belief standard deviation, and AI bias.
 
 ### `FigureS6_simulation.R`
 
