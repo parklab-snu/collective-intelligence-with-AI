@@ -19,7 +19,7 @@ source(
   local = Without_AI
 )
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/Figure2_simulation"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/Figure2,S1,S3,S5_simulation"
 
 
 #=========================================================================
@@ -40,47 +40,45 @@ AI_belief <- runif(N, min = 0, max = 1)
 #Build player
 players <- cbind(interest, belief, AI_belief)
 
-bias_c <- rep(0, m+1)
 bias_i <- rep(0.4, m+1)
 bias <- sum(bias_i)
-alpha_AI <- alpha + bias_c
 AI_error_sd <- 0.3
 
 #Omniscient AI under feedback structure
-omni_feedback <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Feedback')
+Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Feedback')
 
 filename <- sprintf("omni_feedback_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(omni_feedback, file = filepath)
+save(Result, file = filepath)
 
 
 #Omnisceint AI under niche-expert structure
-omni_niche <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Niche expert')
+Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Niche expert')
 
 filename <- sprintf("omni_niche_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(omni_niche, file = filepath)
+save(Result, file = filepath)
 
 
 players <- cbind(interest, belief)
 #Without AI under feedback structure
-without_feedback_avg <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Feedback')
+Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Feedback')
 
 filename <- sprintf("without_feedback_avg.RData")
 filepath <- file.path(out_dir, filename)
 
-save(without_feedback_avg, file = filepath)
+save(Result, file = filepath)
 
 
 #Without AI under niche-expert structure
-without_niche_avg <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Niche expert')
+Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Niche expert')
 
 filename <- sprintf("without_niche_avg.RData")
 filepath <- file.path(out_dir, filename)
 
-save(without_niche_avg, file = filepath)
+save(Result, file = filepath)
 
 
 #=========================================================================
@@ -101,45 +99,43 @@ AI_belief <- runif(N, min = 0, max = 1)
 #Build player
 players <- cbind(interest, belief, AI_belief)
 
-bias_c <- rep(0, m+1)
 bias_i <- rep(0.4, m+1)
-alpha_AI <- alpha + bias_c
 AI_error_sd <- 0.3
 
 
 #Chatbot AI under feedback structure
-chatbot_feedback <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
+Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
 
 filename <- sprintf("chatbot_feedback_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(chatbot_feedback, file = filepath)
+save(Result, file = filepath)
 
 
 #Chatbot AI under niche-expert structure
-chatbot_niche <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
+Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
 
 filename <- sprintf("chatbot_niche_0.4.RData")
 filepath <- file.path(out_dir, filename)
 
-save(chatbot_niche, file = filepath)
+save(Result, file = filepath)
 
 
 players <- cbind(interest, belief)
 
 #Without AI under feedback structure
-without_feedback_clu <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback')
+Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback')
 
 filename <- sprintf("without_feedback_clu.RData")
 filepath <- file.path(out_dir, filename)
 
-save(without_feedback_clu, file = filepath)
+save(Result, file = filepath)
 
 
 #Without AI under niche-expert structure
-without_niche_clu <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert')
+Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert')
 
 filename <- sprintf("without_niche_clu.RData")
 filepath <- file.path(out_dir, filename)
 
-save(without_niche_clu, file = filepath)
+save(Result, file = filepath)

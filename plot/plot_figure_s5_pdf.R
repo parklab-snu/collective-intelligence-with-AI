@@ -7,7 +7,7 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Int
 
 sweep_path <- file.path(
   project_path,
-  "AI_answers_question/Nicheexpert_biassweep"
+  "Simulations/FigureS2,S5_simulation"
 )
 
 bias_list <- c(-0.2, -0.4, -0.6)
@@ -22,7 +22,7 @@ load_result <- function(file) {
 original <- load_result(
   file.path(
     project_path,
-    "Original/clu_niche.RData"
+    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_clu.RData"
   )
 )
 
@@ -31,9 +31,7 @@ ai_data <- bind_rows(lapply(bias_list, function(bias) {
     file.path(
       sweep_path,
       sprintf(
-        "adv_niche_k%02d_i%03d_j%02f.RData",
-        1,
-        0,
+        "chatbot_niche_i%02f.RData",
         bias
       )
     )

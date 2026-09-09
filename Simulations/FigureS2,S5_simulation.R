@@ -13,7 +13,7 @@ source(
   local = Omniscient_AI
 )
 
-out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/FigureS2_simulation"
+out_dir <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/FigureS2,S5_simulation"
 
 
 #=========================================================================
@@ -36,22 +36,20 @@ for(i in bias_list){
   #Build player
   players <- cbind(interest, belief, AI_belief)
   
-  bias_c <- rep(0, m+1)
   bias_i <- rep(i, m+1)
   bias <- sum(bias_i)
-  alpha_AI <- alpha + bias_c
   AI_error_sd <- 0.3
   lambda <- 0
   denom <- sum((alpha[-1]*sigma[-1])^2)
-  AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+  AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
     
-  Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Feedback', lambda = lambda)
+  Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Feedback', lambda = lambda)
     
   filename <- sprintf("omni_feedback_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)
     
-  save(i, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+  save(i, bias_i, AI_error_sd, AI_accuracy, Result, file = filepath)
 }
 
 for(i in bias_list){
@@ -71,22 +69,20 @@ for(i in bias_list){
   #Build player
   players <- cbind(interest, belief, AI_belief)
   
-  bias_c <- rep(0, m+1)
   bias_i <- rep(i, m+1)
   bias <- sum(bias_i)
-  alpha_AI <- alpha + bias_c
   AI_error_sd <- 0.3
   lambda <- 0
   denom <- sum((alpha[-1]*sigma[-1])^2)
-  AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+  AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
     
-  Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = 'Niche expert', lambda = lambda)
+  Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Niche expert', lambda = lambda)
     
   filename <- sprintf("omni_niche_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)
     
-  save(i, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+  save(i, bias_i, AI_error_sd, AI_accuracy, Result, file = filepath)
 }
 
 
@@ -109,22 +105,20 @@ for(i in bias_list){
   #Build player
   players <- cbind(interest, belief, AI_belief)
   
-  bias_c <- rep(0, m+1)
   bias_i <- rep(i, m+1)
   bias <- sum(bias_i)
-  alpha_AI <- alpha + bias_c
   AI_error_sd <- 0.3
   lambda <- 0
   denom <- sum((alpha[-1]*sigma[-1])^2)
-  AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+  AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
     
-  Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
+  Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback', lambda = lambda)
     
   filename <- sprintf("chatbot_feedback_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)
     
-  save(i, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+  save(i, bias_i, AI_error_sd, AI_accuracy, Result, file = filepath)
 }
 
 for(i in bias_list){
@@ -143,21 +137,19 @@ for(i in bias_list){
   #Build player
   players <- cbind(interest, belief, AI_belief)
   
-  bias_c <- rep(0, m+1)
   bias_i <- rep(i, m+1)
   bias <- sum(bias_i)
-  alpha_AI <- alpha + bias_c
   AI_error_sd <- 0.3
   lambda <- 0
   denom <- sum((alpha[-1]*sigma[-1])^2)
-  AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+  AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
   
-  Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
+  Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert', lambda = lambda)
   
-  filename <- sprintf("chatbot_niche_i%02f.RData", i, j)
+  filename <- sprintf("chatbot_niche_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)
   
-  save(i, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+  save(i, bias_i, AI_error_sd, AI_accuracy, Result, file = filepath)
 }
 

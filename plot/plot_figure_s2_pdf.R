@@ -9,22 +9,22 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-int
 
 answers_feedback_path <- file.path(
   project_path,
-  "AI_answers_question/Feedback_biassweep"
+  "Simulations/FigureS2,S5_simulation"
 )
 
 answers_niche_path <- file.path(
   project_path,
-  "AI_answers_question/Nicheexpert_biassweep"
+  "Simulations/FigureS2,S5_simulation"
 )
 
 knows_feedback_path <- file.path(
   project_path,
-  "AI_knows_all/Feedback_repeat"
+  "Simulations/FigureS2,S5_simulation"
 )
 
 knows_niche_path <- file.path(
   project_path,
-  "AI_knows_all/Nicheexpert_repeat"
+  "Simulations/FigureS2,S5_simulation"
 )
 
 bias_list <- seq(-0.6, 0.6, by = 0.1)
@@ -43,7 +43,7 @@ read_stationary <- function(path, filename) {
     env <- new.env()
     
     load(
-      file.path(path, sprintf(filename, 1, 0, i)),
+      file.path(path, sprintf(filename, i)),
       envir = env
     )
     
@@ -104,25 +104,25 @@ to_long <- function(data) {
 
 answers_feedback <- read_stationary(
   answers_feedback_path,
-  "adv_feedback_k%02d_i%03d_j%02f.RData"
+  "chatbot_feedback_i%02f.RData"
 ) %>%
   to_long()
 
 answers_niche <- read_stationary(
   answers_niche_path,
-  "adv_niche_k%02d_i%03d_j%02f.RData"
+  "chatbot_niche_i%02f.RData"
 ) %>%
   to_long()
 
 knows_feedback <- read_stationary(
   knows_feedback_path,
-  "adv_feedback_k%02d_i%03d_j%02f.RData"
+  "omni_feedback_i%02f.RData"
 ) %>%
   to_long()
 
 knows_niche <- read_stationary(
   knows_niche_path,
-  "adv_feedback_k%02d_i%03d_j%02f.RData"
+  "omni_niche_i%02f.RData"
 ) %>%
   to_long()
 

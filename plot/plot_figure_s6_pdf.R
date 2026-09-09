@@ -7,17 +7,17 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Int
 
 feedback_path <- file.path(
   project_path,
-  "AI_answers_question/Feedback_biassweep"
+  "Simulations/FigureS6_simulation"
 )
 
 niche_path <- file.path(
   project_path,
-  "AI_answers_question/Nicheexpert_biassweep"
+  "Simulations/FigureS6_simulation"
 )
 
 balanced_path <- file.path(
   project_path,
-  "AI_answers_question/Balanced_biassweep"
+  "Simulations/FigureS6_simulation"
 )
 
 bias_list <- seq(-0.6, 0.6, by = 0.1)
@@ -27,7 +27,7 @@ read_stationary <- function(path, filename, source) {
     env <- new.env()
     
     load(
-      file.path(path, sprintf(filename, 1, 0, i)),
+      file.path(path, sprintf(filename, i)),
       envir = env
     )
     
@@ -63,19 +63,19 @@ read_stationary <- function(path, filename, source) {
 
 stationary_feedback <- read_stationary(
   feedback_path,
-  "adv_feedback_k%02d_i%03d_j%02f.RData",
+  "chatbot_feedback_i%02f.RData",
   "Feedback"
 )
 
 stationary_niche <- read_stationary(
   niche_path,
-  "adv_niche_k%02d_i%03d_j%02f.RData",
+  "chatbot_niche_i%02f.RData",
   "Niche-expert"
 )
 
 stationary_balanced <- read_stationary(
   balanced_path,
-  "Balanced_k%02d_i%02f_j%02f.RData",
+  "chatbot_balanced_i%02f.RData",
   "Balanced"
 )
 
@@ -206,7 +206,7 @@ p_belief <- make_metric_plot(
 p_var <- make_metric_plot(
   "variance",
   "Collective variance",
-  ylim = c(0, 1000)
+  ylim = c(0, 750)
 ) +
   labs(x = NULL)
 

@@ -4,7 +4,7 @@ library(patchwork)
 library(tidyverse)
 library(viridis)
 
-Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/AI_answers_question/balanced_sweep_random"
+Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/Simulations/FigureS8_simulation"
 save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
 bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
@@ -100,7 +100,7 @@ p_reliance <- ggplot(
 
 ggsave(
   file.path(
-    Save_path,
+    save_path,
     "Supplementary figure 8.pdf"
   ),
   p_reliance,

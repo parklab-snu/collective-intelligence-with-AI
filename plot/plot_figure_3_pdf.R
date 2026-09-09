@@ -32,23 +32,23 @@ grid <- expand.grid(
 
 case_specs <- list(
   omniscient_feedback = list(
-    path = file.path(project_path, "AI_knows_all/Adv_feedback"),
-    prefix = "adv_feedback",
-    has_k = TRUE
+    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    prefix = "omni_feedback",
+    has_k = FALSE
   ),
   omniscient_niche = list(
-    path = file.path(project_path, "AI_knows_all/Adv_niche"),
-    prefix = "adv_niche",
-    has_k = TRUE
+    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    prefix = "omni_niche",
+    has_k = FALSE
   ),
   chatbot_feedback = list(
-    path = file.path(project_path, "AI_answers_question/Adv_feedback"),
-    prefix = "adv_feedback",
+    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    prefix = "chatbot_feedback",
     has_k = FALSE
   ),
   chatbot_niche = list(
-    path = file.path(project_path, "AI_answers_question/Adv_niche"),
-    prefix = "adv_niche",
+    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    prefix = "chatbot_niche",
     has_k = FALSE
   )
 )
@@ -65,8 +65,8 @@ read_stationary <- function(save_path, prefix, has_k) {
       )
     } else {
       filename <- sprintf(
-        paste0(prefix, "_i%03d_j%f.RData"),
-        i, j
+        paste0(prefix, "_i%02f_j%02f.RData"),
+        j, i
       )
     }
     

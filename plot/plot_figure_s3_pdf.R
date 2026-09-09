@@ -212,23 +212,23 @@ make_row_label <- function(label, aggregation) {
 }
 
 knows_feedback_data <- make_plot_data(
-  "Original/avg_feedback.RData",
-  "AI_knows_all/avg_feedback_Acc70_bias0.36_error0.3.RData"
+  "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_avg.RData",
+  "Simulations/Figure2,S1,S3,S5_simulation/omni_feedback_0.4.RData"
 )
 
 knows_niche_data <- make_plot_data(
-  "Original/avg_niche.RData",
-  "AI_knows_all/avg_niche_Acc70_bias0.36_error0.3.RData"
+  "Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData",
+  "Simulations/Figure2,S1,S3,S5_simulation/omni_niche_0.4.RData"
 )
 
 answers_feedback_data <- make_plot_data(
-  "Original/clu_feedback.RData",
-  "AI_answers_question/clu_feedback_Acc70_bias0.36_error0.3.RData"
+  "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_clu.RData",
+  "Simulations/Figure2,S1,S3,S5_simulation/chatbot_feedback_0.4.RData"
 )
 
 answers_niche_data <- make_plot_data(
-  "Original/clu_niche.RData",
-  "AI_answers_question/clu_niche_Acc70_bias0.36_error0.3.RData"
+  "Simulations/Figure2,S1,S3,S5_simulation/without_niche_clu.RData",
+  "Simulations/Figure2,S1,S3,S5_simulation/chatbot_niche_0.4.RData"
 )
 
 plot_knows_feedback <- make_plot(knows_feedback_data)

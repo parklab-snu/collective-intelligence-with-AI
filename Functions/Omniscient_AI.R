@@ -1,6 +1,6 @@
 # Collective intelligence simulation with AI_knows_all model
 # All players share same AI assistent
-# AI has two kinds of innate bias: coefficient bias (b^c) and intercept bias (b^i)
+# AI has innate bias: intercept bias (b^i)
 # AI has random error with zero mean, tau s.d.
 # AI answers with the whole prediction accounting all interests(0 to m) regardless of the player's interest
 
@@ -9,11 +9,10 @@
 # supports Expert, Niche expert, Disadvantage AI Niche, Advantage AI Niche, Feedback, Disadvantage AI Feedback, and Advantage AI Feedback payoffs
 # Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
-compute_payoff_one <- function(i, players, cluster_count, alpha, alpha_AI, sigma, AI_error_sd, bias, delta, feedback_global,
-                               C_const, C_AI, S_alpha_bc, N, payoff_type, lambda) {
+compute_payoff_one <- function(i, players, cluster_count, alpha, sigma, AI_error_sd, bias, delta, feedback_global,
+                               C_const, C_AI,  N, payoff_type, lambda) {
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
-  bias_c_e <- alpha_AI[k] - alpha[k]
   sigma_e <- sigma[k]
   cA_i <- players[i, 2]
   beta_i <- players[i, 3]
@@ -29,17 +28,15 @@ compute_payoff_one <- function(i, players, cluster_count, alpha, alpha_AI, sigma
       expr <- omq^2 * cA_i^2 * sigma_e^2 +
         beta_i^2 * C_AI +
         omq^2 * C_const -
-        2 * omq^2 * alpha_e * cA_i * sigma_e^2 +
-        2 * omq * beta_i * cA_i * bias_c_e * sigma_e^2 -      
-        2 * omq * beta_i * (alpha[1] * bias + S_alpha_bc) + 
+        2 * omq^2 * alpha_e * cA_i * sigma_e^2 -      
+        2 * omq * beta_i * (alpha[1] * bias) + 
         2 * omq * beta_i * cA_i * bias   
     } else{
       expr <- omq^2 * cA_i^2 * sigma_e^2 +
         beta_i^2 * C_AI +
         omq^2 * C_const -
-        2 * omq^2 * alpha_e * cA_i * sigma_e^2 +
-        2 * omq * beta_i * cA_i * bias_c_e * sigma_e^2 -      
-        2 * omq * beta_i * (alpha[1] * bias + S_alpha_bc)
+        2 * omq^2 * alpha_e * cA_i * sigma_e^2 -      
+        2 * omq * beta_i * (alpha[1] * bias)
     }
     
     if (payoff_type == "Expert") {
@@ -151,15 +148,14 @@ resync_state <- function(state, players, m, N, eps, alpha, sigma) {
 }
 
 # main simulation
-main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias_c, bias, payoff_type = "Niche expert", s = 50, mu = 0, eps = 1e-12,
+main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = "Niche expert", s = 50, mu = 0, eps = 1e-12,
                      resync_every = 1000, lambda) {
   # initialize tracking metrics and constants
   denom <- sum((alpha[-1] * sigma[-1])^2)
   C_const <- sum((alpha * sigma)^2)
   
-  C_AI <- sum((bias_c * sigma)^2) + 2 * bias_c[1] * bias + bias^2 + AI_error_sd^2
-  S_alpha_bc <- sum(alpha * bias_c * sigma^2)
-  
+  C_AI <- bias^2 + AI_error_sd^2
+
   accuracy <- numeric(G)
   median_AI_belief <- numeric(G)
   interest_diversity <- numeric(G)
@@ -189,7 +185,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
   for (g in 1:G) {
     # Record first, imitate later
     beta_mean <- state$sum_beta / N
-    delta <- alpha - beta_mean * alpha_AI - state$gamma
+    delta <- alpha - beta_mean * alpha - state$gamma
     delta[1] <- delta[1] - beta_mean * bias
     var_nu_mean <- (AI_error_sd^2 / N^2) * state$sum_beta2
     error <- sum(delta^2 * sigma^2) + var_nu_mean
@@ -213,8 +209,8 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
     }
     
     if (payoff_type == "Feedback" || payoff_type == "Disadvantage AI Feedback" || payoff_type == "Advantage AI Feedback") {
-      feedback_global <- (alpha_AI[1] + bias) * delta[1] +
-        sum(alpha_AI[-1] * delta[-1] * sigma[-1]^2)
+      feedback_global <- (alpha[1] + bias) * delta[1] +
+        sum(alpha[-1] * delta[-1] * sigma[-1]^2)
     } else {
       feedback_global <- 0
     }
@@ -228,8 +224,8 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, alpha_AI, bias
     state_changed <- FALSE
     if (r1 >= mu) {
       # compute payoff of two players
-      payoff_A <- compute_payoff_one(A, players, state$cluster_count, alpha, alpha_AI, sigma, AI_error_sd, bias, delta, feedback_global, C_const, C_AI, S_alpha_bc, N, payoff_type, lambda)
-      payoff_B <- compute_payoff_one(B, players, state$cluster_count, alpha, alpha_AI, sigma, AI_error_sd, bias, delta, feedback_global, C_const, C_AI, S_alpha_bc, N, payoff_type, lambda)
+      payoff_A <- compute_payoff_one(A, players, state$cluster_count, alpha, sigma, AI_error_sd, bias, delta, feedback_global, C_const, C_AI,  N, payoff_type, lambda)
+      payoff_B <- compute_payoff_one(B, players, state$cluster_count, alpha, sigma, AI_error_sd, bias, delta, feedback_global, C_const, C_AI,  N, payoff_type, lambda)
       
       p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
       r2 <- runif(1)

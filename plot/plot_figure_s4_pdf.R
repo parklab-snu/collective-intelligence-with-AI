@@ -8,7 +8,7 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Int
 
 output_path <- file.path(
   project_path,
-  "trajectory_and_interest_diversity_heatmaps.pdf"
+  "Figures"
 )
 
 font_family <- "Arial"
@@ -49,10 +49,9 @@ read_mu_sweep <- function(save_path, mu_list, bias_list) {
       file.path(
         save_path,
         sprintf(
-          "Feedback_k%02d_i%02f_j%02f.RData",
-          1,
-          mu,
-          bias
+          "chatbot_feedback_i%02f_j%02f.RData",
+          bias,
+          mu
         )
       )
     )
@@ -79,16 +78,55 @@ read_belief_sweep <- function(save_path, belief_list, bias_list) {
       file.path(
         save_path,
         sprintf(
-          "Feedback_k%02d_i%02d_j%02f.RData",
-          1,
-          belief,
-          bias
+          "chatbot_feedback_i%02f_j%02f.RData",
+          bias,
+          belief
         )
       )
     )
     
     data.frame(
       bias = factor(bias, levels = bias_list),
+      parameter = factor(belief, levels = belief_list),
+      interest_diversity = extract_final(result$interest_diversity)
+    )
+  }))
+}
+
+read_mu_sweep_ori <- function(save_path, mu_list) {
+  do.call(rbind, lapply(mu_list, function(mu) {
+    result <- load_result(
+      file.path(
+        save_path,
+        sprintf(
+          "without_feedback_j%02f.RData",
+          mu
+        )
+      )
+    )
+    
+    data.frame(
+      bias = factor(0),
+      parameter = factor(mu, levels = mu_list),
+      interest_diversity = extract_final(result$interest_diversity)
+    )
+  }))
+}
+
+read_belief_sweep_ori <- function(save_path, belief_list) {
+  do.call(rbind, lapply(belief_list, function(belief) {
+    result <- load_result(
+      file.path(
+        save_path,
+        sprintf(
+          "without_feedback_j%02f.RData",
+          belief
+        )
+      )
+    )
+    
+    data.frame(
+      bias = factor(0),
       parameter = factor(belief, levels = belief_list),
       interest_diversity = extract_final(result$interest_diversity)
     )
@@ -196,7 +234,7 @@ human_bias_list <- 0
 df_div_mu <- read_mu_sweep(
   file.path(
     project_path,
-    "AI_answers_question/mu_sweep"
+    "Simulations/FigureS4_simulation"
   ),
   mu_list,
   ai_bias_list
@@ -205,28 +243,26 @@ df_div_mu <- read_mu_sweep(
 df_div_b <- read_belief_sweep(
   file.path(
     project_path,
-    "AI_answers_question/belief_sweep"
+    "Simulations/FigureS4_simulation"
   ),
   belief_list,
   ai_bias_list
 )
 
-df_div_mu_ori <- read_mu_sweep(
+df_div_mu_ori <- read_mu_sweep_ori(
   file.path(
     project_path,
-    "Original/mu_sweep"
+    "Simulations/FigureS4_simulation"
   ),
-  mu_list,
-  human_bias_list
+  mu_list
 )
 
-df_div_b_ori <- read_belief_sweep(
+df_div_b_ori <- read_belief_sweep_ori(
   file.path(
     project_path,
-    "Original/belief_sweep"
+    "Simulations/FigureS4_simulation"
   ),
-  belief_list,
-  human_bias_list
+  belief_list
 )
 
 p_div_mu_ori <- make_heatmap(
@@ -256,19 +292,19 @@ p_div_b <- make_heatmap(
 trajectory_files <- c(
   file.path(
     project_path,
-    "Original/mu_0.00.RData"
+    "Simulations/FigureS4_simulation/without_feedback_clu_0.RData"
   ),
   file.path(
     project_path,
-    "Original/mu_0.01.RData"
+    "Simulations/FigureS4_simulation/without_feedback_clu_0.01.RData"
   ),
   file.path(
     project_path,
-    "AI_answers_question/AI_mu_0.00_bias0.4_error0.3.RData"
+    "Simulations/FigureS4_simulation/chatbot_feedback_0.4_0.RData"
   ),
   file.path(
     project_path,
-    "AI_answers_question/AI_mu_0.01_bias0.4_error0.3.RData"
+    "Simulations/FigureS4_simulation/chatbot_feedback_0.4_0.01.RData"
   )
 )
 

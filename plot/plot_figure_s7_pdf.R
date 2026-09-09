@@ -7,7 +7,7 @@ save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Int
 
 balanced_weight_path <- file.path(
   project_path,
-  "AI_answers_question/balanced_weight_sweep"
+  "Simulations/FigureS7_simulation"
 )
 
 w_list <- c(
@@ -22,7 +22,7 @@ read_balanced_weight_stationary <- function(path) {
     load(
       file.path(
         path,
-        sprintf("Balanced_j%02f.RData", j)
+        sprintf("chatbot_balanced_i%02f.RData", j)
       ),
       envir = env
     )
@@ -152,7 +152,6 @@ make_metric_plot <- function(
 p_accuracy <- make_metric_plot(
   "accuracy",
   "Collective accuracy",
-  ylim = c(0, 1),
   hide_x = TRUE
 )
 
@@ -165,14 +164,12 @@ p_hacc <- make_metric_plot(
 p_belief <- make_metric_plot(
   "median_AI_belief",
   "Median reliance on AI",
-  ylim = c(0, 1),
   hide_x = TRUE
 )
 
 p_var <- make_metric_plot(
   "variance",
-  "Collective variance",
-  ylim = c(0, 1000)
+  "Collective variance"
 ) +
   labs(
     x = NULL
@@ -180,14 +177,12 @@ p_var <- make_metric_plot(
 
 p_bias <- make_metric_plot(
   "bias_sq",
-  "Collective bias",
-  ylim = c(0, 800)
+  "Collective bias"
 )
 
 p_div <- make_metric_plot(
   "interest_diversity",
-  "Interest Diversity",
-  ylim = c(0, 51)
+  "Interest Diversity"
 ) +
   labs(
     x = NULL

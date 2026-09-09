@@ -52,26 +52,26 @@ make_panel_data <- function(original_file, ai_file, ai_model, incentive) {
 
 df_acc <- bind_rows(
   make_panel_data(
-    "Original/avg_feedback.RData",
-    "AI_knows_all/avg_feedback_Acc70_bias0.36_error0.3.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_avg.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/omni_feedback_0.4.RData",
     "AI knows all",
     "Feedback"
   ),
   make_panel_data(
-    "Original/avg_niche.RData",
-    "AI_knows_all/avg_niche_Acc70_bias0.36_error0.3.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/omni_niche_0.4.RData",
     "AI knows all",
     "Niche-expert"
   ),
   make_panel_data(
-    "Original/clu_feedback.RData",
-    "AI_answers_question/clu_feedback_Acc70_bias0.36_error0.3.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_clu.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/chatbot_feedback_0.4.RData",
     "AI answers question",
     "Feedback"
   ),
   make_panel_data(
-    "Original/clu_niche.RData",
-    "AI_answers_question/clu_niche_Acc70_bias0.36_error0.3.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_clu.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/chatbot_niche_0.4.RData",
     "AI answers question",
     "Niche-expert"
   )
@@ -88,7 +88,7 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
       color = "black"
     ) +
     geom_line(
-      linewidth = 2,
+      linewidth = 3,
       lineend = "round"
     ) +
     annotate(
@@ -112,17 +112,17 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
       expand = expansion(mult = c(0, 0.005))
     ) +
     scale_y_continuous(
-      breaks = seq(-0.5, 1, by = 0.5),
-      labels = sprintf("%.1f", seq(-0.5, 1, by = 0.5)),
+      breaks = c(-0.25, 0.0, 0.25, 0.5, 0.75, 1.0),
+      labels = sprintf("%.2f", c(-0.25, 0.0, 0.25, 0.5, 0.75, 1.0)),
       expand = expansion(mult = c(0, 0))
     ) +
     coord_cartesian(
       xlim = c(0, 200000),
-      ylim = c(-0.5, 1.07)
+      ylim = c(-0.3, 1.07)
     ) +
     labs(
       x = NULL,
-      y = if (show_y_axis) "Accuracy" else NULL,
+      y = if (show_y_axis) "Collective accuracy" else NULL,
       color = NULL
     ) +
     guides(
@@ -341,14 +341,5 @@ ggsave(
   height = 10.5,
   units = "in",
   device = cairo_pdf,
-  bg = "white"
-)
-
-
-ggsave(
-  file.path(save_path, "Figure 2.png"),
-  combined_plot,
-  width = 14,
-  height = 10.5,
   bg = "white"
 )

@@ -1,19 +1,19 @@
 # Collective intelligence simulation with AI_knows_all model
 # All players share same AI assistent
-# AI has two kinds of innate bias: coefficient bias (b^c) and intercept bias (b^i)
+# AI has innate intercept bias (b^i)
 # AI has random error with zero mean, tau s.d.
 # AI answers prediction based on the players' interest
 
 # compute revised belief (weighted sum of player's belief and AI's biased coefficient)
-compute_p_revised_vec <- function(interest, belief, AI_belief, alpha_AI) {
-  AI_belief * alpha_AI[interest + 1] + (1 - AI_belief) * belief
+compute_p_revised_vec <- function(interest, belief, AI_belief, alpha) {
+  AI_belief * alpha[interest + 1] + (1 - AI_belief) * belief
 }
 # Compute the payoff of the single player.
 # supports Expert, Niche expert, Disadvantage AI Niche, Advantage AI Niche, Feedback, Disadvantage AI Feedback, and Advantage AI Feedback payoffs
 # Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 # Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
 compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, B_bar, alpha, sigma, bias, AI_error_sd,
-                               payoff_type, agg_type, C_const, N, lambda, alpha_AI, w) {
+                               payoff_type, agg_type, C_const, N, lambda, w) {
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
   sigma_e <- sigma[k]
@@ -80,7 +80,7 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
       {w*(-rho_i * expr) + (1-w)*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}
       
     } else if (payoff_type == "AI Feedback collective") {
-      q     <- p_i - alpha_AI[k]               # p - alpha_AI,e
+      q     <- p_i - alpha[k]               # p - alpha,e
       gamma <- 1 - beta_i                       # 1 - beta
       if (k == 1) {
         ft <- q * delta_0 * sigma_e^2           # sigma_1^2 = 1
@@ -196,7 +196,7 @@ resync_state <- function(state, players, p_revised, m, N, alpha, sigma, bias, AI
 }
 
 # main simulation
-main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd, agg_type = "clustering", payoff_type = "Feedback", s = 50, mu = 0, eps = 1e-12,
+main_opt <- function(m, alpha, sigma, N, players, G, bias, AI_error_sd, agg_type = "clustering", payoff_type = "Feedback", s = 50, mu = 0, eps = 1e-12,
                      resync_every = 1000, lambda = 0, w = 0.5) {
   # compute constants and initialize state values
   denom <- sum((alpha[-1] * sigma[-1])^2)
@@ -225,7 +225,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
   human_accuracy <- numeric(G)
   
   # compute p_revised. only need to compute once (unless mutation happens)
-  p_revised <- compute_p_revised_vec(players[, 1], players[, 2], players[, 3], alpha_AI)
+  p_revised <- compute_p_revised_vec(players[, 1], players[, 2], players[, 3], alpha)
   # initialize with resync_state
   resync_state(state, players, p_revised, m, N, alpha, sigma, bias, AI_error_sd, agg_type, eps)
   
@@ -266,9 +266,9 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
     if (r1 >= mu) {
       # compute payoff of two players
       payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
-                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI, w)
+                                     payoff_type, agg_type, C_const, N, lambda, w)
       payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
-                                     payoff_type, agg_type, C_const, N, lambda, alpha_AI, w)
+                                     payoff_type, agg_type, C_const, N, lambda, w)
       
       p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))
       r2 <- runif(1)
@@ -303,7 +303,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, alpha_AI, bias, AI_error_sd
       human_old <- players[A, 2]
       human_new <- new_belief
       p_old <- p_revised[A]
-      p_new <- new_AI_belief * alpha_AI[k_new] + (1 - new_AI_belief) * new_belief
+      p_new <- new_AI_belief * alpha[k_new] + (1 - new_AI_belief) * new_belief
       beta_old <- players[A, 3]
       beta_new <- new_AI_belief
       players[A, ] <- c(new_interest, new_belief, new_AI_belief)

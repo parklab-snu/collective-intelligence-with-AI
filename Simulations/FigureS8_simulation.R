@@ -35,20 +35,18 @@ for(i in bias_list){
     #Build player
     players <- cbind(interest, belief, AI_belief)
     
-    bias_c <- rep(0, m+1)
     bias_i <- rep(i, m+1)
-    alpha_AI <- alpha + bias_c
     AI_error_sd <- 0.3
     
     denom <- sum((alpha[-1]*sigma[-1])^2)
-    AI_accuracy <- 1- (sum(bias_c^2*sigma^2) + 2*bias_c[1]*sum(bias_i) + sum(bias_i)^2 + AI_error_sd^2)/denom
+    AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
     cat("Accuracy:", AI_accuracy, "\n")
       
-    Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, alpha_AI, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda)
+    Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced', lambda = lambda)
       
     filename <- sprintf("Balanced_i%02f_j%02f.RData", i, j)
     filepath <- file.path(out_dir, filename)
       
-    save(i, j, bias_c, bias_i, alpha_AI, AI_error_sd, AI_accuracy, Result, file = filepath)
+    save(i, j, bias_i, AI_error_sd, AI_accuracy, Result, file = filepath)
   }
 }

@@ -4,7 +4,7 @@ library(patchwork)
 library(tidyverse)
 library(viridis)
 
-Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Original/avg_niche_seed42.RData"
+Simulation_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData"
 save_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-Intelligence-with-AI/Figures"
 
 load(file.path(Simulation_path))
@@ -66,7 +66,7 @@ p_difference <- ggplot(
   aes(x = Generation, y = mean_abs_delta)
 ) +
   geom_line(
-    linewidth = 1.5,
+    linewidth = 3,
     lineend = "round",
     color = "#0072B2"
   ) +
@@ -88,7 +88,7 @@ p_accuracy <- ggplot(
   aes(x = Generation, y = accuracy)
 ) +
   geom_line(
-    linewidth = 1.5,
+    linewidth = 3,
     lineend = "round",
     color = "#0072B2"
   ) +
