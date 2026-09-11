@@ -138,21 +138,23 @@ Understanding the conditions that promote and maintain CI therefore remains a fu
 Addressing this question has become particularly timely as artificial intelligence (AI) has begun to reshape how individuals acquire information, make decisions, and contribute to collective outcomes \citep{cui2024ai}.
 
 The recent emergence of generative AI and large language models (LLMs) has changed the way individuals engage in various cognitive tasks, ranging from simple everyday tasks to more complex tasks \citep{noy2023experimental,brynjolfsson2025generative}, including scientific discovery \citep{lu2026towards} and creative writing \citep{doshi2024generative}.
-In particular, while the use of generative AI models, such as ChatGPT, has been rapidly increasing \citep{bick2026rapid,sajadieh2026artificial}, the potential long-term impact of AI assistants on human society, especially the CI, remains uncertain.
-Some argue that AI can promote CI by enhancing individual expertise \citep{vaccaro2024combinations}, and opinion aggregation \citep{burton2024large,tessler2024ai}.
+In particular, while the use of generative AI models, such as ChatGPT, has been rapidly increasing \citep{bick2026rapid,sajadieh2026artificial}, the potential long-term impact of AI assistants on human society, especially CI, remains uncertain.
+Some argue that AI can promote CI by enhancing individual expertise \citep{vaccaro2024combinations} and opinion aggregation \citep{burton2024large,tessler2024ai}.
 Conversely, empirical evidence indicates that the use of AI can limit the diversity of opinions \citep{ fugener2021will,doshi2024generative,lee2024empirical,meincke2025chatgpt}, a key requirement for the emergence of CI \citep{hong2004groups,lorenz2011social,aplin2014individual,becker2017network}.
 
 Our ability to predict the long-term impact of AI assistants on human CI is further hampered by the apparent discrepancy in the incentives that shape AI use.
 On one hand, many industrial sectors are pushing towards increased AI use, where the number of ``tokens'' used is often perceived as a proxy for productivity \citep{bousquette2026tokenmaxxing,keary2026cult}.
 On the other hand, many academic institutions appear to discourage, and even penalize, AI use, reflecting concerns about plagiarism, misinformation, and limited independence \citep{thorp2023chatgpt,chawla2026researchers}.
 Such discrepancy raises a question about whether directly incentivizing or penalizing AI use will benefit or harm human CI.
+More broadly, previous theoretical work identified incentive structures that promote CI through social learning  \citep{wang2025individual}, but it remains unclear whether these structures remain effective in the presence of AI assistants.
 These observations further highlight the importance of identifying a robust incentive structure that can promote CI in the presence of AI assistants.
 Such incentive structure should seek to retain the benefits of AI and prevent potential risk, such as preserving the diversity of individual opinions.
 
-To address these questions, we extend previous approaches for modeling CI, where each individual participates in a prediction task from partial observations of underlying causal factors \citep{mann2017optimal,wang2025individual,hong2012incentives}.
-In particular, we allow each individual to independently consult with AI assistants and revise their predictions accordingly.
-The resulting model allows us to investigate the robustness of human CI under different assumptions about the AI model's ability to make predictions as well as incentive structures that are associated with the prediction task.
-In doing so, we assess the impact of directly incentivizing or penalizing AI use on CI and further suggest a balanced incentive structure that can maintain CI in the presence of AI.
+To address these questions, we extend previous approaches for modeling CI, in which each individual participates in a prediction task based on partial observations of underlying causal factors \citep{mann2017optimal,wang2025individual,hong2012incentives}. 
+In particular, we allow each individual to independently consult with AI assistants and revise their predictions accordingly. 
+Individual interests, beliefs, and reliance on AI then evolve through imitation of peers with higher payoffs. 
+We show that incentive structures that promote CI without AI can become ineffective in its presence. 
+We examine the how AI use affect interest diversity and collective bias, and leverage this understanding to propose incentive structures that can maintain CI in the presence of AI.
 
 \section*{Mathematical model}
 
