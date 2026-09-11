@@ -855,7 +855,8 @@ Here, $R=1$ represents perfect collective prediction, $R=0$ represents performan
 \section{Evolutionary dynamics}
 
 For sufficiently large population ($N \to \infty$), we can approximate the deterministic evolutionary dynamics using the replicator equation under both weak and strong selections.
-We focus on the feedback and niche-expert structures, for which the long-term dynamics can be characterized analytically. The direct interventions on AI use and the balanced structure are examined through simulations.
+We focus on the feedback and niche-expert structures, for which the long-term dynamics can be characterized analytically. 
+The direct interventions on AI use and the balanced structure are examined through simulations.
 
 
 Let $\lambda$ denote a strategy, $p_\lambda$ its frequency, and $u_\lambda=\mathbb{E}(\pi_\lambda)$ its expected payoff.
@@ -863,15 +864,20 @@ Then, the corresponding replicator equation can be written as:
 \begin{equation}
 \frac{dp_\lambda}{dt} = p_\lambda(u_\lambda-\bar{u}),
 \end{equation}
-
-where $\bar{u}=\sum_\lambda p_\lambda u_\lambda$.
-Therefore, at an internal stationary state, all strategies with positive frequency have the same expected payoff.
-A boundary state can also be stationary because a strategy with exactly zero frequency cannot increase under the replicator equation.
-Thus, stability of a boundary state needs to be considered separately by examining invasion by a rare strategy.
+where $\bar{u}=\sum_\lambda p_\lambda u_\lambda$ represents the mean expected payoff of the population. 
+At an internal stationary state, all strategies with positive frequency must have the same expected payoff. 
+A boundary state can also be stationary because a strategy with zero frequency cannot increase unless it is introduced into the population. 
+We therefore assess the stability of boundary states by asking whether they can be invaded by a rare alternative strategy.
 
 \subsection{Omniscient AI}
 
+With Omniscient AI, every AI prediction contains information about the full prediction target, and revised predictions are combined through averaging. 
+As population size increases, independent AI errors vanish from the collective prediction. 
+However, these errors remain in individual prediction errors and can therefore continue to affect niche-expert payoffs. 
+We consider the two incentive structures separately.
+
 \subsubsection{Feedback}
+
 When the population size approaches infinity, the effect of stochastic error on the collective prediction vanishes ($\bar{\eta}\to0$) and the effect of stochastic error in the expected payoff, $-\beta^2\tau^2/N$, also vanishes.
 Following prior research \citep{wang2025individual}, we define the Lyapunov function as the expected error of collective prediction
 
