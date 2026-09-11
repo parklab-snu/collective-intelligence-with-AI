@@ -878,17 +878,14 @@ We consider the two incentive structures separately.
 
 \subsubsection{Feedback}
 
-When the population size approaches infinity, the effect of stochastic error on the collective prediction vanishes ($\bar{\eta}\to0$) and the effect of stochastic error in the expected payoff, $-\beta^2\tau^2/N$, also vanishes.
-Following prior research \citep{wang2025individual}, we define the Lyapunov function as the expected error of collective prediction
-
+Under the feedback structure, both the stochastic error in the collective prediction, $\bar{\eta}$, and its contribution to expected payoff vanish as $N\to\infty$. 
+Following previous work \citep{wang2025individual}, we define the Lyapunov function as the expected error of collective prediction: 
 \begin{equation}
 V = \mathbb{E}\left[(Y-\hat{Y}^{re})^2\right].
 \end{equation}
-
-The function $V$ is non-negative and equals zero when the collective prediction is identical to the target.
-To examine how $V$ changes under the evolutionary dynamics, we take its time derivative:
-
-\begin{align*}
+The function $V$ is non-negative and equals zero when the collective prediction is identical to the target. 
+To determine how $V$ changes over time, we take its time derivative:
+\begin{align}
 \frac{dV}{dt}
 &= -2\mathbb{E}\left[(Y-\hat{Y}^{re})\frac{d\hat{Y}^{re}}{dt}\right] \\
 &= -2\mathbb{E}\left[(\delta_0+\sum_{i=1}^{M}\delta_iX_i)
@@ -896,13 +893,13 @@ To examine how $V$ changes under the evolutionary dynamics, we take its time der
 &= -2\left[\left\{(\alpha_0+B)\delta_0+\sum_{i=1}^{M}\alpha_i\delta_i\sigma_i^2\right\}\frac{d\bar{\beta}}{dt}
 +\delta_0\frac{d\gamma_0}{dt}
 +\sum_{i=1}^{M}\delta_i\sigma_i^2\frac{d\gamma_i}{dt}\right].
-\end{align*}
+\end{align}
 For notational convenience, we define
 \begin{equation}
 K = (\alpha_0+B)\delta_0+\sum_{i=1}^{M}\alpha_i\delta_i\sigma_i^2.
 \end{equation}
 Although $K$ changes with the population state, it is common to all strategies at a given state and can therefore be treated as a constant with respect to the strategy index $\lambda$.
-We also define
+We also define:
 \begin{equation}
 G_e =
 \begin{cases}
@@ -911,7 +908,7 @@ G_e =
 \end{cases}
 \end{equation}
 
-By the definitions of $\bar{\beta}$ and $\gamma_i$ and the replicator equation,
+Under the replicator equation, the rate of change in the population mean of a strategy component is given by its covariance with expected payoff. 
 \begin{equation}
 \frac{d\bar{\beta}}{dt} = \sum_\lambda p_\lambda(u_\lambda-\bar{u})\beta_\lambda = Cov(\beta,u).
 \end{equation}
@@ -921,111 +918,107 @@ Similarly, the terms involving $\gamma_i$ can be combined as
 = Cov((1-\beta)cG_e,u).
 \end{equation}
 Therefore,
-\begin{align*}
+\begin{align}
 \frac{dV}{dt}
 &= -2\left\{KCov(\beta,u)+Cov((1-\beta)cG_e,u)\right\} \\
 &= -2Cov(K\beta+(1-\beta)cG_e,u).
-\end{align*}
+\end{align}
 
 For the feedback structure in the limit $N\to\infty$, the expected payoff of strategy $\lambda$ is
-
 \begin{equation}
 u_\lambda = K\beta_\lambda+(1-\beta_\lambda)c_\lambda G_{e_\lambda}.
 \end{equation}
-Which is same with Thus,
+This expected payoff is identical to the quantity inside the covariance above. 
+Therefore,
 \begin{equation}
 \frac{dV}{dt} = -2Cov(u,u) = -2Var(u) \leq 0.
 \end{equation}
 
-Therefore, the expected error of collective prediction cannot increase during the evolutionary process and decreases whenever strategies differ in their expected payoffs. The derivative becomes zero when the variance of expected payoffs is zero, $\mathrm{Var}(u)=0$.
-This condition corresponds to equal expected payoffs among the strategies present in the population.
-A boundary state in which the entire population consists of a single strategy can also satisfy $\mathrm{Var}(u)=0$ even when $V>0$.
-However, such a state is not evolutionarily stable under the feedback structure.
-If the collective prediction differs from the target $Y$, a nonzero residual remains. By the definition of the feedback payoff, a novel strategy whose prediction aligns with the direction of this residual obtains a higher expected payoff than the resident strategy and can therefore invade the population.
-Thus, an imperfect boundary equilibrium with $V>0$ is unstable to the introduction of novel predictions.
+Because payoff variance is non-negative, the expected collective prediction error cannot increase and decreases whenever the strategies currently represented in the population differ in their expected payoffs. 
+The derivative becomes zero when all represented strategies receive the same expected payoff. 
+However, this condition does not necessarily imply that $V=0$, because a population can lack strategies that would improve its collective prediction.
 
-Consequently, the evolutionary dynamics continue to reduce the collective prediction error until the population reaches the stable state with zero residual, $V=0$. At this state, the collective prediction equals the target, $\hat{Y}^{re}=Y$, and the collective accuracy reaches $R=1$.
+If $V>0$, at least one component of the collective residual remains nonzero. 
+A rare strategy whose prediction is aligned with this residual can obtain a higher expected payoff than the resident strategies and invade the population. 
+Thus, provided that novel strategies can be introduced, an evolutionarily stable state must satisfy $V=0$. 
+At such a state, $\hat{Y}^{\mathrm{re}}=Y$, and collective accuracy reaches $R=1$.
+
+
+
+Therefore, the expected error of collective prediction cannot increase during the evolutionary process and decreases whenever strategies differ in their expected payoffs. 
+The derivative becomes zero when the variance of expected payoffs is zero, $\mathrm{Var}(u)=0$.
+This condition arises when all represented strategies receive the same expected payoff.
+However, this condition does not necessarily imply that $V=0$, because a population can lack strategies that would improve its collective prediction.
+
+If $V>0$, at least one component of the collective residual remains nonzero. 
+A rare strategy whose prediction is aligned with this residual can obtain a higher expected payoff than the resident strategies and invade the population. 
+Thus, provided that novel strategies can be introduced, an evolutionarily stable state must satisfy $V=0$. 
+At such a state, $\hat{Y}^{\mathrm{re}}=Y$, and collective accuracy reaches $R=1$.
 
 \subsubsection{Niche-expert}
-Unlike the stochastic error in the collective prediction, stochastic error in the niche-expert payoff is evaluated at the individual level and does not vanish as population size increases.
-Therefore, we retain $\tau>0$ in the following derivation.
+
+Unlike feedback payoffs, niche-expert payoffs depend on the prediction error of each individual. 
+Stochastic AI error therefore remains in the expected payoff even when $N\to\infty$, and we retain $\tau>0$ throughout this analysis.
 
 We first consider strategies having the same interest by optimizing the expected payoff with respect to $c$ and $\beta$.
 For a nonzero interest $e$, the expected payoff is strictly concave with respect to $c$ for $\beta<1$ and $\sigma_e>0$, and is maximized at
-
 \begin{equation}
 c_e^*=\alpha_e.
 \end{equation}
-
 After substituting $c_e^*=\alpha_e$, the payoff is strictly concave with respect to $\beta$.
-Its unconstrained stationary point is
-
+Its unconstrained stationary point is then:
 \begin{equation}
 \tilde{\beta}_e = \frac{\alpha_0^2+\alpha_0B+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2}{(\alpha_0+B)^2+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2+\tau^2}.
 \end{equation}
-
 Because $\beta$ is constrained between 0 and 1, the optimal $\beta_e^*$ is $\tilde{\beta}_e$ when $0<\tilde{\beta}_e<1$, and otherwise lies at the corresponding boundary, $\beta_e^*=0$ or $\beta_e^*=1$.
 Thus, the boundary cases do not require a separate evolutionary argument; they only change the optimal prediction and its minimum expected squared error.
 When $\beta_e^*=1$, the revised prediction is independent of $c_e$, so different values of $c_e$ are selectively neutral and can be treated as a single payoff-equivalent strategy class.
 
-Let $L_e$ denote the minimum expected individual error, $\mathbb{E}[(Y_A^{re}-Y)^2]$, within interest $e$.
+To compare the optimized strategies across interests, let $L_e$ denote the minimum expected individual squared error within interest $e$, $\mathbb{E}[(Y_A^{re}-Y)^2]$.
 For an internal optimum,
-
 \begin{equation}
 L_e=\frac{B^2\sum_{j\neq e,0}\alpha_j^2\sigma_j^2+\tau^2\left(\alpha_0^2+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2\right)}{(\alpha_0+B)^2+\sum_{j\neq e,0}\alpha_j^2\sigma_j^2+\tau^2}.
 \end{equation}
-
 If the optimum is located at $\beta_e^*=0$ or $\beta_e^*=1$, $L_e$ is instead obtained by evaluating the expected squared prediction error at the corresponding boundary.
 
-For interest 0, optimization with respect to $c$ gives
-
+Interest 0 must be considered separately because $X_0=1$ and the player's belief determines a constant prediction. Optimizing with respect to $c$ gives
 \begin{equation}
 c_0^*(\beta)=\alpha_0-\frac{\beta}{1-\beta}B.
 \end{equation}
-
-Substituting this into the expected payoff gives a strictly concave function of $\beta$, with the unique optimum
-
+Substituting this into the expected payoff gives a strictly concave function of $\beta$, with the unique optimum:
 \begin{equation}
 \beta_0^* = \frac{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2}{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2+\tau^2}.
 \end{equation}
-
 Therefore,
-
 \begin{equation}
 c_0^* = \alpha_0-\frac{B}{\tau^2}\sum_{j=1}^{M}\alpha_j^2\sigma_j^2,
 \end{equation}
-
 and
-
 \begin{equation}
 L_0 = \frac{\tau^2\sum_{j=1}^{M}\alpha_j^2\sigma_j^2}{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2+\tau^2}.
 \end{equation}
+At this optimum, the player adjusts their belief to offset the systematic AI bias.
+The stochastic component of AI error cannot be removed in the same way and therefore limits the benefit of AI reliance.
 
-We denote the optimal strategy, or the payoff-equivalent strategy class when $\beta_e^*=1$, by $S_e$.
-A state containing a suboptimal strategy within an interest can be stationary if the optimal strategy is absent, but it is unstable against invasion because the optimal strategy has a strictly higher payoff at the same $\rho_e$.
-Therefore, a stable state can contain only $S_e$ within each represented interest.
+We denote the optimal strategy within interest $e$ by $S_e$. 
+When $\beta_e^*=1$, different values of $c_e$ are selectively neutral and can be treated as a single payoff-equivalent strategy class. 
+A stable state can contain only the optimal strategy class within each represented interest because a suboptimal strategy can be invaded by $S_e$.
 
 We next consider the frequencies of the $M+1$ optimal strategies.
 Let $\rho_e$ denote the frequency of $S_e$.
 Its expected payoff is
-
 \begin{equation}
 u_e=-\rho_eL_e.
 \end{equation}
-
 Assuming $L_e>0$ for all interests, the equal-payoff condition of the replicator equation at an internal stationary state gives
-
 \begin{equation}
 \rho_0^*L_0 = \rho_1^*L_1 =\cdots = \rho_M^*L_M.
 \end{equation}
-
 Together with $\sum_{e=0}^{M}\rho_e^*=1$, this uniquely determines
-
 \begin{equation}
 \rho_e^* =\frac{D}{L_e},
 \qquad D = \left(\sum_{j=0}^{M}\frac{1}{L_j}\right)^{-1}.
 \end{equation}
-
 This internal stationary state is locally stable.
 At equilibrium, all represented interests have the same expected payoff, with $\rho_e^*L_e=D$.
 If the frequency of one interest increases slightly above its equilibrium value, its payoff decreases because the niche-expert payoff is proportional to $-\rho_eL_e$.
@@ -1039,110 +1032,60 @@ Thus, there exists a unique stable full-support equilibrium in terms of the opti
 Whether the constrained optimum has $\beta_e^*=0$, $0<\beta_e^*<1$, or $\beta_e^*=1$ does not change the frequency argument, because these cases differ only through the resulting value of $L_e$.
 When $\beta_e^*=1$, the strategy is selectively neutral with respect to $c_e$, but its prediction, payoff, and equilibrium interest frequency remain uniquely determined.
 
-This equilibrium also allows a direct comparison with the expected accuracy of the AI.
-Using $Y^{\mathrm{AI}}$ itself without aggregation as the prediction gives
-
+Having characterized this equilibrium, we next compare its collective prediction with a prediction made entirely by AI. 
+In particular, the expected squared error of an Omniscient AI prediction is
 \begin{equation}
 \mathbb{E}\left[(Y-Y^{\mathrm{AI}})^2\right] = B^2+\tau^2.
 \end{equation}
-
 For every interest, complete reliance on AI, $\beta=1$, is a feasible strategy.
 Therefore, because $L_e$ is the minimum individual expected squared prediction error within interest $e$,
-
 \begin{equation}
 L_e\leq B^2+\tau^2.
 \end{equation}
-
 Moreover, for interest 0,
-
 \begin{equation}
 L_0 = \frac{\tau^2\sum_{j=1}^{M}\alpha_j^2\sigma_j^2}{\sum_{j=1}^{M}\alpha_j^2\sigma_j^2+\tau^2}
 < \tau^2 \leq B^2+\tau^2.
 \end{equation}
-
 Because the stable equilibrium has $\rho_0^*>0$,
-
 \begin{equation}
 \sum_{e=0}^{M}\rho_e^*L_e < B^2+\tau^2.
 \end{equation}
-
 The collective prediction is the average of individual revised predictions.
 By convexity of the squared error,
-
 \begin{equation}
 \mathbb{E}\left[(Y-\hat{Y}^{re})^2\right] \leq \sum_{e=0}^{M}\rho_e^*L_e.
 \end{equation}
-
 Therefore,
-
 \begin{equation}
 \mathbb{E}\left[(Y-\hat{Y}^{re})^2\right] < \mathbb{E}\left[(Y-Y^{\mathrm{AI}})^2\right].
 \end{equation}
+Thus, the diversity of optimized predictions allows the population to outperform an individual AI prediction at equilibrium.
 
-Because the collective accuracy and AI accuracy use the same normalization by $\mathbb{E}[(Y-\alpha_0)^2]$, the stationary collective accuracy under the niche-expert structure is strictly greater than the expected accuracy of the AI prediction.
-
-Although the niche-expert structure improves collective prediction relative to the AI, the stationary collective accuracy does not reach one when $\tau>0$.
+However, outperforming AI does not imply perfect collective accuracy. 
+Under averaging, the non-AI contribution associated with a particular factor is provided only by individuals interested in that factor. 
+The predictions of individuals with other interests therefore attenuate that factor's coefficient in the collective prediction. 
 For a nonzero factor $i$, the residual coefficient of the stationary collective prediction can be written as
-
 \begin{equation}
 \delta_i^* = \alpha_i\left\{1-\bar{\beta}^*-\rho_i^*(1-\beta_i^*)\right\} = \alpha_i\sum_{e\neq i}\rho_e^*(1-\beta_e^*).
 \end{equation}
-
 At the stable equilibrium, $\rho_0^*>0$.
 In addition, $\tau>0$ implies $\beta_0^*<1$.
 Therefore, for every factor with $\alpha_i\neq0$,
-
 \begin{equation}
 \delta_i^*\neq0.
 \end{equation}
-
 Because $\sum_{i=1}^{M}\alpha_i^2\sigma_i^2>0$, at least one factor contributes positive prediction error.
 Hence,
-
 \begin{equation}
 \mathbb{E}\left[(Y-\hat{Y}^{re})^2\right]>0,
 \end{equation}
-
 and consequently the stationary collective accuracy satisfies $R^*<1$.
-
-
-% \subsection{Chatbot AI}
-% \subsubsection{Feedback}
-% With Chatbot AI, the effect of stochastic error on the collective prediction depends on $n_i$, requiring the additional assumption that $n_i \to \infty$ for every interest for the stochastic error to vanish.
-% However, Under this assumption, the loss of interest diversity cannot occur, and therefore the stochastic breakdown of collective accuracy observed in finite populations cannot be analytically captured. 
-% Instead, by assuming that each interest is represented by infinitely many players, we can show that the expected collective prediction error monotonically decreases until perfect accuracy is achieved.
-% Because finite population dynamics are more relevant to the empirical populations considered in this study, we retain finite population simulations for the main result.
-
-% \subsubsection{Niche-expert}
-% We first consider strategies having the same interest by optimizing the expected payoff with respect to $c$ and $\beta$.
-% For a nonzero interest $e$, the expected payoff is strictly concave with respect to $c$ for $\beta<1$ and $\sigma_e>0$, and is maximized at
-
-% \begin{equation}
-% c_e^*=\alpha_e.
-% \end{equation}
-% After substituting $c_e^*=\alpha_e$, the payoff is strictly concave with respect to $\beta$.
-% Its unconstrained stationary point is
-% \begin{equation}
-% \tilde{\beta}_e = \frac{2\alpha_0b_{e}}{2b_e^2+2\tau^2}.
-% \end{equation}
-% Because $\beta$ is constrained between 0 and 1, the optimal $\beta_e^*$ is $\tilde{\beta}_e$ when $0<\tilde{\beta}_e<1$, and otherwise lies at the corresponding boundary, $\beta_e^*=0$ or $\beta_e^*=1$.
-% Because we assumes AI model with moderate accuracy, $b_e$ and $\tau$ is relatively smaller than $\alpha_0$ which makes $\tilde{\beta}_e >1$ when $\alpha_0b_e >0$ and $\tilde{\beta}_e < 0$ when $\alpha_0b_e <0$.
-% These boundary cases lead to extreme reliance on AI or complete exclusion of AI which both hinders the emergence of CI.
-% Only when the prediction task is centered near zero and AI is relatively inaccurate ($\alpha_0b_e < b_e^2 + \tau^2$), and $\alpha_0b_e >0$, the internal optimum $\beta_e^*$ can be exist. 
-
-% For interest 0, optimization with respect to $c$ gives
-% \begin{equation}
-% c_0^*(\beta)=\alpha_0-\frac{\beta}{1-\beta}b_0.
-% \end{equation}
-% Substituting this into the expected payoff gives a strictly concave function of $\beta$, with the unique optimum
-% \begin{equation}
-% \beta_0^* = 0.
-% \end{equation}
+Thus, the niche-expert structure preserves interest diversity and allows the population to outperform AI, but averaging prevents the population from reaching perfect collective accuracy.
 
 \pagebreak
 
 \section*{Supplementary Figure}
-
 
 \begin{figure}[!pth]
 \includegraphics[width=\textwidth]{../Figures/Supplementary figure 1.pdf}
