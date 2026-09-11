@@ -580,124 +580,140 @@ The authors declare no competing interests.
 
 \section*{Supplementary Text}
 
+Here, we derive the expected payoffs and collective accuracy used in the simulations.
+We consider Omniscient AI and Chatbot AI separately because they contain different amounts of information and therefore require different aggregation rules.
+We then analyze the corresponding evolutionary dynamics under a deterministic large-population approximation.
+
 \section{Omniscient AI}
-Omniscient AI assumes that AI can incorporate all causal factors regardless of the player's interest.
+
+We first consider Omniscient AI, which incorporates all causal factors regardless of the player's interest. 
+We derive individual and collective predictions before calculating the expected payoffs under each incentive structure.
 
 \subsection{Model}
 
-
+Because Omniscient AI observes all $M$ causal factors, its prediction for player $A$ is given by
 \begin{equation}
-Y_A^{\mathrm{AI}} = \alpha_0 + b_0 + \alpha_1 X_1 + b_1 + \cdots + \alpha_M X_M + b_M + \epsilon.
+Y_A^{\mathrm{AI}} = \alpha_0 + b_0 + \alpha_1 X_1 + b_1 + \cdots + \alpha_M X_M + b_M + \epsilon,
 \end{equation}
+where $b_i$ represent factor-specific biases and $\epsilon$ represents stochastic error, following a Gaussian distribution with mean zero and standard deviation $\tau$.
+A new stochastic error is generated independently for each player and prediction event.
 
-For simplicity, prediction of Omniscient AI can be written as:
-
+Let $B=\sum_{i=0}^{M}b_i$ denote the total additive bias. 
+Because the true prediction target is $Y=\alpha_0+\sum_{i=1}^{M}\alpha_iX_i$, the AI prediction can be written as
 \begin{equation}
-Y^{AI} = Y + B + \epsilon
+Y^{AI} = Y + B + \epsilon.
 \end{equation}
-
-where $Y$ stands for true prediction target ($Y = \alpha_0 + \alpha_1 X_1 + \cdots + \alpha_M X_M$) and $B$ is sum of all fixed baises ($B = b_0 + b_1 + \cdots + b_M$), $\epsilon$ follows normal distribution with zero mean, $\tau$ standard deviation with no correlation within or between players. Player A's prediction and revised prediction can be written as follows:
-
-\begin{equation}
-Y_A = c_A X_{e_A}
-\end{equation}
-\begin{equation}
-Y_A^{re} = \beta_A Y^{AI} + (1-\beta_A)Y_A
-\end{equation}
-where $c_A$ stands for player A's belief on the factor, $e_A$ stands for the interest, and $\beta_A$ stands for reliance on AI.
+In contrast to the AI prediction, player $A$'s initial prediction depends only on the causal factor associated with their interest. 
+Their initial and revised predictions are therefore given by:
+\begin{align}
+Y_A &= c_A X_{e_A}\\
+Y_A^{re} &= \beta_A Y^{AI} + (1-\beta_A)Y_A
+\end{align}
+represents player $A$'s interest, $c_A$ represents their belief about the effect of the corresponding factor, and $\beta_A$ represents their reliance on AI.
+As in the main text, we set $X_0=1$, such that a player with $e_A=0$ makes a constant initial prediction.
 
 \subsection{Aggregation}
-Because $Y_A^{AI}$ is subject to all $M$ factors, we use simple averaging aggregation for collective prediction.
 
-\begin{align*}
+Because the AI component of each revised prediction contains information about all $M$ causal factors, we use simple averaging to obtain the collective prediction:
+\begin{align}
 \hat{Y}^{re}
 &= \frac{1}{N}\sum_{j = 1}^N Y_j^{re}\\
 &= \frac{1}{N}\sum_{j = 1}^N\left\{\beta_jY^{AI} + (1-\beta_j)Y_j\right\}\\
 &= \frac{1}{N}\sum_{j = 1}^N\left\{\beta_j(Y + B + \epsilon) + (1 - \beta_A)c_jX_{e_j}\right\}
-\end{align*}
-Reparameterization for simple derivation and interpretability.
-\begin{equation}
-\bar{\beta} \coloneqq \frac{1}{N}\sum_{j = 1}^{N} \beta_j
-\end{equation}
-\begin{equation}
-\bar{\eta} \coloneqq \frac{1}{N}\sum_{j = 1}^{N} \beta_i\epsilon
+\end{align}
+To separate the contributions of AI and the players' initial predictions, we define the population's mean reliance on AI, the stochastic AI error remaining after aggregation, and the aggregate contribution of initial predictions associated with each factor:
+\begin{align}
+\bar{\beta} &= \frac{1}{N}\sum_{j = 1}^{N} \beta_j\\
+\bar{\eta} &= \frac{1}{N}\sum_{j = 1}^{N} \beta_i\epsilon\\
 \label{eta}
-\end{equation}
-\begin{equation}
-\gamma_i \coloneqq \frac{1}{N}\sum_{A \in \mathcal{A}_i}(1-\beta_A)c_A
-\end{equation}
-$\bar{\beta}$ can be interpreted as mean reliance on AI, $\gamma$ stands for the coefficient for the factor $i$ which is solely based on players' belief. \\
-By this reparameterization, we can write $\hat{Y}^{re}$ as follows.
+\gamma_i &= \frac{1}{N}\sum_{A \in \mathcal{A}_i}(1-\beta_A)c_A
+\end{align}
+Here, $\bar{\beta}$ represents the mean reliance on AI, $\bar{\eta}$ represents the stochastic AI error remaining after averaging, and $\gamma_i$ represents the contribution of players' initial predictions to factor $i$. 
+Using these definitions, the revised collective prediction can be written as follows:
 \begin{equation}
 \hat{Y}^{re} = \bar{\beta}(Y + B) + \sum_{i = 0}^{M}\gamma_iX_i + \bar{\eta}
 \end{equation}
+Thus, the collective prediction consists of an AI-derived component, the contributions of the players' initial predictions, and the stochastic AI error that remains after aggregation.
 
 \subsection{Expected payoffs}
 
+We next derive the expected payoff under each incentive structure. 
+Expectations are taken over the distributions of the causal factors and stochastic AI errors, conditional on the current population strategies and the fixed parameters of the prediction target.
+
 \subsubsection*{Feedback}
-\begin{equation}
-\delta_0 \coloneqq \alpha_0- (\bar{\beta}(\alpha_0 + B) + \gamma_0)
-\end{equation}
-\begin{equation}
-\delta_i \coloneqq \alpha_i- (\bar{\beta}\alpha_i + \gamma_i), \qquad (i \neq 0)
-\end{equation}
-\begin{equation}
-Y - \hat{Y}^{re} = \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}
-\end{equation}
-See equation Eq.~\eqref{eta} for the $\bar{\eta}$.\\
-$\delta_0$ is constant term and $\delta_i$ is independent of $\alpha_k$ $(k\neq i)$, $\epsilon$, and $\bar{\eta}$.
-\begin{align*}
+
+Under the feedback structure, a player's payoff depends on the alignment between their revised prediction and the residual error of the collective prediction. 
+To express this residual, we first define the remaining error in the intercept and in the coefficient of each causal factor:
+\begin{align}
+\delta_0 &= \alpha_0- (\bar{\beta}(\alpha_0 + B) + \gamma_0),\\
+\delta_i &= \alpha_i- (\bar{\beta}\alpha_i + \gamma_i), \qquad (i \neq 0),\\
+Y - \hat{Y}^{re} &= \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta},
+\end{align}
+where $\delta_0$ represents the remaining error in the intercept, whereas $\delta_i$ represents the remaining error associated with factor $i$. 
+Because the causal factors and stochastic AI errors are independent and have zero mean, cross terms vanish when the expectation is taken. Substituting the revised individual prediction and collective residual into the feedback payoff gives
+\begin{align}
 \mathbb{E}(\pi_A)
 &= \mathbb{E}[Y_A^{re}(Y - \hat{Y}^{re})] \\
-&= \mathbb{E}\left[\left\{\beta_A \alpha_0 + \beta_A \sum_{i = 1}^{M} \alpha_i X_i + \beta_A B  + \beta_A \epsilon) + (1 - \beta_A)c_AX_{e_A}\right\}\left\{\delta_0 + \sum_{i = 1}^{m}\delta_iX_i - \bar{\eta}\right\}\right] \\
+&= \mathbb{E}\left[\left\{\beta_A \alpha_0 + \beta_A \sum_{i = 1}^{M} \alpha_i X_i + \beta_A B  + \beta_A \epsilon) + (1 - \beta_A)c_AX_{e_A}\right\}\right.\\
+&\times \left.\left\{\delta_0 + \sum_{i = 1}^{m}\delta_iX_i - \bar{\eta}\right\}\right] \\
 &= \beta_A\alpha_0\delta_0 + \beta_A\sum_{i = 1}^{M}\delta_i\alpha_i\sigma_i^2 + \beta_AB\delta_0 - \frac{1}{N}\beta_A^2\tau^2 + (1-\beta_A)c_A\delta_{e_A}\sigma_{e_A}^2\\
 &= \beta_A\left\{(\alpha_0+B)\delta_0 + \sum_{i = 1}^{M}\alpha_i\delta_i\sigma_i^2\right\} + (1-\beta_A)c_A\delta_{e_A}\sigma_{e_A}^2 - \frac{\beta_A^2\tau^2}{N}
-\end{align*}
+\end{align}
+The first term represents the alignment between the AI-derived prediction and the collective residual, whereas the second term represents the contribution of the player's initial prediction. The final term arises because the stochastic error in player $A$'s AI prediction also contributes to the collective prediction. This finite-population effect decreases as population size increases.
 
 \subsubsection*{Niche-expert}
 
-If $e_A = 0$, player does not observe causal facor and their unrevised prediction is same with their belief $c_A$. Such that, the expected payoff is
-\begin{align*}
+Under the niche-expert structure, the payoff is the negative squared error of the revised individual prediction, weighted by the frequency of the player's interest. 
+Because $X_0=1$, a player with $e_A=0$ makes a constant initial prediction. 
+In this case, the expected payoff is:
+\begin{align}
 \mathbb{E}(\pi_A)
 &= -\mathbb{E}[\rho_{0}(Y_A^{re} - Y)^2] \\
 &= -\mathbb{E}\left[\rho_{0}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A \right\}^2\right] \\[6pt]
 &= -\mathbb{E}\left[\rho_{0}\left\{(\beta_A - 1)(\alpha_0- c_A) + \beta_A B + (\beta_A - 1)\sum_{i=1}^{M} \alpha_i X_i + \beta_A \epsilon\right\}^2\right] \\[6pt]
 &= -\rho_{0}\Bigl\{(1-\beta_A)^2(\alpha_0 - c_A)^2 - 2\beta_A(1-\beta_A)(\alpha_0 - c_A) B + \beta_A^2 B^2\\
 &\qquad + (1-\beta_A)^2\sum_{i \neq 0}\alpha_i^2\sigma_i^2  + \beta_A^2\tau^2\Bigr\}
-\end{align*}
-Else,
-\begin{align*}
+\end{align}
+For a player with $e_A\neq0$, the initial prediction instead depends on the observed value of factor $X_{e_A}$. The expected payoff is therefore:
+\begin{align}
 \mathbb{E}(\pi_A)
 &= -\mathbb{E}[\rho_{e_A}(Y_A^{re} - Y)^2] \\
-&= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A X_{e_A} \right\}^2\right] \\[6pt]
-&= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A -1 )\alpha_0 + \beta_A B + + (\beta_A - 1)(\alpha_{eA} - c_A) X_{e_A} + (\beta_A - 1)\sum_{i \neq e_A, 0} \alpha_i X_i + \beta_A \epsilon\right\}^2\right] \\[6pt]
-&= -\rho_{e_A}\Bigl\{ (1-\beta_A)^2\alpha_0^2 - 2\beta_A(1-\beta_A)\alpha_0 B + \beta_A^2 B^2  + (1-\beta_A)^2(\alpha_{eA} - c_A)^2\sigma_{e_A}^2 \\
-&\qquad + (1-\beta_A)^2\sum_{i \neq e_A, 0}\alpha_i^2\sigma_i^2 + \beta_A^2\tau^2\Bigr\}
-\end{align*}
+&= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A X_{e_A} \right\}^2\right] \\
+&= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A -1 )\alpha_0 + \beta_A B  \right.\right. \\
+&+ \left.\left. (\beta_A - 1)(\alpha_{eA} - c_A) X_{e_A} + (\beta_A - 1)\sum_{i \neq e_A, 0} \alpha_i X_i + \beta_A \epsilon\right\}^2\right] \\
+&= -\rho_{e_A}\Bigl\{ (1-\beta_A)^2\alpha_0^2 - 2\beta_A(1-\beta_A)\alpha_0 B\\
+&+ \beta_A^2 B^2  + (1-\beta_A)^2(\alpha_{eA} - c_A)^2\sigma_{e_A}^2 \\
+&+ (1-\beta_A)^2\sum_{i \neq e_A, 0}\alpha_i^2\sigma_i^2 + \beta_A^2\tau^2\Bigr\}
+\end{align}
+These expressions separate the contributions of the player's belief, the unobserved causal factors, systematic AI bias, and stochastic AI error.
+Increasing reliance on AI reduces the contribution of errors in the player's initial prediction but increases their exposure to AI bias and stochastic error.
 
 \subsubsection*{Incentivizing or penalizing AI use}
-Because additive term $\lambda\beta$ is not a random variable, we can simply derive the expected payoff as
 
-\begin{equation}
-\mathbb{E}(\pi_{A, Feedback})=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A.
-\end{equation}
-
-\begin{equation}
-\mathbb{E}(\pi_{A, Niche-expert}) = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
-\end{equation}
+Direct incentives add the term $\lambda\beta_A$ to either the feedback or niche-expert payoff. 
+Because this term is fixed conditional on the player's strategy, its expectation is simply $\lambda\beta_A$. 
+The expected payoffs therefore become
+\begin{align}
+\mathbb{E}(\pi_{A, \textrm{Feedback}})&=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A,\\
+\mathbb{E}(\pi_{A, \textrm{Niche-expert}}) &= -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
+\end{align}
+Thus, a positive value of $\lambda$ increases the payoff of strategies with greater reliance on AI, whereas a negative value favors strategies with lower reliance.
 
 \subsection{Expected accuracy}
-\begin{equation}
-\mathbb{E}[(Y - \alpha_0)^2] = \mathbb{E}\left[\left(\alpha_0 +\sum_{i = 1}^{M}\alpha_iX_i - \alpha_0\right)^2\right] = \sum_{i = 1}^{M}\alpha_i^2\sigma_i^2
-\end{equation}
-\begin{equation}
-\mathbb{E}[(Y - \hat{Y}^{re})^2] = \mathbb{E}\left[\left(\delta_0 +\sum_{i = 1}^{M}\delta_iX_i - \hat{\eta}\right)^2\right] = \delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \frac{\tau^2}{N^2}\sum_{j = 1}^{N}\beta_j^2
-\end{equation}
-\begin{align*}
+
+Using the residual defined above, the mean squared error of the revised collective prediction is:
+\begin{align}
+\mathbb{E}[(Y - \alpha_0)^2] &= \mathbb{E}\left[\left(\alpha_0 +\sum_{i = 1}^{M}\alpha_iX_i - \alpha_0\right)^2\right] = \sum_{i = 1}^{M}\alpha_i^2\sigma_i^2\\
+\mathbb{E}[(Y - \hat{Y}^{re})^2] &= \mathbb{E}\left[\left(\delta_0 +\sum_{i = 1}^{M}\delta_iX_i - \hat{\eta}\right)^2\right] = \delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \frac{\tau^2}{N^2}\sum_{j = 1}^{N}\beta_j^2
+\end{align}
+The expected collective accuracy is therefore
+\begin{align}
 R
 &= 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}\\[6pt]
 &= 1- \frac{\delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \frac{\tau^2}{N^2}\sum_{j = 1}^{N}\beta_j^2}{\sum_{i = 1}^{M}\alpha_i^2\sigma_i^2}
-\end{align*}
+\end{align}
+The collective prediction error consists of the squared error in the intercept, the remaining error associated with each causal factor, and the stochastic AI error remaining after averaging across players.
+Counterfactual collective accuracy is obtained from the same expression by setting $\beta_A=0$ for all players while retaining their evolved interests and beliefs.
 
 \section{Chatbot AI}
 \subsection{Model}
@@ -723,28 +739,28 @@ For Chatbot AI, clustering aggregation is used for collective prediction.
 \end{align*}
 Reparameterize for the simplicity.
 \begin{equation}
-\tilde{c}_i \coloneqq \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\}
+\tilde{c}_i = \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\}
 \end{equation}
 \begin{equation}
-\tilde{B}_i \coloneqq \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_Ab_{e_A}
+\tilde{B}_i = \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_Ab_{e_A}
 \end{equation}
 \begin{equation}
-\bar{B} \coloneqq \sum_{i = 0}^{M}\tilde{B}_i
+\bar{B} = \sum_{i = 0}^{M}\tilde{B}_i
 \end{equation}
 \begin{equation}
-\tilde{\eta}_i \coloneqq \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_A\epsilon
+\tilde{\eta}_i = \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_A\epsilon
 \end{equation}
 \begin{equation}
-\bar{\eta} \coloneqq \sum_{i = 0}^{M}\tilde{\eta}_i
+\bar{\eta} = \sum_{i = 0}^{M}\tilde{\eta}_i
 \end{equation}
 
 \subsection{Expected payoffs}
 \subsubsection*{Feedback}
 \begin{equation}
-\delta_0 \coloneqq \alpha_0 - \tilde{c}_0 - \bar{B}
+\delta_0 = \alpha_0 - \tilde{c}_0 - \bar{B}
 \end{equation}
 \begin{equation}
-\delta_i \coloneqq \alpha_i - \tilde{c}_i, \qquad (i\neq 0)
+\delta_i = \alpha_i - \tilde{c}_i, \qquad (i\neq 0)
 \end{equation}
 \begin{equation}
 Y - \hat{Y}^{re} = \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}
