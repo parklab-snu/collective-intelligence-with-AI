@@ -119,7 +119,7 @@ Jaeseung Kim\textsuperscript{1} Sang Woo Park\textsuperscript{1,2,*}
 
 \section*{Abstract}
 
-Recent advances in artificial intelligence (AI) have enabled widespread use of AI assistants for various cognitive tasks, ranging from simple everyday tasks to scientific discovery and creative writing.
+Recent advances in artificial intelligence (AI) have enabled widespread use of AI assistants for various cognitive tasks, ranging from everyday tasks to scientific discovery and creative writing.
 While AI assistance can improve the performance of each individual, it can weaken their subsequent performance without AI and further limit the diversity of interests and opinions.
 These risks raise the question of whether human collective intelligence can persist as our society becomes increasingly reliant on AI assistants.
 To address this question, we develop an evolutionary model of collective intelligence, where each individual participate in a prediction task, consult AI, and imitate each other's prediction strategy.
@@ -127,7 +127,6 @@ We find that ``Chatbot'' AI, which depends on users’ interests, can prevent th
 Directly incentivizing or penalizing AI use generally worsens these outcomes.
 Instead, a balanced incentive structure that preserve minority expertise and reward contributions to collective outcome can promote the emergence of collective intelligence.
 However, the inherent ability of the population's to make prediction in the absence of AI remains suboptimal even under this balanced incentive structure, raising concerns for continued AI reliance.
-\swp{conclusion?}
 
 \pagebreak
 
@@ -141,7 +140,7 @@ Addressing this question has become particularly timely as artificial intelligen
 The recent emergence of generative AI and large language models (LLMs) has changed the way individuals engage in various cognitive tasks, ranging from simple everyday tasks to more complex tasks \citep{noy2023experimental,brynjolfsson2025generative}, including scientific discovery \citep{lu2026towards} and creative writing \citep{doshi2024generative}.
 In particular, while the use of generative AI models, such as ChatGPT, has been rapidly increasing \citep{bick2026rapid,sajadieh2026artificial}, the potential long-term impact of AI assistants on human society, especially the CI, remains uncertain.
 Some argue that AI can promote CI by enhancing individual expertise \citep{vaccaro2024combinations}, and opinion aggregation \citep{burton2024large,tessler2024ai}.
-Conversely, empirical evidence indicate that the use of AI can limit the diversity of opinions \citep{ fugener2021will,doshi2024generative,lee2024empirical,meincke2025chatgpt}, a key requirement for the emergence of CI \citep{hong2004groups,lorenz2011social,aplin2014individual,becker2017network}.
+Conversely, empirical evidence indicates that the use of AI can limit the diversity of opinions \citep{ fugener2021will,doshi2024generative,lee2024empirical,meincke2025chatgpt}, a key requirement for the emergence of CI \citep{hong2004groups,lorenz2011social,aplin2014individual,becker2017network}.
 
 Our ability to predict the long-term impact of AI assistants on human CI is further hampered by the apparent discrepancy in the incentives that shape AI use.
 On one hand, many industrial sectors are pushing towards increased AI use, where the number of ``tokens'' used is often perceived as a proxy for productivity \citep{bousquette2026tokenmaxxing,keary2026cult}.
@@ -206,7 +205,7 @@ Hereafter, we say that CI emerges when the collective accuracy reaches a near pe
 Full derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Supplementary Text S1 and S2.
 
 This model now allows us to explore the impact of AI on CI depending on the type of AI and the incentive structure.
-Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate a how different incentive structures affect the emergence of CI in the presence of AI.
+Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate how different incentive structures affect the emergence of CI in the presence of AI.
 
 \section*{AI can either promote or prevent the emergence of CI}
 
@@ -280,14 +279,14 @@ in the latter case, the population retains collective intelligence regardless of
 The reduction in collective accuracy arises because incentivizing or penalizing AI use causes individuals to imitate others based on their AI use rather than their predictive accuracy.
 Thus, stronger interventions can push the group to always ($\beta = 1$) or never ($\beta = 0$) rely on AI  (Fig. 3B, D, F, H) but these scenarios do not necessarily lead to better outcomes (Fig. 3D, F, H).
 When AI bias is relatively large, a weak penalty can lead to higher collective accuracy, but this represents a narrow parameter regime (Figure 3G).
-Overall, these results indicate that simply incentivizing or penalizing the AI, independent of individuals' performance, use may exacerbate rather than resolve the risk of AI on CI.
+Overall, these results indicate that directly rewarding or penalizing AI use, independently of predictive performance, may exacerbate rather than mitigate the risk of AI on CI.
 
 \section*{Balanced incentives mitigate AI-induced failures of CI}
 
 \begin{figure}[!th]
 \includegraphics[width=\textwidth]{../Figures/Figure 4.pdf}
 \caption{
-\textbf{Balanced structure can promote collective intelligence} 
+\textbf{Balanced structure can promote collective intelligence.} 
 Trajectories of collective accuracy (A) and counterfactual human CI (B) under three incentive structures (feedback, niche-expert, and balanced) with Chatbot AI.
 Distributions of individual interest and belief (C-E) and of interest and reliance on AI (F-H) after 200,000 generations. 
 Each point represents an individual. 
@@ -322,7 +321,7 @@ These contrasting outcomes arise because AI assistance affects not only individu
 We also show that directly incentivizing or penalizing AI use, independent of individual's performances, can further limit the collective accuracy of the population. 
 Instead, a balanced incentive structure can maintain CI by promoting diversity and limiting bias.
 
-Our analysis reveals that AI can prevent the emergence of AI through two different mechanisms.
+Our analysis reveals that AI can prevent the emergence of CI through two different mechanisms.
 First, AI use can cause individuals to concentrate on a subset of the factors that determine the prediction target, thereby reducing diversity in their interests.
 This result is broadly consistent with recent empirical studies showing that AI assistance can improve individual performance but limit the diversity of outputs, in domains ranging from scientific research \citep{hao2026artificial} to creative writing \citep{doshi2024generative}.
 Second, over-reliance on AI can cause the population to inherit inherent biases in AI's predictions \citep{fugener2021will,vicente2023humans}, causing the prediction accuracy to decrease eventually.
@@ -330,7 +329,7 @@ This mechanism can prevent the emergence of CI even when the interest diversity 
 Thus, preserving the diversity of ideas will not be sufficient to promote CI.
 Instead, AI use need to be calibrated to prevent systematic AI biases from becoming collective biases \citep{buccinca2021trust}.
 
-Our analyses of counterfactual collective accuracy also raises an important concern for future AI use:
+Our analysis of counterfactual collective accuracy also raises an important concern for future AI use:
 while AI use may improve the apparent performance of individuals and, in some cases, the population as a whole, it can simultaneously reduce the population’s ability to make accurate predictions without AI. 
 These results echo findings from a recent field experiment, which demonstrated that students, who seemingly performed better in solving mathematics problems under AI assistance, performed worse on their own than those who did not have access \citep{bastani2025generative}.
 These findings highlight the need to evaluate AI tools not only by the performance gains they provide during use, but also by whether individuals and populations retain the ability to perform without them \citep{melumad2025experimental,ke2026ai}.
@@ -346,7 +345,7 @@ maintaining diversity and preventing collective bias, rather than on AI use itse
 There are several limitations to our analyses.
 First, our model allows for social learning among humans, but AI's inherent ability remains fixed throughout the evolutionary process.
 In reality, AI can also learn from human-generated data \citep{ouyang2022training}.
-Such bidirectional learning increase the similarity between human and AI errors and therefore further reduce the group performance \citep{steyvers2022bayesian}.
+Such bidirectional learning could increase the similarity between human and AI errors and thereby reduce group performance \citep{steyvers2022bayesian}.
 Second, we model AI errors using fixed, factor-specific additive biases and independent random errors.
 This assumption allows random errors to be reduced through aggregation, while systematic biases can still persist in the collective prediction.
 In reality, AI errors may have more complex structures, including biased estimates of factor effects and correlated errors across individuals, factors, or repeated interactions.
