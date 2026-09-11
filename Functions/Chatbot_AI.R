@@ -9,9 +9,8 @@ compute_p_revised_vec <- function(interest, belief, AI_belief, alpha) {
   AI_belief * alpha[interest + 1] + (1 - AI_belief) * belief
 }
 # Compute the payoff of the single player.
-# supports Expert, Niche expert, Disadvantage AI Niche, Advantage AI Niche, Feedback, Disadvantage AI Feedback, and Advantage AI Feedback payoffs
-# Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
-# Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
+# supports Niche expert, Incentivize/penalize AI Niche, Feedback, Incentivize/penalize AI Feedback, and Balanced payoffs.
+# Incentivize/penalize AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, B_bar, alpha, sigma, bias, AI_error_sd,
                                payoff_type, agg_type, C_const, N, lambda, w) {
   k <- players[i, 1] + 1
@@ -20,7 +19,8 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
   bias_e <- bias[k]
   beta_i <- players[i, 3]
   p_i <- p_revised[i]
-  if (payoff_type == "Expert" || payoff_type == "Niche expert" || payoff_type == "Advantage AI Niche" || payoff_type == "Disadvantage AI Niche") {
+  
+  if (payoff_type == "Niche expert" || payoff_type == "Incentivize/penalize AI Niche") {
     expr <- (p_i^2 - 2 * p_i * alpha_e) * sigma_e^2 +
       C_const +
       beta_i^2 * AI_error_sd^2 +
@@ -32,17 +32,12 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
       expr <- expr - 2 * alpha[1] * beta_i * bias_e
     }
     
-    if (payoff_type == "Expert") {
-      -expr
-    } else if(payoff_type == "Niche expert"){
+    if(payoff_type == "Niche expert"){
       rho_i <- cluster_count[k] / N
       -rho_i * expr
-    } else if(payoff_type == "Advantage AI Niche"){
+    } else if(payoff_type == "Incentivize/penalize AI Niche"){
       rho_i <- cluster_count[k] / N
       -rho_i * expr + lambda * beta_i
-    } else if(payoff_type == "Disadvantage AI Niche"){
-      rho_i <- cluster_count[k] / N
-      -rho_i * expr - lambda * beta_i
     }
   } else {
     mu_e <- cluster_mean[k]
@@ -55,10 +50,8 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
     }
     if(payoff_type == "Feedback"){
       first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e
-    } else if(payoff_type == "Advantage AI Feedback"){
+    } else if(payoff_type == "Incentivize/penalize AI Feedback"){
       first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e + lambda * beta_i
-    } else if (payoff_type == "Disadvantage AI Feedback"){
-      first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e - lambda * beta_i
     } else if (payoff_type == "Balanced"){
       rho_i <- cluster_count[k] / N
       
@@ -72,22 +65,8 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
       } else {
         expr <- expr - 2 * alpha[1] * beta_i * bias_e
       }
-      
-      #(1-lambda)*(-rho_i * expr) + lambda*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
-      #(1 / rho_i*50) * (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)
-      # original balanced {(-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/2
-      
       {w*(-rho_i * expr) + (1-w)*(first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}
       
-    } else if (payoff_type == "AI Feedback collective") {
-      q     <- p_i - alpha[k]               # p - alpha,e
-      gamma <- 1 - beta_i                       # 1 - beta
-      if (k == 1) {
-        ft <- q * delta_0 * sigma_e^2           # sigma_1^2 = 1
-      } else {
-        ft <- q * (alpha_e - mu_e) * sigma_e^2
-      }
-      ft - gamma * bias_e * delta_0 + beta_i * gamma * AI_error_sd^2 / count_e
     }
   }
 }
@@ -186,7 +165,6 @@ resync_state <- function(state, players, p_revised, m, N, alpha, sigma, bias, AI
   state$entropy_sum <- sum(ratios * log(ratios + eps))
   state$total_beta2 <- total_beta2_sum
   
-  
   # human error
   sum_human <- as.numeric(tapply(players[ ,2], grp, sum))
   sum_human[is.na(sum_human)] <- 0
@@ -247,13 +225,6 @@ main_opt <- function(m, alpha, sigma, N, players, G, bias, AI_error_sd, agg_type
     
     if (g %% 1000 == 0) {
       players_intime[g %/% 1000, , ] <- players
-      # cat("Generation:", g, "\n")
-      # cat("Interest diversity:", sprintf("%.2f", interest_diversity[g]), "\n")
-      # cat("Median AI belief:",   sprintf("%.2f", median_AI_belief[g]),   "\n")
-      # cat("Accuracy:",           sprintf("%.2f", accuracy[g]),           "\n")
-      # cat("Bias:",               sprintf("%.2f", bias[g]),               "\n")
-      # cat("Variance:",           sprintf("%.2f", variance[g]),           "\n")
-      # cat("\n")
     }
     
     # sample two players

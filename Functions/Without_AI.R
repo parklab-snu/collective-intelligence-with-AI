@@ -1,17 +1,16 @@
 # Collective intelligence simulation based on Wang et al. "Individual incentives that promote collective intelligence" (PNAS, 2025)
 
 # Compute the payoff of the single player.
-# supports for both averaging aggregation and clustering aggregation, Expert, Niche expert, Feedback payoff.
+# supports for both averaging aggregation and clustering aggregation, Niche expert, and Feedback payoff.
 # See original paper for the definition of each aggregation and payoff.
 compute_payoff_one <- function(i, players, cluster_sum, cluster_count, cluster_mean, alpha, sigma, payoff_type, agg_type, C_const, N) {
+  
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
   sigma_e <- sigma[k]
   belief_i <- players[i, 2]
   
-  if (payoff_type == "Expert") {
-    -((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2)
-  } else if (payoff_type == "Niche expert") {
+  if (payoff_type == "Niche expert") {
     rho_i <- cluster_count[k] / N
     -rho_i * ((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2 + C_const)
   } else if (payoff_type == "Feedback") {
@@ -77,7 +76,7 @@ resync_state <- function(state, players, m, N, alpha, sigma, agg_type, eps) {
   state$cluster_sum <- sum_b
   if (agg_type == "clustering") {
     state$cluster_mean <- ifelse(state$cluster_count > 0, state$cluster_sum / pmax(state$cluster_count, 1), 0)
-  } else if (agg_type == "aggregation") {
+  } else if (agg_type == "averaging") {
     state$cluster_mean <- state$cluster_sum / N
   }
   state$error_part <- sum((alpha - state$cluster_mean)^2 * sigma^2)
@@ -119,10 +118,6 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
     
     if (g %% 1000 == 0) {
       players_intime[g %/% 1000, , ] <- players
-      #cat("Generation:", g, "\n")
-      #cat("Interest diversity:", sprintf("%.2f", interest_diversity[g]), "\n")
-      #cat("Accuracy:",           sprintf("%.2f", accuracy[g]),           "\n")
-      #cat("\n")
     }
     
     # sample two players
@@ -165,7 +160,11 @@ main_opt <- function(m, alpha, sigma, N, players, G, agg_type = "clustering", pa
     } else { # with mutation
       # sample new interest and belief
       new_interest <- sample(0:m, 1)
-      new_belief <- rnorm(1, mean = 0, sd = 5)
+      if (agg_type == "clustering") {
+        new_belief <- rnorm(1, mean = 0, sd = 5)
+      } else if (agg_type == "averaging") {
+        new_belief <- rnorm(1, mean = 0, sd = 100)
+      }
       # save old and new values
       k_old <- players[A, 1] + 1
       k_new <- new_interest + 1

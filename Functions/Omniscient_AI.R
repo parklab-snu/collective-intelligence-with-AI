@@ -6,11 +6,11 @@
 
 # Compute the payoff of the single player.
 # only supports averaging aggregation.
-# supports Expert, Niche expert, Disadvantage AI Niche, Advantage AI Niche, Feedback, Disadvantage AI Feedback, and Advantage AI Feedback payoffs
-# Disadvantage and Advantage AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
-# Disadvantaging AI is made by -lambda * beta_i, Advantaging AI is made by +lambda * beta_i
+# supports Niche expert, Incentivize/penalize AI Niche, Feedback, and Incentivize/penalize AI Feedback.
+# Incentivize/penalize AI payoffs are modified from Niche expert and Feedback payoffs. These payoffs leverage original payoff and AI payoff by "lambda"
 compute_payoff_one <- function(i, players, cluster_count, alpha, sigma, AI_error_sd, bias, delta, feedback_global,
                                C_const, C_AI,  N, payoff_type, lambda) {
+  
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
   sigma_e <- sigma[k]
@@ -39,23 +39,13 @@ compute_payoff_one <- function(i, players, cluster_count, alpha, sigma, AI_error
         2 * omq * beta_i * (alpha[1] * bias)
     }
     
-    if (payoff_type == "Expert") {
-      -expr
-    } else if (payoff_type == "Niche expert") {
+    if (payoff_type == "Niche expert") {
       rho_i <- cluster_count[k] / N
       -rho_i * expr
-    } else if (payoff_type == "Disadvantage AI Niche"){
-      rho_i <- cluster_count[k] / N
-      #-rho_i *beta_i * expr
-      -rho_i * expr - lambda * beta_i
-    } else if (payoff_type == "Advantage AI Niche"){
+    } else if (payoff_type == "Incentivize/penalize AI Niche"){
       rho_i <- cluster_count[k] / N
       -rho_i * expr + lambda * beta_i
-    } else if (payoff_type == "Disadvantage AI Feedback"){
-      delta_e <- delta[k]
-      beta_i * feedback_global + omq * cA_i * delta_e * sigma_e^2 -
-        beta_i^2 * AI_error_sd^2 / N - lambda * beta_i
-    } else if (payoff_type == "Advantage AI Feedback"){
+    } else if (payoff_type == "Incentivize/penalize AI Feedback"){
       delta_e <- delta[k]
       beta_i * feedback_global + omq * cA_i * delta_e * sigma_e^2 -
         beta_i^2 * AI_error_sd^2 / N + lambda * beta_i
@@ -201,11 +191,6 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_t
     interest_diversity[g] <- exp(-state$entropy_sum)
     if (g %% 1000 == 0) {
       players_intime[g %/% 1000, , ] <- players
-      # cat("Generation:", g, "\n")
-      # cat("Interest diversity:", sprintf("%.2f", interest_diversity[g]), "\n")
-      # cat("Median AI belief:",   sprintf("%.2f", median_AI_belief[g]),   "\n")
-      # cat("Accuracy:",           sprintf("%.2f", accuracy[g]),           "\n")
-      # cat("\n")
     }
     
     if (payoff_type == "Feedback" || payoff_type == "Disadvantage AI Feedback" || payoff_type == "Advantage AI Feedback") {
@@ -249,7 +234,7 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_t
     } else { # with mutation
       # sample new interest and belief
       new_interest <- sample(0:m, 1)
-      new_belief <- rnorm(1, mean = 0, sd = 5)
+      new_belief <- rnorm(1, mean = 0, sd = 100)
       new_AI <- runif(1, 0, 1)
       
       # save old and new values
