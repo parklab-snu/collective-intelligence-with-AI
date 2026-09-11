@@ -488,7 +488,7 @@ Two distinct players, $A$ and $B$, are randomly sampled, and player $A$ imitated
 \end{equation}
 where $s$ represents the strength of social learning and was set to 50 in all simulations. 
 We introduce a mutation rate $\mu$, such that with probability $\mu$, player $A$ does not imitate player $B$ but instead redrew all strategy components from the same distributions used to initialize the population. 
-The mutation rate is set to zero in all simulations except those presented in Supplementary Fig. S4 \swp{need to check}.
+The mutation rate is set to zero in all simulations except those presented in Supplementary Fig. S4.
 
 Unless otherwise specified, each simulation is run for 200,000 generations. 
 When a result is represented by a single summary value rather than as a temporal trajectory, the metric was averaged over the final 10,000 generations.
@@ -849,10 +849,9 @@ Here, $R=1$ represents perfect collective prediction, $R=0$ represents performan
 
 \section{Evolutionary dynamics}
 
-For sufficiently large population ($N \to \infty$), we can approximate the deterministic evolutionary dynamics using the replicator equation under both weak and strong selections.
+For sufficiently large population ($N \to \infty$), we can approximate the deterministic evolutionary dynamics using the replicator equation under both weak and strong selections \citep{taylor1978evolutionary,traulsen2005coevolutionary}.
 We focus on the feedback and niche-expert structures, for which the long-term dynamics can be characterized analytically. 
 The direct interventions on AI use and the balanced structure are examined through simulations.
-
 
 Let $\lambda$ denote a strategy, $p_\lambda$ its frequency, and $u_\lambda=\mathbb{E}(\pi_\lambda)$ its expected payoff.
 Then, the corresponding replicator equation can be written as:
