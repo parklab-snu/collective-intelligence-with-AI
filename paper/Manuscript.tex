@@ -203,6 +203,7 @@ Specifically, after each generation, two individuals are randomly sampled, and o
 Individual predictions are aggregated into a collective prediction $\hat{Y}$ based on the aggregation rules.
 Collective accuracy is defined as the reduction in prediction error achieved by the collective prediction relative to a baseline prediction $\alpha_0$ \citep{wang2025individual}: $1-\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathbb{E}[(Y-\alpha_0)^2]$.
 Hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.
+Full derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Supplementary Text S1 and S2.
 
 This model now allows us to explore the impact of AI on CI depending on the type of AI and the incentive structure.
 Here, we begin by comparing the emergence of CI with and without AI and subsequently investigate a how different incentive structures affect the emergence of CI in the presence of AI.
@@ -231,7 +232,7 @@ This is because enhancing individual accuracy causes individuals to predict clos
 
 We find that AI usage can have heterogeneous outcomes depending on its type.
 For example, the use of Omniscient AI can either preserve CI under the feedback incentive structure (Fig. 2A) or promote higher collective accuracy under the niche-expert incentive structure (Fig. 2B).
-These results are robust across different levels of AI accuracy and can be shown analytically by assuming a sufficiently large group of players (Fig. S2; see SI Evolutionary dynamics section). \swp{need to get back.}
+These results are robust across different levels of AI accuracy (Fig. S2) and can also be characterized analytically in the large-population limit (Supplementary Text S3.1).
 
 In contrast, the use of Chatbot AI prevents the emergence of CI, thereby resulting in lower levels of collective accuracy (Fig. 2C, D).
 Under the feedback incentive structure, the use of Chatbot AI leads to a loss of diversity in the population's interest, making it impossible to account for effect of some causal factors (Fig. S2, S3).
@@ -240,7 +241,7 @@ We note that the loss of interest diversity may arise even in the absence of AI 
 Under the niche-expert incentive structure, the population becomes overly reliant on AI, causing the collective prediction to inherit the AI's bias (Fig. S3).
 This leads to an increase in collective bias and a decrease in collective accuracy (Fig. 2; Fig. S3).
 Interestingly, we find that the niche-expert structure can prevent the use of AI under specific assumptions about the relationship between the true coefficient and AI bias (Fig. S2).
-In this case, the population reduces \js{I think it is difficult to say that it completely excludes AI, because reliance on AI does not approach zero. This may be due to the limited population size.} the reliance on AI assistance, allowing the CI to emerge eventually.
+In this case, the population reduces the reliance on AI assistance, allowing the CI to emerge eventually.
 However, this phenomenon can substantially delay the emergence of CI (Fig. S5).
 
 To investigate whether the group can retain its predictive ability when AI assistance suddenly becomes unavailable at any given time, we quantify counterfactual collective accuracy based on unrevised predictions.
@@ -272,19 +273,14 @@ To investigate whether such direct incentives or penalties can help the emergenc
 \begin{equation}
 \mathrm{Feedback /} \mathrm{Niche\text{-}expert} + \lambda \beta_A
 \end{equation}
-where $\lambda$ represent the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$), and $\beta_A$ represent individual reliance on AI.
-\swp{maybe we need to call incentive pi earlier on...}
-\swp{also good to define beta again here as a reminder.}
+where $\lambda$ represent the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$), and $\beta_A$ represent individual reliance on AI (Supplementary Text S1.3 and S2.3).
 
 Directly incentivizing or penalizing AI use can further reduce the collective accuracy (Fig. 3C, E, G), except when Omniscient AI is used under the feedback structure;
 in the latter case, the population retains collective intelligence regardless of the intervention strength (Fig. 3A).
 The reduction in collective accuracy arises because incentivizing or penalizing AI usage causes individuals to imitate others based on their AI usage rather than their predictive accuracy.
-Thus, stronger interventions can push the group to always \js{wholly?} ($\beta = 1$) or never ($\beta = 0$) rely on AI  (Fig. 3B, D, F, H) but these scenarios do not necessarily lead to better outcomes (Fig. 3D, F, H).
+Thus, stronger interventions can push the group to always ($\beta = 1$) or never ($\beta = 0$) rely on AI  (Fig. 3B, D, F, H) but these scenarios do not necessarily lead to better outcomes (Fig. 3D, F, H).
 When AI bias is relatively large, a weak penalty can lead to higher collective accuracy, but this represents a narrow parameter regime (Figure 3G).
-
 Overall, these results indicate that simply incentivizing or penalizing the AI, independent of individuals' performance, use may exacerbate rather than resolve the risk of AI on CI.
-Thus, we also considered an incentive structure where interventions for AI usage affects the payoffs multiplicatively, thus giving higher payoffs to individuals who rely more (or less) AI and makes better prediction.
-\swp{Supp.} \js{Should I add the multiplicative intervention to the SI? I remember that we didn't reach a clear conclusion during our last meeting about whether to include it.}
 
 \section*{Balanced incentives mitigate AI-induced failures of CI}
 
@@ -305,7 +301,7 @@ AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
 
 Neither the original incentive structures nor simple interventions targeting AI use are sufficient to promote CI.
 What incentive structure, then, would work in the presence of AI?
-Here, we propose a ``balanced'' incentive structure, modeled as the average of the feedback and niche expert incentives.
+Here, we propose a ``balanced'' incentive structure, modeled as the average of the feedback and niche expert incentives (Supplementary Text S2.3).
 
 The core idea behind the balanced structure is to maintain interest diversity and prevent collective bias.
 On one hand, the feedback incentive structure is prone to the loss of interest diversity but can prevent collective bias by incentivizing players whose predictions lie opposite to the collective prediction.
@@ -316,8 +312,6 @@ Therefore, when the two incentive structures are combined, the population achiev
 Under the balanced structure, individuals remain more evenly distributed across causal factors, and their beliefs lie closer to the true coefficients than under either incentive structure alone (Fig. 4C--E). 
 The balanced structure also produces higher counterfactual collective accuracy than the feedback or niche-expert structure (Fig. 4B, S6).
 These patterns are robust to how the two incentive structures are weighted when combined (Fig. S7), and are driven by the emergent property of the balanced structure, under which the population increases its reliance on AI as AI becomes more accurate (Fig S8).
-
-\swp{may need some robustness check rather than a case study...}
 
 \section*{Discussion}
 
@@ -362,8 +356,8 @@ This assumption does not hold for many real-world tasks, where causal factors ma
 Future studies should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.
 
 The rapid adoption of AI assistants is changing how individuals learn, work, and make decisions \citep{tessler2024ai,glickman2025human,sajadieh2026artificial,bick2026rapid,ke2026ai}.
-While the immediate benefits and risks of these systems have been evaluated at the individual level \cite{noy2023experimental,bastani2025generative}, our study raises a broader concern that their widespread AI use may reshape collective intelligence of human society.
-Our results further underline the importance of designing reward structures that preserve minority expertise and prevent AI biases from persisting across the population.
+While the immediate benefits and risks of these systems have been evaluated at the individual level \citep{noy2023experimental,bastani2025generative}, our study raises a broader concern that their widespread AI use may reshape collective intelligence of human society.
+Our results further underline the importance of designing reward structures that preserve minority expertise and prevent AI biases from persisting across the population \citep{mann2017optimal,vicente2023humans,glickman2025human,wang2025individual}.
 A detailed empirical understanding of how AI assistance reshapes diversity, expertise, and reliance at the population level will therefore be critical for predicting the dynamics of future of human collective intelligence.
 
 \section*{Methods}
@@ -764,7 +758,7 @@ Thus, the collective prediction can be written as:
 \begin{equation}
 \hat{Y}^{re} = \sum_{i\in\mathcal I}\tilde{c}_iX_i+\bar{B}+\bar{\eta},
 \end{equation}
-where $\mathcal I={i\in{0,\ldots,M}>0}$ denotes the set of represented interests.
+where $\mathcal I=\{i\in\{0,\ldots,M\}>0\}$ denotes the set of represented interests.
 
 \subsection{Expected payoffs}
 
