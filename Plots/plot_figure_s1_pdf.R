@@ -1,3 +1,10 @@
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("patchwork")) install.packages("patchwork")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("viridis")) install.packages("viridis")
+
+
 library(ggplot2)
 library(dplyr)
 library(patchwork)

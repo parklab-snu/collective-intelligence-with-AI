@@ -1,3 +1,8 @@
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("cowplot")) install.packages("cowplot")
+if (!require("patchwork")) install.packages("patchwork")
+if (!require("grid")) install.packages("grid")
+
 library(ggplot2)
 library(patchwork)
 library(cowplot)

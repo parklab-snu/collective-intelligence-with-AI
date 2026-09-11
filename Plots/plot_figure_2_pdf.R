@@ -1,3 +1,8 @@
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("tidyr")) install.packages("tidyr")
+if (!require("patchwork")) install.packages("patchwork")
+
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -89,6 +94,14 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
       color = "black"
     ) +
     geom_line(
+      aes(group = factor(
+        Trajectory,
+        levels = c(
+          "Counterfactual human CI",
+          "Without AI",
+          "With AI"
+        )
+      )),
       linewidth = 3,
       lineend = "round"
     ) +

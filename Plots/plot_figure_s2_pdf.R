@@ -1,3 +1,10 @@
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("patchwork")) install.packages("patchwork")
+if (!require("tidyr")) install.packages("tidyr")
+if (!require("ggh4x")) install.packages("ggh4x")
+
+
 library(ggh4x)
 library(ggplot2)
 library(dplyr)
