@@ -11,3 +11,4 @@
 *.Rproj
 .Rproj
 .Rproj.user
+tmp/
