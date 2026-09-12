@@ -108,7 +108,7 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
     annotate(
       "text",
       x = 5000,
-      y = -0.47,
+      y = -0.25,
       label = tag,
       hjust = 0,
       vjust = 0,

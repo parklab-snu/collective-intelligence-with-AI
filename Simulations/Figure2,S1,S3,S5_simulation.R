@@ -32,54 +32,82 @@ sigma <- runif(m, min = 0, max = 3)
 sigma <- c(1, sigma)
 N <- 10000
 G <- 200000
-belief <- rnorm(N, mean = 0, sd = 100)
-#Sample initial interest (SRS form 0 to 50)
-interest <- sample(0:m, size = N, replace = TRUE)
-#Sample initial AI belief
-AI_belief <- runif(N, min = 0, max = 1)
-#AI_belief <- rep(1, N)
-#Build player
-players <- cbind(interest, belief, AI_belief)
-
 bias_i <- rep(0.4, m+1)
 bias <- sum(bias_i)
 AI_error_sd <- 0.3
 
 #Omniscient AI under feedback structure
-Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Feedback')
 
-filename <- sprintf("omni_feedback_0.4.RData")
-filepath <- file.path(out_dir, filename)
+print("Omni_feedback")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 100)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  #Sample initial AI belief
+  AI_belief <- runif(N, min = 0, max = 1)
+  #Build player
+  players <- cbind(interest, belief, AI_belief)
+  Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Feedback')
+  filename <- sprintf("omni_feedback_0.4_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 
-save(Result, file = filepath)
+print("Omni_niche")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 100)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  #Sample initial AI belief
+  AI_belief <- runif(N, min = 0, max = 1)
+  #Build player
+  players <- cbind(interest, belief, AI_belief)
+  Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Niche expert')
+  filename <- sprintf("omni_niche_0.4_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 
+print("Without_feedback")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 100)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  players <- cbind(interest, belief)
+  Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Feedback')
+  filename <- sprintf("without_feedback_avg_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 
-#Omnisceint AI under niche-expert structure
-Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Niche expert')
-
-filename <- sprintf("omni_niche_0.4.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
-
-
-players <- cbind(interest, belief)
-#Without AI under feedback structure
-Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Feedback')
-
-filename <- sprintf("without_feedback_avg.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
-
-
+print("Without_niche")
 #Without AI under niche-expert structure
-Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Niche expert')
-
-filename <- sprintf("without_niche_avg.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 100)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  players <- cbind(interest, belief)
+  Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'averaging', payoff_type = 'Niche expert')
+  filename <- sprintf("without_niche_avg_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 
 
 #=========================================================================
@@ -103,40 +131,80 @@ players <- cbind(interest, belief, AI_belief)
 bias_i <- rep(0.4, m+1)
 AI_error_sd <- 0.3
 
-
+print("Chatbot_feedback")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 5)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  #Sample initial AI belief
+  AI_belief <- runif(N, min = 0, max = 1)
+  #Build player
+  players <- cbind(interest, belief, AI_belief)
+  Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
+  filename <- sprintf("chatbot_feedback_0.4_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 #Chatbot AI under feedback structure
-Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
 
-filename <- sprintf("chatbot_feedback_0.4.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
-
-
+print("Chatbot_niche")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 5)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  #Sample initial AI belief
+  AI_belief <- runif(N, min = 0, max = 1)
+  #Build player
+  players <- cbind(interest, belief, AI_belief)
+  Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
+  filename <- sprintf("chatbot_niche_0.4_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 #Chatbot AI under niche-expert structure
-Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
-
-filename <- sprintf("chatbot_niche_0.4.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
 
 
-players <- cbind(interest, belief)
-
+print("Without_niche")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 5)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  #Build player
+  players <- cbind(interest, belief)
+  Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback')
+  filename <- sprintf("without_feedback_clu_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 #Without AI under feedback structure
-Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Feedback')
 
-filename <- sprintf("without_feedback_clu.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
-
-
+print("Without_feedback")
+for (i in 1:30){
+  set.seed(NULL)
+  seed <- sample.int(.Machine$integer.max, 1)
+  set.seed(seed)
+  belief <- rnorm(N, mean = 0, sd = 5)
+  #Sample initial interest (SRS form 0 to 50)
+  interest <- sample(0:m, size = N, replace = TRUE)
+  #Build player
+  players <- cbind(interest, belief)
+  Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert')
+  filename <- sprintf("without_niche_clu_i%2d.RData", i)
+  filepath <- file.path(out_dir, filename)
+  
+  save(Result, file = filepath)
+}
 #Without AI under niche-expert structure
-Result <- Without_AI$main_opt(m, alpha, sigma, N, players, G, agg_type = 'clustering', payoff_type = 'Niche expert')
 
-filename <- sprintf("without_niche_clu.RData")
-filepath <- file.path(out_dir, filename)
-
-save(Result, file = filepath)
