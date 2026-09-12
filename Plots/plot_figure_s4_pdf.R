@@ -2,14 +2,13 @@ if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("cowplot")) install.packages("cowplot")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("grid")) install.packages("grid")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(patchwork)
 library(cowplot)
 library(grid)
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
+library(here)
 
 font_family <- "Arial"
 
@@ -232,36 +231,24 @@ ai_bias_list <- c(
 human_bias_list <- 0
 
 df_div_mu <- read_mu_sweep(
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation"
-  ),
+  here("Simulations", "FigureS4_simulation"),
   mu_list,
   ai_bias_list
 )
 
 df_div_b <- read_belief_sweep(
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation"
-  ),
+  here("Simulations", "FigureS4_simulation"),
   belief_list,
   ai_bias_list
 )
 
 df_div_mu_ori <- read_mu_sweep_ori(
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation"
-  ),
+  here("Simulations", "FigureS4_simulation"),
   mu_list
 )
 
 df_div_b_ori <- read_belief_sweep_ori(
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation"
-  ),
+  here("Simulations", "FigureS4_simulation"),
   belief_list
 )
 
@@ -290,21 +277,25 @@ p_div_b <- make_heatmap(
 )
 
 trajectory_files <- c(
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation/without_feedback_clu_0.RData"
+  here(
+    "Simulations",
+    "FigureS4_simulation",
+    "without_feedback_clu_0.RData"
   ),
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation/without_feedback_clu_0.01.RData"
+  here(
+    "Simulations",
+    "FigureS4_simulation",
+    "without_feedback_clu_0.01.RData"
   ),
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation/chatbot_feedback_0.4_0.RData"
+  here(
+    "Simulations",
+    "FigureS4_simulation",
+    "chatbot_feedback_0.4_0.RData"
   ),
-  file.path(
-    project_path,
-    "Simulations/FigureS4_simulation/chatbot_feedback_0.4_0.01.RData"
+  here(
+    "Simulations",
+    "FigureS4_simulation",
+    "chatbot_feedback_0.4_0.01.RData"
   )
 )
 
@@ -487,10 +478,7 @@ p_combined <- wrap_plots(
 )
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary figure 4.pdf"
-  ),
+  here("Figures", "Supplementary figure 4.pdf"),
   p_combined,
   width = 11,
   height = 14,

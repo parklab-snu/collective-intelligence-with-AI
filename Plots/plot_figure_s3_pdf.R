@@ -2,16 +2,14 @@ if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("ggh4x")) install.packages("ggh4x")
+if (!require("here")) install.packages("here")
 
 
 library(ggh4x)
 library(ggplot2)
 library(dplyr)
 library(patchwork)
-
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")s
+library(here)
 
 legend_order <- c(
   "Without AI",
@@ -34,8 +32,8 @@ make_plot_data <- function(original_file, ai_file, by = 100) {
   original_env <- new.env()
   ai_env <- new.env()
   
-  load(file.path(project_path, original_file), envir = original_env)
-  load(file.path(project_path, ai_file), envir = ai_env)
+  load(here(original_file), envir = original_env)
+  load(here(ai_file), envir = ai_env)
   
   original_result <- original_env$Result
   ai_result <- ai_env$Result
@@ -292,7 +290,7 @@ base_plot <- (
   )
 
 ggsave(
-  file.path(save_path, "Supplementary figure 3.pdf"),
+  here("Figures", "Supplementary figure 3.pdf"),
   base_plot,
   width = 14,
   height = 10.5,

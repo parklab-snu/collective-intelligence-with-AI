@@ -1,19 +1,14 @@
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(here)
 
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
-
-sweep_path <- file.path(
-  project_path,
-  "Simulations/FigureS2,S5_simulation"
-)
+sweep_path <- here("Simulations", "FigureS2,S5_simulation")
 
 bias_list <- c(-0.2, -0.4, -0.6)
 generation <- seq(1, 200000, by = 100)
@@ -24,12 +19,8 @@ load_result <- function(file) {
   env$Result
 }
 
-original <- load_result(
-  file.path(
-    project_path,
-    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_clu.RData"
-  )
-)
+original <- load_result(here("Simulations", "Figure2,S1,S3,S5_simulation",
+    "without_niche_clu.RData"))
 
 ai_data <- bind_rows(lapply(bias_list, function(bias) {
   result <- load_result(
@@ -174,10 +165,7 @@ combined <- (
   )
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary figure 5.pdf"
-  ),
+  here("Figures", "Supplementary figure 5.pdf"),
   combined,
   width = 11,
   height = 5.5,

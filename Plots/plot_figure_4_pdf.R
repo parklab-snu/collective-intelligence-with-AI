@@ -1,22 +1,25 @@
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(patchwork)
-
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
+library(here)
 
 feedback_env <- new.env()
 niche_env <- new.env()
 balanced_env <- new.env()
 
-load(file.path(project_path, "Simulations/Figure4_simulation/chatbot_feedback_0.4.RData"), envir = feedback_env)
-load(file.path(project_path, "Simulations/Figure4_simulation/chatbot_niche_0.4.RData"), envir = niche_env)
-load(file.path(project_path, "Simulations/Figure4_simulation/chatbot_balanced_0.4.RData"), envir = balanced_env)
+load(here("Simulations", "Figure4_simulation", "chatbot_feedback_0.4.RData"),
+  envir = feedback_env)
+
+load(here("Simulations", "Figure4_simulation", "chatbot_niche_0.4.RData"),
+  envir = niche_env)
+
+load(here("Simulations", "Figure4_simulation", "chatbot_balanced_0.4.RData"),
+  envir = balanced_env)
 
 feedback_result <- feedback_env$Result
 niche_result <- niche_env$Result
@@ -383,10 +386,7 @@ final_plot <- (
   )
 
 ggsave(
-  file.path(
-    save_path,
-    "Figure 4.pdf"
-  ),
+  here("Figures", "Figure 4.pdf"),
   final_plot,
   width = 16,
   height = 16,

@@ -1,30 +1,14 @@
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(here)
 
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
-
-feedback_path <- file.path(
-  project_path,
-  "Simulations/FigureS6_simulation"
-)
-
-niche_path <- file.path(
-  project_path,
-  "Simulations/FigureS6_simulation"
-)
-
-balanced_path <- file.path(
-  project_path,
-  "Simulations/FigureS6_simulation"
-)
-
+simulation_path <- here("Simulations", "FigureS6_simulation")
 bias_list <- seq(-0.6, 0.6, by = 0.1)
 
 read_stationary <- function(path, filename, source) {
@@ -67,19 +51,19 @@ read_stationary <- function(path, filename, source) {
 }
 
 stationary_feedback <- read_stationary(
-  feedback_path,
+  simulation_path,
   "chatbot_feedback_i%02f.RData",
   "Feedback"
 )
 
 stationary_niche <- read_stationary(
-  niche_path,
+  simulation_path,
   "chatbot_niche_i%02f.RData",
   "Niche-expert"
 )
 
 stationary_balanced <- read_stationary(
-  balanced_path,
+  simulation_path,
   "chatbot_balanced_i%02f.RData",
   "Balanced"
 )
@@ -242,7 +226,7 @@ p_combined <- (
   )
 
 ggsave(
-  file.path(save_path, "Supplementary figure 6.pdf"),
+  here("Figures", "Supplementary figure 6.pdf"),
   p_combined,
   width = 13,
   height = 8,

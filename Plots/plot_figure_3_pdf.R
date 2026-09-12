@@ -1,14 +1,12 @@
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(patchwork)
-
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
+library(here)
 
 lambda_list <- c(-40, -30, -20, -10, 0, 10, 20, 30, 40)
 bias_list <- c(-0.4, -0.2, 0.2, 0.4)
@@ -37,22 +35,22 @@ grid <- expand.grid(
 
 case_specs <- list(
   omniscient_feedback = list(
-    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    path = here("Simulations", "Figure3_simulation"),
     prefix = "omni_feedback",
     has_k = FALSE
   ),
   omniscient_niche = list(
-    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    path = here("Simulations", "Figure3_simulation"),
     prefix = "omni_niche",
     has_k = FALSE
   ),
   chatbot_feedback = list(
-    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    path = here("Simulations", "Figure3_simulation"),
     prefix = "chatbot_feedback",
     has_k = FALSE
   ),
   chatbot_niche = list(
-    path = file.path(project_path, "Simulations/Figure3_simulation"),
+    path = here("Simulations", "Figure3_simulation"),
     prefix = "chatbot_niche",
     has_k = FALSE
   )
@@ -459,7 +457,7 @@ base_plot <- (
   )
 
 ggsave(
-  file.path(save_path, "Figure 3.pdf"),
+  here("Figures", "Figure 3.pdf"),
   base_plot,
   width = 18,
   height = 9,

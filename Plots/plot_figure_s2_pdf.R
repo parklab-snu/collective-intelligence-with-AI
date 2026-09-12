@@ -3,37 +3,16 @@ if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("tidyr")) install.packages("tidyr")
 if (!require("ggh4x")) install.packages("ggh4x")
-
+if (!require("here")) install.packages("here")
 
 library(ggh4x)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(patchwork)
+library(here)
 
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
-
-answers_feedback_path <- file.path(
-  project_path,
-  "Simulations/FigureS2,S5_simulation"
-)
-
-answers_niche_path <- file.path(
-  project_path,
-  "Simulations/FigureS2,S5_simulation"
-)
-
-knows_feedback_path <- file.path(
-  project_path,
-  "Simulations/FigureS2,S5_simulation"
-)
-
-knows_niche_path <- file.path(
-  project_path,
-  "Simulations/FigureS2,S5_simulation"
-)
+simulation_path <- here("Simulations","FigureS2,S5_simulation")
 
 bias_list <- seq(-0.6, 0.6, by = 0.1)
 
@@ -111,25 +90,25 @@ to_long <- function(data) {
 }
 
 answers_feedback <- read_stationary(
-  answers_feedback_path,
+  simulation_path,
   "chatbot_feedback_i%02f.RData"
 ) %>%
   to_long()
 
 answers_niche <- read_stationary(
-  answers_niche_path,
+  simulation_path,
   "chatbot_niche_i%02f.RData"
 ) %>%
   to_long()
 
 knows_feedback <- read_stationary(
-  knows_feedback_path,
+  simulation_path,
   "omni_feedback_i%02f.RData"
 ) %>%
   to_long()
 
 knows_niche <- read_stationary(
-  knows_niche_path,
+  simulation_path,
   "omni_niche_i%02f.RData"
 ) %>%
   to_long()
@@ -440,10 +419,7 @@ base_plot <- (
   )
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary figure 2.pdf"
-  ),
+  here("Figures", "Supplementary figure 2.pdf"),
   base_plot,
   width = 18,
   height = 10.5,

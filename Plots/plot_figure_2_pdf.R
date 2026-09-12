@@ -2,15 +2,15 @@ if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("tidyr")) install.packages("tidyr")
 if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(patchwork)
+library(here)
 
 #Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI/"
-save_path <- file.path(project_path, "Figures/")
 idx <- unique(c(seq(1, 200000, by = 100), 200000))
 
 trajectory_order <- c(
@@ -29,7 +29,7 @@ trajectory_colors <- c(
 
 read_result <- function(file) {
   env <- new.env()
-  load(file.path(project_path, file), envir = env)
+  load(here(file), envir = env)
   env$Result
 }
 
@@ -349,7 +349,7 @@ combined_plot <- (
   )
 
 ggsave(
-  file.path(save_path, "Figure 2.pdf"),
+  here("Figures", "Figure 2.pdf"),
   combined_plot,
   width = 14,
   height = 10.5,

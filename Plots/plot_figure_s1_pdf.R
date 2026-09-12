@@ -3,6 +3,7 @@ if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("viridis")) install.packages("viridis")
+if (!require("here")) install.packages("here")
 
 
 library(ggplot2)
@@ -10,12 +11,9 @@ library(dplyr)
 library(patchwork)
 library(tidyverse)
 library(viridis)
+library(here)
 
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
-
-load(file.path(project_path, "Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData"))
+load(here("Simulations", "Figure2,S1,S3,S5_simulation", "without_niche_avg.RData"))
 
 set.seed(42)
 m <- 50
@@ -130,10 +128,7 @@ combined <- (
   )
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary figure 1.pdf"
-  ),
+  here("Figures", "Supplementary figure 1.pdf"),
   combined,
   width = 11,
   height = 4.8,

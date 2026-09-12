@@ -1,19 +1,14 @@
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(here)
 
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
-
-balanced_weight_path <- file.path(
-  project_path,
-  "Simulations/FigureS7_simulation"
-)
+balanced_weight_path <- here("Simulations", "FigureS7_simulation")
 
 w_list <- c(
   0.1, 0.2, 0.3, 0.4, 0.5,
@@ -203,10 +198,7 @@ p_combined <- (
   )
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary figure 7.pdf"
-  ),
+  here("Figures", "Supplementary figure 7.pdf"),
   p_combined,
   width = 13,
   height = 8,

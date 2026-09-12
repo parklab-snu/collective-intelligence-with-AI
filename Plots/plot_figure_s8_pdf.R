@@ -3,19 +3,16 @@ if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("viridis")) install.packages("viridis")
-
+if (!require("here")) install.packages("here")
 
 library(ggplot2)
 library(dplyr)
 library(patchwork)
 library(tidyverse)
 library(viridis)
+library(here)
 
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
-save_path <- file.path(project_path, "Figures/")
-
-Simulation_path <- file.path(project_path, "Simulations/FigureS8_simulation")
+simulation_path <- here("Simulations", "FigureS8_simulation")
 
 bias_list <- c(-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
 
@@ -24,7 +21,7 @@ result_list <- list()
 for(i in bias_list){
   for(j in 1:30){
     filename <- sprintf("Balanced_i%02f_j%02f.RData", i, j)
-    filepath <- file.path(Simulation_path, filename)
+    filepath <- file.path(simulation_path, filename)
     
     load(filepath)
     
@@ -109,10 +106,7 @@ p_reliance <- ggplot(
   common_theme
 
 ggsave(
-  file.path(
-    save_path,
-    "Supplementary figure 8.pdf"
-  ),
+  here("Figures", "Supplementary figure 8.pdf"),
   p_reliance,
   width = 5.5,
   height = 4.8,
