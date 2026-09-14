@@ -117,6 +117,16 @@ Jaeseung Kim\textsuperscript{1} Sang Woo Park\textsuperscript{1,2,*}
 *Corresponding author: sangwoopark@snu.ac.kr
 \end{flushleft}
 
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\setcounter{equation}{0}
+\setcounter{section}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thesection}{S\arabic{section}}
+
 \section*{Materials and Methods}
 
 \subsection*{Prediction target}
@@ -236,7 +246,7 @@ The initial interest of each player is sampled uniformly from the integers betwe
 We assume that prediction events occur on a substantially faster timescale than social learning. 
 In each generation, we therefore calculate the expected payoff $\mathbb{E}[\pi_A]$ of each player analytically rather than explicitly sampling prediction events. 
 The expectation is taken over the distributions of the causal factors $X_1,\ldots,X_M$ and the stochastic AI error $\epsilon$, conditional on the current population strategies and the fixed target parameters. 
-Closed form expression of expected payoffs are derived for all incentive structures and are presented in the Supplementary Methods.
+Closed form expression of expected payoffs are derived for all incentive structures and are presented in the Supplementary Text.
 
 Each generation consists of an expected payoff calculation followed by one opportunity for pairwise social learning. 
 Two distinct players, $A$ and $B$, are randomly sampled, and player $A$ imitated all three strategies of player $B$ with probability
@@ -259,69 +269,18 @@ A negative value indicates that the collective prediction performs worse than th
 Counterfactual collective accuracy is evaluated by setting $\beta_A=0$ while retaining the evolved interests and beliefs of the AI-assisted population. 
 In calculating interest diversity, we use the convention that $\rho_i\ln\rho_i=0$ when $\rho_i=0$ (Table~\ref{tab:evaluation_metrics}).
 
-\begin{table}[htbp]
-\centering
-\caption{Evaluation metrics used to analyze collective prediction dynamics.}
-\label{tab:evaluation_metrics}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}L{0.28\textwidth} C{0.27\textwidth} Y@{}}
-\toprule
-Metric & Definition & Interpretation \\
-\midrule
-
-Collective accuracy &
-\(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
-Accuracy of the revised collective prediction relative to the baseline prediction $\alpha_0$. \\
-\addlinespace
-
-Collective bias &
-\(\displaystyle \left(\mathbb{E}[Y-\hat{Y}^{\mathrm{re}}]\right)^2\) &
-Squared expected deviation of the revised collective prediction from the true target. \\
-\addlinespace
-
-Collective variance &
-\(\displaystyle \operatorname{Var}(Y-\hat{Y}^{\mathrm{re}})\) &
-Variability of the revised collective prediction error across prediction events. \\
-\addlinespace
-
-Counterfactual collective accuracy &
-\(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
-Accuracy obtained after removing AI use from the current population while retaining its evolved interests and beliefs. \\
-\addlinespace
-
-Interest diversity &
-\(\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i\ln\rho_i\right)\) &
-Effective number of interests represented in the population. \\
-\addlinespace
-
-Median reliance on AI &
-\(\displaystyle \operatorname{median}_{A\in N}(\beta_A)\) &
-Median reliance on AI in the population. \\
-
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\setcounter{figure}{0}
-\setcounter{equation}{0}
-\setcounter{section}{0}
-\renewcommand{\thefigure}{S\arabic{figure}}
-\renewcommand{\theequation}{S\arabic{equation}}
-\renewcommand{\thetable}{S\arabic{table}}
-\renewcommand{\thesection}{S\arabic{section}}
-
 \section*{Supplementary Text}
 
 Here, we derive the expected payoffs and collective accuracy used in the simulations.
 We consider Omniscient AI and Chatbot AI separately because they contain different amounts of information and therefore require different aggregation rules.
 We then analyze the corresponding evolutionary dynamics under a deterministic large-population approximation.
 
-\section{Omniscient AI}
+\section*{Omniscient AI}
 
 We first consider Omniscient AI, which incorporates all causal factors regardless of the player's interest. 
 We derive individual and collective predictions before calculating the expected payoffs under each incentive structure.
 
-\subsection{Model}
+\subsection*{Model}
 
 Because Omniscient AI observes all $M$ causal factors, its prediction for player $A$ is given by
 \begin{equation}
@@ -344,7 +303,7 @@ Y_A^{re} &= \beta_A Y^{AI} + (1-\beta_A)Y_A
 represents player $A$'s interest, $c_A$ represents their belief about the effect of the corresponding factor, and $\beta_A$ represents their reliance on AI.
 As in the main text, we set $X_0=1$, such that a player with $e_A=0$ makes a constant initial prediction.
 
-\subsection{Aggregation}
+\subsection*{Aggregation}
 
 Because the AI component of each revised prediction contains information about all $M$ causal factors, we use simple averaging to obtain the collective prediction:
 \begin{align}
@@ -367,7 +326,7 @@ Using these definitions, the revised collective prediction can be written as fol
 \end{equation}
 Thus, the collective prediction consists of an AI-derived component, the contributions of the players' initial predictions, and the stochastic AI error that remains after aggregation.
 
-\subsection{Expected payoffs}
+\subsection*{Expected payoffs}
 
 We next derive the expected payoff under each incentive structure. 
 Expectations are taken over the distributions of the causal factors and stochastic AI errors, conditional on the current population strategies and the fixed parameters of the prediction target.
@@ -431,7 +390,7 @@ The expected payoffs therefore become
 \end{align}
 Thus, a positive value of $\lambda$ increases the payoff of strategies with greater reliance on AI, whereas a negative value favors strategies with lower reliance.
 
-\subsection{Expected accuracy}
+\subsection*{Expected accuracy}
 
 Using the residual defined above, the mean squared error of the revised collective prediction is:
 \begin{align}
@@ -447,13 +406,13 @@ R
 The collective prediction error consists of the squared error in the intercept, the remaining error associated with each causal factor, and the stochastic AI error remaining after averaging across players.
 Counterfactual collective accuracy is obtained from the same expression by setting $\beta_A=0$ for all players while retaining their evolved interests and beliefs.
 
-\section{Chatbot AI}
+\section*{Chatbot AI}
 
 Unlike Omniscient AI, Chatbot AI use only the causal factor associated with each player's interest. 
 This causes the information contained in AI predictions to depend directly on the distribution of interests in the population. 
 Here, we derive the collective prediction, expected payoffs, and expected collective accuracy under this form of AI assistance.
 
-\subsection{Model}
+\subsection*{Model}
 
 The prediction generated by Chatbot AI for player $A$ depends on the causal factor associated with the player's interest:
 \begin{equation}
@@ -470,7 +429,7 @@ Y_A^{re} &= \beta_AY_A^{AI} + (1-\beta_A)Y_A
 Here, $c_A$ represents player $A$'s belief about the effect of their focal factor, $e_A$ represents their interest, and $\beta_A$ represents their reliance on AI. 
 Thus, the revised prediction remains specific to the single factor associated with the player's interest.
 
-\subsection{Aggregation}
+\subsection*{Aggregation}
 
 Because both the player's initial prediction and the Chatbot AI prediction contain information about the same causal factor, we use clustering aggregation. 
 Revised predictions are first averaged among players interested in the same factor and then summed across represented interests:
@@ -497,7 +456,7 @@ Thus, the collective prediction can be written as:
 \end{equation}
 where $\mathcal I=\{i\in\{0,\ldots,M\}>0\}$ denotes the set of represented interests.
 
-\subsection{Expected payoffs}
+\subsection*{Expected payoffs}
 
 We next derive the expected payoff under each incentive structure. 
 Expectations are taken over the causal factors and stochastic AI errors, conditional on the current population strategies and the fixed parameters of the prediction target.
@@ -564,7 +523,7 @@ Under the balanced structure, the payoff corresponds to the arithmetic mean of t
 \end{align}
 The expected payoff under the balanced structure can therefore be calculated directly from the feedback and niche-expert payoffs derived above.
 
-\subsection{Expected accuracy}
+\subsection*{Expected accuracy}
 
 Finally, we derive the expected collective accuracy under clustering aggregation. The intercept $\alpha_0$ serves as the baseline prediction. 
 Because the causal factors are independent and have mean zero, its expected squared error is
@@ -584,7 +543,7 @@ R &= 1 - \frac{\mathbb{E}[(Y - \hat{Y})^2]}{\mathbb{E}[(Y - \alpha_0)^2]}\\[6pt]
 \end{align}
 Here, $R=1$ represents perfect collective prediction, $R=0$ represents performance equal to the baseline, and $R<0$ represents performance worse than the baseline.
 
-\section{Evolutionary dynamics}
+\section*{Evolutionary dynamics}
 
 Following previous work \citep{wang2025individual,taylor1978evolutionary,traulsen2005coevolutionary}, we use replicator dynamics as a deterministic large-population approximation to characterize equilibrium states and their local stability.
 The agent-based simulations themselves follow the Fermi imitation rule defined above.
@@ -602,14 +561,14 @@ At an internal stationary state, all strategies with positive frequency must hav
 A boundary state can also be stationary because a strategy with zero frequency cannot increase unless it is introduced into the population. 
 We therefore assess the stability of boundary states by asking whether they can be invaded by a rare alternative strategy.
 
-\subsection{Omniscient AI}
+\subsection*{Omniscient AI}
 
 With Omniscient AI, every AI prediction contains information about the full prediction target, and revised predictions are combined through averaging. 
 As population size increases, independent AI errors vanish from the collective prediction. 
 However, these errors remain in individual prediction errors and can therefore continue to affect niche-expert payoffs. 
 We consider the two incentive structures separately.
 
-\subsubsection{Feedback}
+\subsubsection*{Feedback}
 
 Under the feedback structure, both the stochastic error in the collective prediction, $\bar{\eta}$, and its contribution to expected payoff vanish as $N\to\infty$. 
 Following previous work \citep{wang2025individual}, we define the Lyapunov function as the expected error of collective prediction: 
@@ -676,8 +635,6 @@ A rare strategy whose prediction is aligned with this residual can obtain a high
 Thus, provided that novel strategies can be introduced, an evolutionarily stable state must satisfy $V=0$. 
 At such a state, $\hat{Y}^{\mathrm{re}}=Y$, and collective accuracy reaches $R=1$.
 
-
-
 Therefore, the expected error of collective prediction cannot increase during the evolutionary process and decreases whenever strategies differ in their expected payoffs. 
 The derivative becomes zero when the variance of expected payoffs is zero, $\mathrm{Var}(u)=0$.
 This condition arises when all represented strategies receive the same expected payoff.
@@ -688,7 +645,7 @@ A rare strategy whose prediction is aligned with this residual can obtain a high
 Thus, provided that novel strategies can be introduced, an evolutionarily stable state must satisfy $V=0$. 
 At such a state, $\hat{Y}^{\mathrm{re}}=Y$, and collective accuracy reaches $R=1$.
 
-\subsubsection{Niche-expert}
+\subsubsection*{Niche-expert}
 
 Unlike feedback payoffs, niche-expert payoffs depend on the prediction error of each individual. 
 Stochastic AI error therefore remains in the expected payoff even when $N\to\infty$, and we retain $\tau>0$ throughout this analysis.
@@ -957,6 +914,52 @@ Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\bet
 AI parameters: $\tau = 0.3$, Chatbot AI is used.
 }
 \end{figure}
+
+\pagebreak
+
+
+\begin{table}[htbp]
+\centering
+\caption{Evaluation metrics used to analyze collective prediction dynamics.}
+\label{tab:evaluation_metrics}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{0.28\textwidth} C{0.27\textwidth} Y@{}}
+\toprule
+Metric & Definition & Interpretation \\
+\midrule
+
+Collective accuracy &
+\(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
+Accuracy of the revised collective prediction relative to the baseline prediction $\alpha_0$. \\
+\addlinespace
+
+Collective bias &
+\(\displaystyle \left(\mathbb{E}[Y-\hat{Y}^{\mathrm{re}}]\right)^2\) &
+Squared expected deviation of the revised collective prediction from the true target. \\
+\addlinespace
+
+Collective variance &
+\(\displaystyle \operatorname{Var}(Y-\hat{Y}^{\mathrm{re}})\) &
+Variability of the revised collective prediction error across prediction events. \\
+\addlinespace
+
+Counterfactual collective accuracy &
+\(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
+Accuracy obtained after removing AI use from the current population while retaining its evolved interests and beliefs. \\
+\addlinespace
+
+Interest diversity &
+\(\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i\ln\rho_i\right)\) &
+Effective number of interests represented in the population. \\
+\addlinespace
+
+Median reliance on AI &
+\(\displaystyle \operatorname{median}_{A\in N}(\beta_A)\) &
+Median reliance on AI in the population. \\
+
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \pagebreak
 

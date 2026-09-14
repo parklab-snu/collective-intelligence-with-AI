@@ -100,7 +100,7 @@ Following previous work \cite{wang2025individual}, we consider two incentive str
 First, the feedback structure gives higher payoffs to individuals whose predictions are aligned with the collective prediction error, rather than directly rewarding individual predictive accuracy: $\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})$.
 Second, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest: $\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2$, where $\rho_{e_A}$ represents the proportion of individuals sharing the same interest.
 We assume that prediction events occur on a substantially faster timescale than social learning, which allow us to calculate the expected payoff $\mathbb{E}[\pi_A]$ of each player analytically and simulate social learning.
-Full details of the model and derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Materials and Methods as well as Supplementary Text S1 and S2.
+Full details of the model and derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Materials and Methods as well as Supplementary Text.
 
 We begin by characterizing the dynamics of CI with AI under two classic incentive structures from prior work \cite{wang2025individual}.
 We show that the outcome depends on the information available to AI: Omniscient AI can preserve or improve collective accuracy, whereas Chatbot AI can undermine CI by limiting interest diversity or propagating systematic AI bias. 
@@ -131,7 +131,7 @@ One exception is the use of simple averaging with niche-expert incentive structu
 This is because each individual accurately predicts the contribution of their factor of interest, but averaging these partial predictions dilutes the factor-specific contributions instead of reconstructing the full prediction target (Fig. S1).
 
 The use of Omniscient AI can either preserve CI under the feedback incentive structure (Fig. 2A) or promote higher collective accuracy under the niche-expert incentive structure (Fig. 2B). 
-These results are robust across different levels of AI accuracy (Fig. S2) and can also be characterized analytically in the large-population limit (Supplementary Text S3.1).
+These results are robust across different levels of AI accuracy (Fig. S2) and can also be characterized analytically in the large-population limit (Supplementary Text).
 
 Under the feedback incentive structure, the use of Chatbot AI leads to a loss of diversity in the population's interest, making it impossible to account for effect of some causal factors (Fig. S2, S3).
 This causes an increase in collective variance and a stochastic decrease in collective accuracy (Fig. 2C; Fig. S3).
@@ -169,7 +169,7 @@ To investigate whether such direct incentives or penalties can promote CI, we mo
 \begin{equation}
 \mathrm{Feedback /} \mathrm{Niche\text{-}expert} + \lambda \beta_A
 \end{equation}
-where $\lambda$ represent the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$), and $\beta_A$ represent individual reliance on AI (Supplementary Text S1.3 and S2.3).
+where $\lambda$ represent the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$), and $\beta_A$ represent individual reliance on AI (Supplementary Text).
 
 We find that direct incentives and penalties on AI use do not consistently improve collective accuracy (Fig. 3).
 When Omniscient AI is used under the feedback structure, the population retains collective intelligence regardless of the intervention strength (Fig. 3A), despite large changes in reliance on AI (Fig. 3B).
@@ -198,7 +198,7 @@ AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
 \end{figure}
 
 The contrasting failures of the feedback and niche-expert structures suggest combining their complementary roles.
-Here, we propose a ``balanced'' incentive structure, modeled as the average of the feedback and niche expert incentives (Supplementary Text S2.3).
+Here, we propose a ``balanced'' incentive structure, modeled as the average of the feedback and niche expert incentives (Supplementary Text).
 
 The core idea behind the balanced structure is to maintain interest diversity and prevent collective bias.
 On one hand, the feedback incentive structure is prone to the loss of interest diversity but can prevent collective bias by rewarding predictions aligned with the collective prediction error.
@@ -275,7 +275,8 @@ All data are stored in a publicly available GitHub repository (https://github.co
 \section*{Supplementary materials}
 Materials and Methods\\
 Supplementary Text\\
-Figs. S1 to S10\\
+Figs. S1 to S9\\
+Table S1\\
 References (49–58)
 
 \bibliographystyle{Science}
