@@ -64,8 +64,9 @@ The recent emergence of generative AI and large language models (LLMs) has chang
 In particular, while the use of generative AI models, such as ChatGPT, has been rapidly increasing \cite{bick2026rapid,sajadieh2026artificial}, the potential long-term impact of AI assistants on human society, especially CI, remains uncertain.
 Some argue that AI can promote CI by enhancing individual expertise \cite{vaccaro2024combinations} and opinion aggregation \cite{burton2024large,tessler2024ai}.
 Conversely, empirical evidence indicates that the use of AI can limit the diversity of opinions \cite{ fugener2021will,doshi2024generative,lee2024empirical,meincke2025chatgpt}, a key requirement for the emergence of CI \cite{hong2004groups,lorenz2011social,aplin2014individual,becker2017network}.
+We expect these AI-driven changes to shape long-term social evolution because successful individuals can influence which interests, beliefs, and patterns of AI use become prevalent in a population.
 
-Our ability to predict the long-term impact of AI assistants on human CI is further hampered by the apparent discrepancy in the incentives that shape AI use.
+However, our ability to predict the long-term impact of AI assistants on human CI is hampered by the apparent discrepancy in the incentives that shape AI use.
 On one hand, many industrial sectors are pushing towards increased AI use, where the number of ``tokens'' used is often perceived as a proxy for productivity \cite{bousquette2026tokenmaxxing,keary2026cult}.
 On the other hand, many academic institutions appear to discourage AI use, reflecting concerns about plagiarism, misinformation, and limited independence \cite{thorp2023chatgpt,chawla2026researchers}.
 Such discrepancy raises a question about whether directly incentivizing or penalizing AI use will benefit or harm human CI.
@@ -75,9 +76,11 @@ Thus, a key challenge is to identify robust incentive structures that retain the
 To address these questions, we extend previous approaches for modeling CI, in which each individual participates in a prediction task \cite{hong2012incentives,mann2017optimal,wang2025individual}.
 Previous work modeled the prediction target $Y$ as a linear combination of underlying causal factors, $X_1, X_2, \dots, X_M$, (Fig. 1A) and assumed that each individual makes an independent prediction from a single observed factor of their interest $e_A$ and their belief $c_A$: $Y_A = c_A X_{e_A}$ (Fig. 1B).
 Here, we further allow each individual to independently consult with AI assistants, which can also make their own predictions $Y_A^{AI}$, and revise their predictions by taking the weighted average according to their reliance on AI $\beta_A$: $Y_A^{\mathrm{re}} = \beta_A Y_A^{\mathrm{AI}} + (1-\beta_A)Y_A$ (Fig. 1B).
-In doing so, we consider two forms of AI: an Omniscient AI knows exactly how much every causal factor contributes to the prediction target, whereas a Chatbot can provide an answer about the contribution of the factor that the user is interested in (Fig. 1B).
+In doing so, we consider two forms of AI: Omniscient AI constructs predictions using all causal factors, whereas Chatbot AI responds only about the factor that the user is interested in (Fig. 1B).
 These AI predictions can include both systematic biases and stochastic errors (Fig. 1B).
 Then, these revised predictions are aggregated to form a collective prediction $\hat{Y}^{\mathrm{re}}$, which is then used to evaluate the collective accuracy of the population \cite{wang2025individual}: $1-\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathbb{E}[(Y-\alpha_0)^2]$.
+For Omniscient AI, we simply average revised predictions. 
+For Chatbot AI, we average within interests and sum across represented interests.
 Hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.
 
 \begin{figure}[!th]
@@ -140,7 +143,7 @@ In this case, the population reduces its reliance on AI assistance, allowing CI 
 However, the emergence of CI can be substantially delayed compared with the population without AI (Fig. S5).
 
 To investigate whether the group can retain its predictive ability when AI assistance suddenly becomes unavailable, we quantify counterfactual collective accuracy based on unrevised predictions, retaining the population’s evolved interests and beliefs. 
-Across all scenarios, counterfactual collective accuracy is lower than the accuracy of the corresponding AI-assisted population (Fig. 2).
+Across all scenarios, counterfactual collective accuracy is lower than the accuracy of the corresponding AI-assisted population and the accuracy of populations that evolved without AI (Fig. 2).
 Thus, the accuracy achieved with AI assistance does not necessarily reflect the population’s ability to make equally accurate predictions without it.
 
 \section*{Directly incentives and penalties for AI do not reliably improve collective accuracy}
@@ -211,7 +214,7 @@ These patterns are robust to balancing weights (Fig. S7), and are driven by the 
 \section*{Discussion}
 
 The ongoing race towards the development of ``better'' AI continues to pose questions about the societal benefits and risks of AI use \cite{bender2021dangers,burton2024large,cui2024ai}.
-Here, we used mathematical models of evolutionary dynamics to investigate how AI use and incentive structures jointly affect the emergence of CI, which is defined as the population's ability to make accurate predictions.
+Here, we used mathematical models of evolutionary dynamics to investigate how AI use and incentive structures jointly affect the emergence of CI.
 We find that an ``Omniscient'' AI model, which incorporates information about all relevant causal factors, can improve collective accuracy, whereas a ``Chatbot'' AI model, whose outcome depends on the user's interest, can impair it.
 These contrasting outcomes arise because AI assistance affects not only individual predictions, but also the population's interest diversity, beliefs, and reliance on AI.
 We also show that directly incentivizing or penalizing AI use, independent of individual's performances, can further limit the collective accuracy of the population. 
