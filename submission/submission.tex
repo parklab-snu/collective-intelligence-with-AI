@@ -76,8 +76,8 @@ Here, we further allow each individual to independently consult with AI assistan
 In doing so, we consider two forms of AI: Omniscient AI constructs predictions using all causal factors, whereas Chatbot AI responds only about the factor that the user is interested in (Fig. 1B).
 These AI predictions can include both systematic biases and stochastic errors (Fig. 1B).
 Then, these revised predictions are aggregated to form a collective prediction $\hat{Y}^{\mathrm{re}}$, which is then used to evaluate the collective accuracy of the population \cite{wang2025individual}: $1-\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathbb{E}[(Y-\alpha_0)^2]$.
-For Omniscient AI, we simply average revised predictions. 
-For Chatbot AI, we average within interests and sum across represented interests.
+For Omniscient AI, we simply average revised predictions (namely, ``averaging''). 
+For Chatbot AI, we average within interests and sum across represented interests (namely, ``clustering'').
 Hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.
 
 \begin{figure}[!th]
@@ -100,7 +100,7 @@ We assume that prediction events occur on a substantially faster timescale than 
 Full details of the model and derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Materials and Methods as well as Supplementary Text.
 
 We begin by characterizing the dynamics of CI with AI under two classic incentive structures from prior work \cite{wang2025individual}.
-We show that the outcome depends on the information available to AI: Omniscient AI can preserve or improve collective accuracy, whereas Chatbot AI can undermine CI by limiting interest diversity or propagating systematic AI bias. 
+We show that the outcome depends on the information available to AI: Omniscient AI can preserve or improve collective accuracy, whereas Chatbot AI can undermine CI by limiting interest diversity or propagating systematic AI bias.
 Directly incentivizing or penalizing AI use fails to correct these effects and can further reduce collective accuracy.
 Finally, we leverage these findings to propose a balanced incentive structure that preserves minority expertise while rewarding contributions to collective accuracy, thereby restoring CI under Chatbot AI. 
 However, even when AI-assisted CI is restored, the population’s unaided collective accuracy remains suboptimal, requiring additional incentives that explicitly preserve unaided predictive ability.
