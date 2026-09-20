@@ -48,7 +48,7 @@ for(i in bias_list){
     AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
     cat("Accuracy:", AI_accuracy, "\n")
     
-    Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Advantage AI Feedback', lambda = lambda)
+    Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Incentivize/penalize AI Feedback', lambda = lambda)
     
     filename <- sprintf("omni_feedback_i%02f_j%02f.RData", i, j)
     filepath <- file.path(out_dir, filename)
@@ -83,7 +83,7 @@ for(i in bias_list){
     AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
     cat("Accuracy:", AI_accuracy, "\n")
     
-    Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Advantage AI Niche', lambda = lambda)
+    Result <- Omniscient_AI$main_opt(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_type = 'Incentivize/penalize AI Niche', lambda = lambda)
     
     filename <- sprintf("omni_niche_i%02f_j%02f.RData", i, j)
     filepath <- file.path(out_dir, filename)
@@ -122,7 +122,7 @@ for(i in bias_list){
     AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
     cat("Accuracy:", AI_accuracy, "\n")
     
-    Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Advantage AI Feedback', lambda = lambda)
+    Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Incentivize/penalize AI Feedback', lambda = lambda)
     
     filename <- sprintf("chatbot_feedback_i%02f_j%02f.RData", i, j)
     filepath <- file.path(out_dir, filename)
@@ -156,7 +156,7 @@ for(i in bias_list){
     AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
     cat("Accuracy:", AI_accuracy, "\n")
     
-    Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Advantage AI Niche', lambda = lambda)
+    Result<- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Incentivize/penalize AI Niche', lambda = lambda)
     
     filename <- sprintf("chatbot_niche_i%02f_j%02f.RData", i, j)
     filepath <- file.path(out_dir, filename)

@@ -3,8 +3,6 @@ if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("tidyr")) install.packages("tidyr")
 if (!require("ggh4x")) install.packages("ggh4x")
-if (!require("here")) install.packages("here")
-
 library(ggh4x)
 library(ggplot2)
 library(dplyr)
@@ -12,7 +10,7 @@ library(tidyr)
 library(patchwork)
 library(here)
 
-simulation_path <- here("Simulations","FigureS2,S5_simulation")
+simulation_path <- here("Simulations", "FigureS9_simulation")
 
 bias_list <- seq(-0.6, 0.6, by = 0.1)
 
@@ -91,25 +89,13 @@ to_long <- function(data) {
 
 answers_feedback <- read_stationary(
   simulation_path,
-  "chatbot_feedback_i%02f.RData"
+  "chatbot_avg_feedback_i%02f.RData"
 ) %>%
   to_long()
 
 answers_niche <- read_stationary(
   simulation_path,
   "chatbot_niche_i%02f.RData"
-) %>%
-  to_long()
-
-knows_feedback <- read_stationary(
-  simulation_path,
-  "omni_feedback_i%02f.RData"
-) %>%
-  to_long()
-
-knows_niche <- read_stationary(
-  simulation_path,
-  "omni_niche_i%02f.RData"
 ) %>%
   to_long()
 
@@ -169,6 +155,12 @@ make_plot <- function(
     facetted_pos_scales(
       y = list(
         Metric == "Collective accuracy" ~
+          scale_y_continuous(
+            limits = c(0, 1),
+            breaks = c(0, 0.25, 0.5, 0.75, 1)
+          ),
+        
+        Metric == "Counterfactual human CI" ~
           scale_y_continuous(
             limits = c(0, 1),
             breaks = c(0, 0.25, 0.5, 0.75, 1)
@@ -257,6 +249,7 @@ make_plot <- function(
 }
 
 make_header <- function(label) {
+  
   ggplot() +
     annotate(
       "text",
@@ -288,6 +281,7 @@ make_row_label <- function(
     label,
     aggregation
 ) {
+  
   ggplot() +
     annotate(
       "text",
@@ -324,32 +318,18 @@ make_row_label <- function(
     )
 }
 
-plot_knows_feedback <- make_plot(
-  knows_feedback,
-  variance_limit = c(0, 160),
-  bias_limit = c(0, 160),
-  reference_y = 1
-)
-
-plot_knows_niche <- make_plot(
-  knows_niche,
-  variance_limit = c(0, 160),
-  bias_limit = c(0, 160),
-  reference_y = 0
-)
-
 plot_answers_feedback <- make_plot(
   answers_feedback,
-  variance_limit = c(0, 1000),
+  variance_limit = c(0, 1100),
   bias_limit = c(0, 800),
   reference_y = 1
 )
 
 plot_answers_niche <- make_plot(
   answers_niche,
-  variance_limit = c(0, 1000),
+  variance_limit = c(0, 1100),
   bias_limit = c(0, 800),
-  reference_y = 1
+  reference_y = 0
 )
 
 feedback_header <- make_header(
@@ -360,14 +340,9 @@ niche_header <- make_header(
   "Niche-expert"
 )
 
-knows_label <- make_row_label(
-  "Omniscient AI",
-  "(Averaging)"
-)
-
 answers_label <- make_row_label(
   "Chatbot AI",
-  "(Clustering)"
+  "(Averaging)"
 )
 
 base_plot <- (
@@ -376,12 +351,6 @@ base_plot <- (
     plot_spacer() +
     niche_header +
     
-    knows_label +
-    plot_knows_feedback +
-    plot_spacer() +
-    plot_knows_niche +
-    
-    plot_spacer() +
     answers_label +
     plot_answers_feedback +
     plot_spacer() +
@@ -391,8 +360,6 @@ base_plot <- (
       design = "
       ABCD
       EFGH
-      IIII
-      JKLM
       ",
       widths = c(
         0.25,
@@ -402,8 +369,6 @@ base_plot <- (
       ),
       heights = c(
         0.12,
-        1,
-        0.025,
         1
       )
     )
@@ -419,10 +384,10 @@ base_plot <- (
   )
 
 ggsave(
-  here("Figures", "Supplementary figure 2.pdf"),
+  here("Figures", "Supplementary figure 9.pdf"),
   base_plot,
   width = 18,
-  height = 10.5,
+  height = 5.5,
   device = grDevices::cairo_pdf,
   units = "in",
   bg = "white"
