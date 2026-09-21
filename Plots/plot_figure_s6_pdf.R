@@ -35,7 +35,7 @@ read_stationary <- function(path, filename, source) {
   }))
   
   df %>%
-    filter(Generation >= 190000, Generation <= 200000) %>%
+    filter(Generation >= 190001, Generation <= 200000) %>%
     group_by(bias_i) %>%
     summarise(
       source = source,

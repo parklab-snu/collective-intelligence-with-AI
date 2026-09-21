@@ -88,7 +88,7 @@ read_stationary <- function(save_path, prefix, has_k) {
   }))
   
   df %>%
-    filter(Generation >= 190000, Generation <= 200000) %>%
+    filter(Generation >= 190001, Generation <= 200000) %>%
     group_by(lambda, bias_i) %>%
     summarise(
       accuracy = mean(accuracy),

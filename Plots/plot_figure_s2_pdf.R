@@ -50,7 +50,7 @@ read_stationary <- function(path, filename) {
   
   df %>%
     filter(
-      Generation >= 190000,
+      Generation >= 190001,
       Generation <= 200000
     ) %>%
     group_by(bias_i) %>%

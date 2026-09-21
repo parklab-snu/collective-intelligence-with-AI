@@ -85,7 +85,7 @@ read_stationary <- function(save_path, prefix) {
       median_AI_belief = result$median_AI_belief
     ) %>%
       filter(
-        Generation >= 190000,
+        Generation >= 190001,
         Generation <= 200000
       ) %>%
       summarise(
