@@ -43,11 +43,12 @@
 \maketitle 
 
 \begin{sciabstract}
-Artificial intelligence (AI) assistants can improve individual performance, but they can also weaken unaided performance and limit interest diversity, raising questions about their long-term effects on collective intelligence (CI).
-To address this question, we consider an evolutionary model in which individuals participate in prediction tasks, consult AI, and imitate better-performing peers.
-Classic reward structures that promote CI without AI can fail under ``Chatbot AI'', whose predictions depend on users’ interests, by reducing interest diversity or propagating systematic bias.
-Directly rewarding or penalizing AI use does not reliably mitigate these effects.
-Instead, a balanced incentive that preserves minority expertise and rewards collective contributions promote CI under Chatbot AI, but an additional incentive is needed to restore unaided collective accuracy.
+Artificial intelligence (AI) assistants can improve individual performance but may weaken unaided performance and limit interest diversity, raising questions about their long-term effects on collective intelligence (CI). 
+Here, we consider an evolutionary model in which individuals predict, consult AI, and imitate better-performing peers. 
+Classic reward structures that promote CI without AI can fail under ``Chatbot AI'', whose predictions depend on users’ interests, by reducing interest diversity or propagating bias. 
+Directly rewarding or penalizing AI use does not mitigate these effects. 
+Instead, a balanced incentive that preserves minority expertise and rewards collective contributions can promote CI, but an additional incentive is needed to restore unaided collective accuracy.
+Our framework offers an explanation for emerging evidence of AI’s societal impact and clarifies its long-term implications.
 \end{sciabstract}
 
 \section*{Introduction}
@@ -70,7 +71,7 @@ Such discrepancy raises a question about whether directly incentivizing or penal
 More broadly, previous work identified incentive structures that promote CI through social learning  \cite{wang2025individual}, but it remains unclear whether these structures remain effective in the presence of AI assistants.
 Thus, a key challenge is to identify robust incentive structures that retain the benefits of AI while limiting risks such as the loss of diversity in individual opinions, thereby allowing for the maintenance of CI under AI use.
 
-To address these questions, we extend previous approaches for modeling CI, in which each individual participates in a prediction task \cite{hong2012incentives,mann2017optimal,wang2025individual}.
+To address these questions, we extend previous approaches for modeling CI, in which each individual participates in a prediction task and imitates better-performing peers \cite{hong2012incentives,mann2017optimal,wang2025individual}.
 Previous work modeled the prediction target $Y$ as a linear combination of underlying causal factors, $X_1, X_2, \dots, X_M$, (Fig. 1A) and assumed that each individual makes an independent prediction from a single observed factor of their interest $e_A$ and their belief $c_A$: $Y_A = c_A X_{e_A}$ (Fig. 1B).
 Here, we further allow each individual to independently consult with AI assistants, which can also make their own predictions $Y_A^{AI}$, and revise their predictions by taking the weighted average according to their reliance on AI $\beta_A$: $Y_A^{\mathrm{re}} = \beta_A Y_A^{\mathrm{AI}} + (1-\beta_A)Y_A$ (Fig. 1B).
 In doing so, we consider two forms of AI: Omniscient AI constructs predictions using all causal factors, whereas Chatbot AI responds only about the factor that the user is interested in (Fig. 1B).
@@ -103,7 +104,7 @@ We begin by characterizing the dynamics of CI with AI under two classic incentiv
 We show that the outcome depends on the information available to AI: Omniscient AI can preserve or improve collective accuracy, whereas Chatbot AI can undermine CI by limiting interest diversity or propagating systematic AI bias.
 Directly incentivizing or penalizing AI use fails to correct these effects and can further reduce collective accuracy.
 Finally, we leverage these findings to propose a balanced incentive structure that preserves minority expertise while rewarding contributions to collective accuracy, thereby restoring CI under Chatbot AI. 
-However, even when AI-assisted CI is restored, the population’s unaided collective accuracy remains suboptimal, requiring additional incentives that explicitly preserve unaided predictive ability.
+However, even when AI-assisted CI is restored, the population’s unaided collective accuracy remains suboptimal, requiring additional incentives that explicitly reward unaided predictive ability.
 
 \section*{Classic incentive structures for collective intelligence can fail under Chatbot AI}
 
