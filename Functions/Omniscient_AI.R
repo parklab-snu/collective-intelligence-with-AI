@@ -193,7 +193,8 @@ main_opt <- function(m, alpha, sigma, N, players, G, AI_error_sd, bias, payoff_t
       players_intime[g %/% 1000, , ] <- players
     }
     
-    if (payoff_type == "Feedback" || payoff_type == "Disadvantage AI Feedback" || payoff_type == "Advantage AI Feedback") {
+    if (payoff_type %in% c("Feedback", "Incentivize/penalize AI Feedback",
+                           "Disadvantage AI Feedback", "Advantage AI Feedback")) {
       feedback_global <- (alpha[1] + bias) * delta[1] +
         sum(alpha[-1] * delta[-1] * sigma[-1]^2)
     } else {
