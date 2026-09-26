@@ -140,7 +140,7 @@ Each causal factor $X_i$ is modeled as an independent Gaussian random variable w
 
 \subsection*{Players}
 
-We consider a well-mixed population $\mathcal{N}$ consisting of $N$ players engaged in a novel prediction task. 
+We consider a well-mixed population $\mathcal{N}$ consisting of $N$ players engaged in a prediction task \citep{wang2025individual}. 
 In the absence of AI assistance, the strategy of player $A$ is characterized by two variables: interest $e_A$ and belief $c_A$. 
 Player $A$ observes the causal factor $X_{e_A}$ and makes a prediction by multiplying the observed factor value by their belief:
 \begin{equation}
@@ -180,7 +180,7 @@ Y_A^{\mathrm{AI}} = \alpha_{e_A} X_{e_A} + b_{e_A} + \epsilon.
 
 \subsection*{Aggregation rules}
 
-The revised individual predictions are aggregated to form a collective prediction. We use two aggregation rules proposed in previous research \citep{wang2025individual}, depending on the type of AI used by the group.
+The revised individual predictions are aggregated to form a collective prediction. We use two aggregation rules proposed in previous work \citep{wang2025individual}, depending on the type of AI used by the group.
 First, when the group is assisted by the Omniscient AI, the AI component of each revised prediction contains information about all $M$ factors, even though the individual's own prediction is based on only one factor. Each revised prediction can therefore be treated as an estimate of the entire target. Accordingly, we calculate the collective prediction by taking the simple average of the revised individual predictions:
 \begin{equation}
 \hat{Y}^{\mathrm{re}} = \frac{Y_1^{\mathrm{re}} + Y_2^{\mathrm{re}} + \cdots + Y_n^{\mathrm{re}}}{N}.
@@ -273,6 +273,8 @@ Collective accuracy is normalized relative to the baseline prediction $\alpha_0$
 A negative value indicates that the collective prediction performs worse than the baseline. 
 Counterfactual collective accuracy is evaluated by setting $\beta_A=0$ while retaining the evolved interests and beliefs of the AI-assisted population. 
 In calculating interest diversity, we use the convention that $\rho_i\ln\rho_i=0$ when $\rho_i=0$ (Table~\ref{tab:evaluation_metrics}).
+
+\pagebreak
 
 \section*{Supplementary Text}
 
