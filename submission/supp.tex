@@ -222,15 +222,12 @@ To examine the effects of directly encouraging or discouraging AI use, we modify
 Here, $\lambda$ represents the strength of the direct incentive or penalty applied to AI use. A positive value of $\lambda$ rewards AI reliance, whereas a negative value penalizes it. When $\lambda=0$, no direct incentive or penalty is applied, and the payoff functions reduce to the original feedback and niche-expert structures.
 
 The balanced structure is defined as the weighted mean of the feedback and niche-expert payoff components, with balancing weight $w$:
-
 \begin{equation}
-\pi_A = w{Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})} - (1-w)\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2.
+\pi_A = (1-w){Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})} - w\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2,
 \end{equation}
-
 where $w \in [0,1]$ determines the relative contribution of the feedback and niche-expert components.
 We set $w=0.5$ for all analyses unless otherwise specified, such that the two components contribute equally to the balanced structure.
 The sensitivity of the results to $w$ is examined in Supplementary Fig. S7.
-
 
 \subsection*{Simulations}
 
@@ -393,7 +390,7 @@ Because this term is fixed conditional on the player's strategy, its expectation
 The expected payoffs therefore become
 \begin{align}
 \mathbb{E}(\pi_{A, \textrm{Feedback}})&=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A,\\
-\mathbb{E}(\pi_{A, \textrm{Niche-expert}}) &= -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
+\mathbb{E}(\pi_{A, \textrm{Niche-expert}}) &= \mathbb{E}\left[-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
 \end{align}
 Thus, a positive value of $\lambda$ increases the payoff of strategies with greater reliance on AI, whereas a negative value favors strategies with lower reliance.
 
@@ -517,7 +514,7 @@ Directly incentivizing or penalizing AI use adds the term $\lambda\beta_A$ to th
 \begin{align}
 \mathbb{E}(\pi_{A, Feedback}) &=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right]\\
 &= \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A,\\
-\mathbb{E}(\pi_{A, Niche-expert}) &= -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] \\
+\mathbb{E}(\pi_{A, Niche-expert}) &= \mathbb{E}\left[-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] \\
 &= -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
 \end{align}
 
@@ -632,15 +629,6 @@ Therefore,
 \begin{equation}
 \frac{dV}{dt} = -2Cov(u,u) = -2Var(u) \leq 0.
 \end{equation}
-
-Because payoff variance is non-negative, the expected collective prediction error cannot increase and decreases whenever the strategies currently represented in the population differ in their expected payoffs. 
-The derivative becomes zero when all represented strategies receive the same expected payoff. 
-However, this condition does not necessarily imply that $V=0$, because a population can lack strategies that would improve its collective prediction.
-
-If $V>0$, at least one component of the collective residual remains nonzero. 
-A rare strategy whose prediction is aligned with this residual can obtain a higher expected payoff than the resident strategies and invade the population. 
-Thus, provided that novel strategies can be introduced, an evolutionarily stable state must satisfy $V=0$. 
-At such a state, $\hat{Y}^{\mathrm{re}}=Y$, and collective accuracy reaches $R=1$.
 
 Therefore, the expected error of collective prediction cannot increase during the evolutionary process and decreases whenever strategies differ in their expected payoffs. 
 The derivative becomes zero when the variance of expected payoffs is zero, $\mathrm{Var}(u)=0$.
