@@ -319,7 +319,7 @@ Because the AI component of each revised prediction contains information about a
 To separate the contributions of AI and the players' initial predictions, we define the population's mean reliance on AI, the stochastic AI error remaining after aggregation, and the aggregate contribution of initial predictions associated with each factor:
 \begin{align}
 \bar{\beta} &= \frac{1}{N}\sum_{j = 1}^{N} \beta_j\\
-\bar{\eta} &= \frac{1}{N}\sum_{j = 1}^{N} \beta_i\epsilon_j\\
+\bar{\eta} &= \frac{1}{N}\sum_{j = 1}^{N} \beta_j\epsilon_j\\
 \label{eta}
 \gamma_i &= \frac{1}{N}\sum_{A \in \mathcal{A}_i}(1-\beta_A)c_A
 \end{align}
@@ -536,7 +536,7 @@ Because the causal factors are independent and have mean zero, its expected squa
 \end{equation}
 Using the expression for the collective residual above, the expected squared error of the revised collective prediction is
 \begin{equation}
-\mathbb{E}[(Y - \hat{Y})^2] = \mathbb{E}\left[\left(\delta_0 +\sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}\right)^2\right] = \delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \sum_{i = 0}^{M}\frac{\tau^2}{n_i^2}\sum_{A \in \mathcal{A}_i}\beta_A^2
+\mathbb{E}[(Y - \hat{Y}^{\mathrm{re}})^2] = \mathbb{E}\left[\left(\delta_0 +\sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}\right)^2\right] = \delta_0^2 + \sum_{i = 1}^{M}\delta_i^2\sigma_i^2 + \sum_{i = 0}^{M}\frac{\tau^2}{n_i^2}\sum_{A \in \mathcal{A}_i}\beta_A^2
 \end{equation}
 The first two terms represent squared errors in the intercept and factor-specific coefficients. The final term represents the stochastic AI error remaining after predictions are averaged within each interest group. 
 Thus, stochastic error has a larger effect when an interest is represented by fewer individuals. 
