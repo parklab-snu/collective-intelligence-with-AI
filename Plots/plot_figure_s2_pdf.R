@@ -207,7 +207,7 @@ make_plot <- function(
         "0.6"
       ),
       expand = expansion(
-        mult = c(-0.03, 0.03)
+        mult = c(0.03, 0.03)
       )
     ) +
     labs(

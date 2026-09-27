@@ -212,6 +212,7 @@ Therefore, when the two incentive structures are combined, the population achiev
 Under the balanced structure, individuals remain more evenly distributed across causal factors, and their beliefs lie closer to the true coefficients than under either incentive structure alone (Fig. 4C--E). 
 The balanced structure also produces higher counterfactual collective accuracy than the feedback or niche-expert structure (Fig. 4B; Fig. S6).
 These patterns are robust to balancing weights (Fig. S7), and are driven by the emergent property of the balanced structure, under which the population increases its reliance on AI as AI becomes more accurate (Fig S8).
+Moreover, a more comprehensive incentive structure (combined balanced), which combines the balanced structure with incentives based on unrevised predictions, further improves counterfactual human CI (Supplementary Text; Fig. S9).
 
 \section*{Discussion}
 
@@ -233,12 +234,14 @@ Instead, AI use need to be calibrated to prevent systematic AI biases from becom
 Our analysis of counterfactual collective accuracy also raises an important concern for future AI use:
 while AI use may improve the apparent performance of individuals and, in some cases, the population as a whole, it can simultaneously reduce the population’s ability to make accurate predictions without AI. 
 These results echo findings from a recent field experiment, which demonstrated that students, who seemingly performed better in solving mathematics problems under AI assistance, performed worse on their own than those who did not have access \cite{bastani2025generative}.
+Our results, however, also suggest that this loss of counterfactual performance is not inevitable.
+Incorporating incentives based on individuals' predictions without AI assistance can improve counterfactual collective accuracy without loosing collective accuracy.
 These findings highlight the need to evaluate AI tools not only by the performance gains they provide during use, but also by whether individuals and populations retain the ability to perform without them \cite{melumad2025experimental,ke2026ai}.
 Making this distinction clear will be particularly important for education, where AI may help students complete a task without helping them learn how to do it on their own \cite{bastani2025generative,melumad2025experimental}.
 
 As generative AI and large language models are already generating substantial benefits, many organizations, both industrial and academic, are increasingly seeking to improve their collective performance by regulating AI use \cite{thorp2023chatgpt,bousquette2026tokenmaxxing,chawla2026researchers,keary2026cult}.
 Such regulations may take direct forms, including AI-use policies or token-based leaderboards, or may operate indirectly through other incentives, such as productivity rewards or the social stigma associated with AI use \cite{reif2025evidence}.
-Our model suggests that directly incentivizing or penalizing AI use is unlikely to induce appropriately calibrated reliance on AI or to promote CI.
+Our model suggests that incentivizing or penalizing AI use is unlikely to induce appropriately calibrated reliance on AI or to promote CI.
 Incentivizing AI use could lead to overreliance, causing groups to propagate AI biases, whereas penalizing AI use could lead to underreliance, preventing groups from using AI even when it performs well in the relevant domain.
 Our results instead show that CI and appropriate reliance on AI can be promoted by rewarding diversity and contributions to collective accuracy \cite{hong2004groups,lorenz2011social,mann2017optimal}, rather than by directly rewarding or penalizing AI use.
 
@@ -250,6 +253,8 @@ Second, we model AI errors using fixed, factor-specific additive biases and inde
 This assumption allows random errors to be reduced through aggregation, while systematic biases can still persist in the collective prediction.
 In reality, AI errors may have more complex structures, including biased estimates of factor effects and correlated errors across individuals, factors, or repeated interactions.
 Further empirical and theoretical work is therefore needed to understand how these error structures affect the emergence of CI.
+Third, in our main analyses, each AI model is paired with a specific aggregation rule, making it difficult to fully separate the effects of AI model from those of aggregation.
+Analyses of alternative pairings suggest that our primary aggregation choices are consistent with the distinct prediction structures of the two AI models, although the effects of AI assistance may also depend on how individual predictions are aggregated (Supplementary Text; Fig. S10).
 Finally, following established models of CI, we assume that the prediction target is a linear combination of independent causal factors.
 This assumption does not hold for many real-world tasks, where causal factors may be correlated or interact nonlinearly.
 Future studies should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.
