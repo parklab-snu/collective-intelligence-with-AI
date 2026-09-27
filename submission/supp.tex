@@ -229,6 +229,17 @@ where $w \in [0,1]$ determines the relative contribution of the feedback and nic
 We set $w=0.5$ for all analyses unless otherwise specified, such that the two components contribute equally to the balanced structure.
 The sensitivity of the results to $w$ is examined in Supplementary Fig. S7.
 
+To examine whether incentives based on unrevised predictions (i.e., predictions made without incorporating AI predictions) could overcome the limitations of the other incentive structures, we defined an unrevised balanced structure. The unrevised balanced structure is defined as the arithmetic mean of the feedback structure based on the unrevised collective prediction and the niche-expert structure based on unrevised individual predictions:
+\begin{equation}
+\pi_A = \frac{Y_A(Y-\hat{Y}) - \rho_{e_A}(Y_A-Y)^2}{2},
+\end{equation}
+where $\hat{Y}$ is the collective prediction based on unrevised individual predictions, and $Y_A(Y-\hat{Y})$ and $-\rho_{e_A}(Y_A-Y)^2$ represent the unrevised feedback and unrevised niche-expert components, respectively.
+
+We further defined a combined balanced structure as the arithmetic mean of the balanced and unrevised balanced structures, with the balancing weight set to $w=0.5$:
+\begin{equation}
+\pi_A = \frac{Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - \rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + Y_A(Y-\hat{Y}) - \rho_{e_A}(Y_A-Y)^2}{4}.
+\end{equation}
+
 \subsection*{Simulations}
 
 All simulations are conducted using an agent-based model with 50 causal factors ($M=50$) and 10,000 players ($N=10{,}000$).
@@ -520,12 +531,14 @@ Directly incentivizing or penalizing AI use adds the term $\lambda\beta_A$ to th
 
 \subsubsection*{Balanced}
 
-Under the balanced structure, the payoff corresponds to the arithmetic mean of the feedback and niche-expert payoff components:
+Under the balanced structure, the payoff corresponds to the weighted mean of the feedback and niche-expert payoff components, with balancing weight $w$:
 \begin{align}
-\mathbb{E}(\pi_{A})&=\mathbb{E}\left[\frac{Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - \rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2}{2}\right]\\
-&= \frac{\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] - \mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]}{2}
+\mathbb{E}(\pi_{A})&=\mathbb{E}\left[(1-w)Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - w\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]\\
+&= (1-w)\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] - w\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]
 \end{align}
 The expected payoff under the balanced structure can therefore be calculated directly from the feedback and niche-expert payoffs derived above.
+
+\subsubsection*{Triple balanced}
 
 \subsection*{Expected accuracy}
 
@@ -768,6 +781,10 @@ Hence,
 and consequently the stationary collective accuracy satisfies $R^*<1$.
 Thus, the niche-expert structure preserves interest diversity and allows the population to outperform AI, but averaging prevents the population from reaching perfect collective accuracy.
 
+\section*{Incentive structure incorproating unrevised predictions}
+
+\section*{Different }
+
 \pagebreak
 
 \section*{Supplementary Figure}
@@ -907,6 +924,44 @@ The balanced structure shows well-calibrated reliance on AI, with reliance incre
 Prediction target parameters: $M = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
 AI parameters: $\tau = 0.3$, Chatbot AI is used.
+}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 9.pdf}
+\caption{
+\textbf{Incentive structures incorporating unrevised prediction accuracy can promote better counterfactual human CI.}
+Evaluation metrics under the balanced, triple balanced feedback, and triple balanced niche structures across varying levels of AI bias.
+The triple balanced feedback structure is defined as the arithmetic mean of the feedback, niche-expert, and feedback based on unrevised predictions, whereas the triple balanced niche structure is defined as the arithmetic mean of the feedback, niche-expert, and niche-expert based on unrevised predictions.
+A larger absolute AI bias indicates a less accurate AI model.
+All evaluation metrics are averaged over generations 190,001--200,000.
+The triple balanced niche structure maintains higher counterfactual human CI across AI bias levels than the other incentive structures.
+Prediction target parameters: $M = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$.
+AI parameters: $\tau = 0.3$; Chatbot AI is used.
+}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[!pth]
+\includegraphics[width=\textwidth]{../Figures/Supplementary figure 10.pdf}
+\caption{
+\textbf{Chatbot AI with averaging aggregation has a limited influence on CI.}
+Evaluation metrics across varying levels of AI bias under Chatbot AI with averaging aggregation.
+Two incentive structures, feedback and niche-expert, are considered.
+A larger absolute AI bias indicates a less accurate AI model.
+Across the range of AI bias considered, AI accuracy varies from approximately 0.24 to nearly 1 when the AI predicts the target independently.
+Dashed horizontal lines represent the values of the evaluation metrics when the group is not assisted by AI.
+Collective accuracy represents the predictive performance of the group, whereas counterfactual human CI represents the group's predictive accuracy if AI assistance were unavailable at the given generation.
+Interest diversity is defined as the Hill--Shannon diversity of interests within the population, and median reliance on AI represents the median reliance on AI ($\beta$) across individuals.
+Collective bias represents the systematic deviation of the collective prediction from the true target, whereas collective variance represents the variability of collective prediction errors across prediction events.
+All evaluation metrics are averaged over generations 190,001--200,000.
+Prediction target parameters: $M = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$, and $\beta_A \sim U(0, 1)$.
+AI parameters: $\tau = 0.3$.
 }
 \end{figure}
 

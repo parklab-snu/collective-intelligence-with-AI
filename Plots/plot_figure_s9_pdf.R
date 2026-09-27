@@ -1,12 +1,10 @@
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
-if (!require("tidyr")) install.packages("tidyr")
-if (!require("ggh4x")) install.packages("ggh4x")
-library(ggh4x)
+if (!require("here")) install.packages("here")
+
 library(ggplot2)
 library(dplyr)
-library(tidyr)
 library(patchwork)
 library(here)
 
@@ -14,16 +12,7 @@ simulation_path <- here("Simulations", "FigureS9_simulation")
 
 bias_list <- seq(-0.6, 0.6, by = 0.1)
 
-metric_order <- c(
-  "Collective accuracy",
-  "Counterfactual human CI",
-  "Median reliance on AI",
-  "Collective variance",
-  "Collective bias",
-  "Interest Diversity"
-)
-
-read_stationary <- function(path, filename) {
+read_stationary <- function(path, filename, source) {
   df <- bind_rows(lapply(bias_list, function(i) {
     env <- new.env()
     
@@ -39,356 +28,162 @@ read_stationary <- function(path, filename) {
       Generation = seq_along(result$accuracy),
       accuracy = result$accuracy,
       human_accuracy = result$human_accuracy,
-      median_AI_belief = result$median_AI_belief,
-      bias_sq = result$bias_sq,
-      variance = result$variance,
-      interest_diversity = result$interest_diversity
+      median_AI_belief = result$median_AI_belief
     )
   }))
   
   df %>%
-    filter(
-      Generation >= 190000,
-      Generation <= 200000
-    ) %>%
+    filter(Generation >= 190000, Generation <= 200000) %>%
     group_by(bias_i) %>%
     summarise(
+      source = source,
       accuracy = mean(accuracy, na.rm = TRUE),
       human_accuracy = mean(human_accuracy, na.rm = TRUE),
       median_AI_belief = mean(median_AI_belief, na.rm = TRUE),
-      bias_sq = mean(bias_sq, na.rm = TRUE),
-      variance = mean(variance, na.rm = TRUE),
-      interest_diversity = mean(interest_diversity, na.rm = TRUE),
       .groups = "drop"
     ) %>%
     arrange(bias_i)
 }
 
-to_long <- function(data) {
-  data %>%
-    rename(
-      `Collective accuracy` = accuracy,
-      `Counterfactual human CI` = human_accuracy,
-      `Median reliance on AI` = median_AI_belief,
-      `Collective variance` = variance,
-      `Collective bias` = bias_sq,
-      `Interest Diversity` = interest_diversity
-    ) %>%
-    pivot_longer(
-      cols = -bias_i,
-      names_to = "Metric",
-      values_to = "Value"
-    ) %>%
-    mutate(
-      Metric = factor(
-        Metric,
-        levels = metric_order
-      )
+stationary_feedback <- read_stationary(
+  simulation_path,
+  "chatbot_triple_balanced_feedback_i%02f.RData",
+  "Triple balanced feedback"
+)
+
+stationary_niche <- read_stationary(
+  simulation_path,
+  "chatbot_triple_balanced_niche_i%02f.RData",
+  "Triple balanced niche"
+)
+
+stationary_balanced <- read_stationary(
+  simulation_path,
+  "chatbot_balanced_i%02f.RData",
+  "Balanced"
+)
+
+df <- bind_rows(
+  stationary_feedback,
+  stationary_niche,
+  stationary_balanced
+)
+
+my_colors <- c(
+  "Triple balanced feedback" = "#3A85A6",
+  "Triple balanced niche" = "#FC8644",
+  "Balanced" = "#C173C3"
+)
+
+my_shapes <- c(
+  "Triple balanced feedback" = 17,
+  "Triple balanced niche" = 15,
+  "Balanced" = 16
+)
+
+x_scale <- scale_x_continuous(
+  breaks = c(-0.6, -0.3, 0, 0.3, 0.6)
+)
+
+single_theme <- theme_classic() +
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_blank(),
+    plot.background = element_blank(),
+    legend.background = element_blank(),
+    legend.key = element_blank(),
+    panel.border = element_rect(
+      color = "black",
+      fill = NA,
+      linewidth = 1
+    ),
+    axis.title = element_text(size = 20),
+    axis.text = element_text(
+      size = 16,
+      color = "black"
+    ),
+    axis.title.x.bottom = element_text(
+      margin = margin(t = 8)
+    ),
+    legend.title = element_text(size = 18),
+    legend.text = element_text(size = 15),
+    legend.key.height = grid::unit(0.7, "cm"),
+    plot.title = element_text(
+      size = 18,
+      hjust = 0.5
     )
-}
+  )
 
-answers_feedback <- read_stationary(
-  simulation_path,
-  "chatbot_avg_feedback_i%02f.RData"
-) %>%
-  to_long()
-
-answers_niche <- read_stationary(
-  simulation_path,
-  "chatbot_niche_i%02f.RData"
-) %>%
-  to_long()
-
-line_width <- 1
-point_size <- 3.4
-color1 <- "#D55E00"
-
-make_plot <- function(
-    data,
-    variance_limit,
-    bias_limit,
-    reference_y = 1
-) {
-  
-  ggplot(
-    data,
+make_metric_plot <- function(metric, title, ylim = NULL) {
+  p <- ggplot(
+    df,
     aes(
       x = bias_i,
-      y = Value
+      y = .data[[metric]],
+      color = source,
+      shape = source
     )
   ) +
-    geom_hline(
-      data = data.frame(
-        Metric = factor(
-          c(
-            "Collective accuracy",
-            "Counterfactual human CI"
-          ),
-          levels = metric_order
-        ),
-        reference_y = c(
-          reference_y,
-          reference_y
-        )
-      ),
-      aes(
-        yintercept = reference_y
-      ),
-      linetype = "dashed",
-      linewidth = 0.8,
-      color = "#7E7E7E",
-      inherit.aes = FALSE
+    geom_line(linewidth = 1.2) +
+    geom_point(size = 5) +
+    x_scale +
+    scale_color_manual(
+      values = my_colors,
+      name = "Incentive"
     ) +
-    geom_line(
-      linewidth = line_width,
-      color = color1
-    ) +
-    geom_point(
-      size = point_size,
-      color = color1
-    ) +
-    facet_wrap(
-      ~ Metric,
-      ncol = 3,
-      scales = "free_y"
-    ) +
-    facetted_pos_scales(
-      y = list(
-        Metric == "Collective accuracy" ~
-          scale_y_continuous(
-            limits = c(0, 1),
-            breaks = c(0, 0.25, 0.5, 0.75, 1)
-          ),
-        
-        Metric == "Counterfactual human CI" ~
-          scale_y_continuous(
-            limits = c(0, 1),
-            breaks = c(0, 0.25, 0.5, 0.75, 1)
-          ),
-        
-        Metric == "Median reliance on AI" ~
-          scale_y_continuous(
-            limits = c(0, 1),
-            breaks = c(0, 0.25, 0.5, 0.75, 1)
-          ),
-        
-        Metric == "Collective variance" ~
-          scale_y_continuous(
-            limits = variance_limit
-          ),
-        
-        Metric == "Collective bias" ~
-          scale_y_continuous(
-            limits = bias_limit
-          ),
-        
-        Metric == "Interest Diversity" ~
-          scale_y_continuous(
-            limits = c(0, 51)
-          )
-      )
-    ) +
-    scale_x_continuous(
-      limits = c(-0.6, 0.6),
-      breaks = c(-0.6, -0.3, 0, 0.3, 0.6),
-      labels = c(
-        "-0.6",
-        "-0.3",
-        "0",
-        "0.3",
-        "0.6"
-      ),
-      expand = expansion(
-        mult = c(-0.03, 0.03)
-      )
+    scale_shape_manual(
+      values = my_shapes,
+      name = "Incentive"
     ) +
     labs(
       x = "Bias",
-      y = NULL
+      y = NULL,
+      title = title
     ) +
-    theme_classic(
-      base_family = "Arial",
-      base_size = 11
-    ) +
-    theme(
-      panel.grid = element_blank(),
-      panel.background = element_blank(),
-      plot.background = element_blank(),
-      panel.border = element_rect(
-        color = "black",
-        fill = NA,
-        linewidth = 0.65
-      ),
-      axis.title.x = element_text(
-        size = 12,
-        margin = margin(t = 6)
-      ),
-      axis.text = element_text(
-        size = 10,
-        color = "black"
-      ),
-      axis.ticks = element_line(
-        color = "black",
-        linewidth = 0.5
-      ),
-      strip.text = element_text(
-        size = 11.5,
-        family = "Arial"
-      ),
-      strip.background = element_blank(),
-      panel.spacing.x = grid::unit(
-        0.55,
-        "cm"
-      ),
-      panel.spacing.y = grid::unit(
-        0.45,
-        "cm"
-      ),
-      plot.margin = margin(4)
-    )
-}
-
-make_header <- function(label) {
+    single_theme
   
-  ggplot() +
-    annotate(
-      "text",
-      x = 0.5,
-      y = 0.5,
-      label = label,
-      size = 6.2,
-      family = "Arial",
-      fontface = "bold"
-    ) +
-    xlim(0, 1) +
-    ylim(0, 1) +
-    theme_void() +
-    theme(
-      panel.background = element_rect(
-        fill = "grey88",
-        color = NA
-      ),
-      plot.margin = margin(
-        0,
-        20,
-        6,
-        20
-      )
-    )
-}
-
-make_row_label <- function(
-    label,
-    aggregation
-) {
+  if (!is.null(ylim)) {
+    p <- p +
+      coord_cartesian(ylim = ylim)
+  }
   
-  ggplot() +
-    annotate(
-      "text",
-      x = 0.5,
-      y = 0.56,
-      label = label,
-      size = 5.3,
-      family = "Arial",
-      fontface = "bold"
-    ) +
-    annotate(
-      "text",
-      x = 0.5,
-      y = 0.43,
-      label = aggregation,
-      size = 4.3,
-      family = "Arial",
-      fontface = "bold"
-    ) +
-    xlim(0, 1) +
-    ylim(0, 1) +
-    theme_void() +
-    theme(
-      panel.background = element_rect(
-        fill = "grey88",
-        color = NA
-      ),
-      plot.margin = margin(
-        25,
-        16,
-        25,
-        8
-      )
-    )
+  p
 }
 
-plot_answers_feedback <- make_plot(
-  answers_feedback,
-  variance_limit = c(0, 1100),
-  bias_limit = c(0, 800),
-  reference_y = 1
+p_accuracy <- make_metric_plot(
+  "accuracy",
+  "Collective accuracy",
+  ylim = c(0, 1)
 )
 
-plot_answers_niche <- make_plot(
-  answers_niche,
-  variance_limit = c(0, 1100),
-  bias_limit = c(0, 800),
-  reference_y = 0
+p_hacc <- make_metric_plot(
+  "human_accuracy",
+  "Counterfactual human CI"
 )
 
-feedback_header <- make_header(
-  "Feedback"
+p_belief <- make_metric_plot(
+  "median_AI_belief",
+  "Median reliance on AI",
+  ylim = c(0, 1)
 )
 
-niche_header <- make_header(
-  "Niche-expert"
-)
-
-answers_label <- make_row_label(
-  "Chatbot AI",
-  "(Averaging)"
-)
-
-base_plot <- (
-  plot_spacer() +
-    feedback_header +
-    plot_spacer() +
-    niche_header +
-    
-    answers_label +
-    plot_answers_feedback +
-    plot_spacer() +
-    plot_answers_niche +
-    
-    plot_layout(
-      design = "
-      ABCD
-      EFGH
-      ",
-      widths = c(
-        0.25,
-        1,
-        0.015,
-        1
-      ),
-      heights = c(
-        0.12,
-        1
-      )
-    )
+p_combined <- (
+  p_accuracy | p_hacc | p_belief
 ) +
-  plot_annotation(
-    theme = theme(
-      plot.background = element_rect(
-        fill = "white",
-        color = NA
-      ),
-      plot.margin = margin(0)
-    )
+  plot_layout(
+    guides = "collect",
+    axis_titles = "collect_x"
+  ) &
+  theme(
+    legend.position = "right"
   )
 
 ggsave(
   here("Figures", "Supplementary figure 9.pdf"),
-  base_plot,
-  width = 18,
-  height = 5.5,
-  device = grDevices::cairo_pdf,
+  p_combined,
+  width = 13,
+  height = 4.5,
   units = "in",
+  device = grDevices::cairo_pdf,
   bg = "white"
 )

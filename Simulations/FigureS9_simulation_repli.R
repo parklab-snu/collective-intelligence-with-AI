@@ -8,7 +8,7 @@ source(
   local = Chatbot_AI_triple
 )
 
-out_dir <- file.path(project_path, "Simulations", "FigureS10_simulation")
+out_dir <- file.path(project_path, "Simulations", "FigureS9_simulation")
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
 #=========================================================================
@@ -45,6 +45,8 @@ for(i in bias_list){
     
     filename <- sprintf("chatbot_triple_balanced_feedback_i%02f_r%02d.RData", i, r)
     filepath <- file.path(out_dir, filename)
+    
+    save(i, bias_i, AI_error_sd, AI_accuracy, Result, file = filepath)
   }
 }
 

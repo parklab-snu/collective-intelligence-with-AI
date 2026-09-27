@@ -11,6 +11,8 @@ compute_p_revised_vec <- function(interest, belief, AI_belief, alpha) {
 
 # Compute the payoff of the single player.
 # supports Balanced, Triple balanced niche, and Triple balanced feedback payoffs.
+# Compute the payoff of the single player.
+# supports Balanced, Unrevised balanced, and Combined balanced payoffs.
 compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, B_bar, alpha, sigma, bias, AI_error_sd,
                                payoff_type, agg_type, C_const, N) {
   k <- players[i, 1] + 1
@@ -42,26 +44,36 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
     expr <- expr - 2 * alpha[1] * beta_i * bias_e
   }
   
+  revised_niche <- first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e
+  revised_feedback <- -rho_i * expr
+  
+  belief_i <- players[i, 2]
+  unrevised_niche <- -rho_i*((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2)
+  
+  q     <- p_i - alpha[k]               # p - alpha_e
+  gamma <- 1 - beta_i                   # 1 - beta
+  if (k == 1) {
+    ft <- q * delta_0 * sigma_e^2       # sigma_1^2 = 1
+  } else {
+    ft <- q * (alpha_e - mu_e) * sigma_e^2
+  }
+  
+  unrevised_feedback <- ft - gamma * bias_e * delta_0 + beta_i * gamma * AI_error_sd^2 / count_e
+  
+  balanced <- (revised_feedback + revised_niche)/2
+  unrevised_balanced <- (unrevised_feedback + unrevised_niche)/2
+  
   if (payoff_type == "Balanced"){
-    {(-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/2
+    balanced
     
-  } else if (payoff_type == "Triple balanced niche"){
-    belief_i <- players[i, 2]
+  } else if (payoff_type == "Unrevised balanced"){
+    unrevised_balanced
     
-    {-rho_i*((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2) + (-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/3
-    
-  } else if (payoff_type == "Triple balanced feedback"){
-    q     <- p_i - alpha[k]               # p - alpha_e
-    gamma <- 1 - beta_i                   # 1 - beta
-    if (k == 1) {
-      ft <- q * delta_0 * sigma_e^2       # sigma_1^2 = 1
-    } else {
-      ft <- q * (alpha_e - mu_e) * sigma_e^2
-    }
-    
-    {(ft - gamma * bias_e * delta_0 + beta_i * gamma * AI_error_sd^2 / count_e) + (-rho_i * expr) + (first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e)}/3
+  } else if (payoff_type == "Combined balanced"){
+    (balanced + unrevised_balanced)/2
   }
 }
+
 
 # Update the cluster values based on one step increments (deltas)
 # For the efficient tracking of multiple scalar values, we used incremental approach instead of computing all the metric for each step.

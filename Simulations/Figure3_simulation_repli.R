@@ -14,7 +14,7 @@ source(
   local = Omniscient_AI
 )
 
-out_dir <- file.path(project_path, "Simulations", "Figure3_simulation")
+out_dir <- file.path(project_path, "Simulations", "Figure3_simulation_0927")
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
 #=========================================================================
