@@ -47,14 +47,14 @@ read_stationary <- function(path, filename, source) {
 
 stationary_feedback <- read_stationary(
   simulation_path,
-  "chatbot_triple_balanced_feedback_i%02f.RData",
-  "Triple balanced feedback"
+  "chatbot_unrevised_balanced_i%02f.RData",
+  "Unrevised balanced"
 )
 
 stationary_niche <- read_stationary(
   simulation_path,
-  "chatbot_triple_balanced_niche_i%02f.RData",
-  "Triple balanced niche"
+  "chatbot_combined_balanced_i%02f.RData",
+  "Combined balanced"
 )
 
 stationary_balanced <- read_stationary(
@@ -70,14 +70,14 @@ df <- bind_rows(
 )
 
 my_colors <- c(
-  "Triple balanced feedback" = "#3A85A6",
-  "Triple balanced niche" = "#FC8644",
+  "Unrevised balanced" = "#3A85A6",
+  "Combined balanced" = "#FC8644",
   "Balanced" = "#C173C3"
 )
 
 my_shapes <- c(
-  "Triple balanced feedback" = 17,
-  "Triple balanced niche" = 15,
+  "Unrevised balanced" = 17,
+  "Combined balanced" = 15,
   "Balanced" = 16
 )
 
@@ -125,7 +125,7 @@ make_metric_plot <- function(metric, title, ylim = NULL) {
     )
   ) +
     geom_line(linewidth = 1.2) +
-    geom_point(size = 5) +
+    geom_point(size = 4.8) +
     x_scale +
     scale_color_manual(
       values = my_colors,
@@ -179,7 +179,7 @@ p_combined <- (
   )
 
 ggsave(
-  here("Figures", "Supplementary figure 9.pdf"),
+  here("Figures", "Supplementary figure 9_new.pdf"),
   p_combined,
   width = 13,
   height = 4.5,

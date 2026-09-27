@@ -10,10 +10,8 @@ compute_p_revised_vec <- function(interest, belief, AI_belief, alpha) {
 }
 
 # Compute the payoff of the single player.
-# supports Balanced, Triple balanced niche, and Triple balanced feedback payoffs.
-# Compute the payoff of the single player.
 # supports Balanced, Unrevised balanced, and Combined balanced payoffs.
-compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, B_bar, alpha, sigma, bias, AI_error_sd,
+compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count, cluster_mean, cluster_human_mean, B_bar, alpha, sigma, bias, AI_error_sd,
                                payoff_type, agg_type, C_const, N) {
   k <- players[i, 1] + 1
   alpha_e <- alpha[k]
@@ -44,21 +42,12 @@ compute_payoff_one <- function(i, players, p_revised, cluster_sum, cluster_count
     expr <- expr - 2 * alpha[1] * beta_i * bias_e
   }
   
-  revised_niche <- first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e
-  revised_feedback <- -rho_i * expr
+  revised_niche <- -rho_i * expr
+  revised_feedback <- first_term + beta_i * bias_e * delta_0 - beta_i^2 * AI_error_sd^2 / count_e
   
   belief_i <- players[i, 2]
-  unrevised_niche <- -rho_i*((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2)
-  
-  q     <- p_i - alpha[k]               # p - alpha_e
-  gamma <- 1 - beta_i                   # 1 - beta
-  if (k == 1) {
-    ft <- q * delta_0 * sigma_e^2       # sigma_1^2 = 1
-  } else {
-    ft <- q * (alpha_e - mu_e) * sigma_e^2
-  }
-  
-  unrevised_feedback <- ft - gamma * bias_e * delta_0 + beta_i * gamma * AI_error_sd^2 / count_e
+  unrevised_niche <- -rho_i*((belief_i^2 - 2 * belief_i * alpha_e) * sigma_e^2 + C_const)
+  unrevised_feedback <- belief_i * (alpha_e - cluster_human_mean[k]) * sigma_e^2
   
   balanced <- (revised_feedback + revised_niche)/2
   unrevised_balanced <- (unrevised_feedback + unrevised_niche)/2
@@ -245,9 +234,9 @@ main_opt <- function(m, alpha, sigma, N, players, G, bias, AI_error_sd, agg_type
     state_changed <- FALSE
     if (r1 >= mu) {
       # compute payoff of two players
-      payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
+      payoff_A <- compute_payoff_one(A, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$cluster_human_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
                                      payoff_type, agg_type, C_const, N)
-      payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
+      payoff_B <- compute_payoff_one(B, players, p_revised, state$cluster_sum, state$cluster_count, state$cluster_mean, state$cluster_human_mean, state$B_bar, alpha, sigma, bias, AI_error_sd,
                                      payoff_type, agg_type, C_const, N)
       
       p_imitate <- 1 / (1 + exp(s * (payoff_A - payoff_B)))

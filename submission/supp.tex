@@ -358,7 +358,7 @@ Y - \hat{Y}^{re} &= \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta},
 where $\delta_0$ represents the remaining error in the intercept, whereas $\delta_i$ represents the remaining error associated with factor $i$. 
 Because the causal factors and stochastic AI errors are independent and have zero mean, cross terms vanish when the expectation is taken. Substituting the revised individual prediction and collective residual into the feedback payoff gives
 \begin{align}
-\mathbb{E}(\pi_A)
+\mathbb{E}[\pi_A]
 &= \mathbb{E}[Y_A^{re}(Y - \hat{Y}^{re})] \\
 &= \mathbb{E}\left[\left\{\beta_A \alpha_0 + \beta_A \sum_{i = 1}^{M} \alpha_i X_i + \beta_A B  + \beta_A \epsilon) + (1 - \beta_A)c_AX_{e_A}\right\}\right.\\
 &\times \left.\left\{\delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}\right\}\right] \\
@@ -373,7 +373,7 @@ Under the niche-expert structure, the payoff is the negative squared error of th
 Because $X_0=1$, a player with $e_A=0$ makes a constant initial prediction. 
 In this case, the expected payoff is:
 \begin{align}
-\mathbb{E}(\pi_A)
+\mathbb{E}[\pi_A]
 &= -\mathbb{E}[\rho_{0}(Y_A^{re} - Y)^2] \\
 &= -\mathbb{E}\left[\rho_{0}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A \right\}^2\right] \\[6pt]
 &= -\mathbb{E}\left[\rho_{0}\left\{(\beta_A - 1)(\alpha_0- c_A) + \beta_A B + (\beta_A - 1)\sum_{i=1}^{M} \alpha_i X_i + \beta_A \epsilon\right\}^2\right] \\[6pt]
@@ -382,7 +382,7 @@ In this case, the expected payoff is:
 \end{align}
 For a player with $e_A\neq0$, the initial prediction instead depends on the observed value of factor $X_{e_A}$. The expected payoff is therefore:
 \begin{align}
-\mathbb{E}(\pi_A)
+\mathbb{E}[\pi_A]
 &= -\mathbb{E}[\rho_{e_A}(Y_A^{re} - Y)^2] \\
 &= -\mathbb{E}\left[\rho_{e_A}\left\{(\beta_A - 1)Y + \beta_A B + \beta_A \epsilon + (1-\beta_A)c_A X_{e_A} \right\}^2\right] \\
 &= -\mathbb{E}\Bigg[\rho_{e_A}\bigg\{(\beta_A -1 )\alpha_0 + \beta_A B \\
@@ -400,8 +400,8 @@ Direct incentives add the term $\lambda\beta_A$ to either the feedback or niche-
 Because this term is fixed conditional on the player's strategy, its expectation is simply $\lambda\beta_A$. 
 The expected payoffs therefore become
 \begin{align}
-\mathbb{E}(\pi_{A, \textrm{Feedback}})&=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A,\\
-\mathbb{E}(\pi_{A, \textrm{Niche-expert}}) &= \mathbb{E}\left[-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
+\mathbb{E}[\pi_{A, \textrm{Feedback}}]&=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right] = \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A,\\
+\mathbb{E}[\pi_{A, \textrm{Niche-expert}}] &= \mathbb{E}\left[-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] = -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
 \end{align}
 Thus, a positive value of $\lambda$ increases the payoff of strategies with greater reliance on AI, whereas a negative value favors strategies with lower reliance.
 
@@ -487,7 +487,7 @@ Y - \hat{Y}^{re} &= \delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta},
 where $\delta_0$ includes the remaining error in the intercept and the total additive AI bias, whereas $\delta_i$ measures the remaining error in the coefficient of factor $i$. 
 Because the causal factors and stochastic errors are independent and have zero mean, substituting the revised individual prediction into the feedback payoff gives
 \begin{align}
-\mathbb{E}(\pi_A)
+\mathbb{E}[\pi_A]
 &= \mathbb{E}[Y_A^{re}(Y - \hat{Y}^{re})] \\
 &= \mathbb{E}\left[\left\{\left(\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right)X_{e_A} + \beta_Ab_{e_A} + \beta_A\epsilon\right\}\right.\\
 &\times \left. \left\{\delta_0 + \sum_{i = 1}^{M}\delta_iX_i - \bar{\eta}\right\}\right] \\
@@ -501,7 +501,7 @@ Under the niche-expert structure, the negative squared error of each revised ind
 We consider $e_A=0$ separately because these players make constant predictions rather than factor-dependent predictions. 
 When $e_A=0$, the expected payoff is
 \begin{align}
-\mathbb{E}(\pi_A)
+\mathbb{E}[\pi_A]
 &= -\mathbb{E}[\rho_{0}(Y_A^{re} - Y)^2] \\
 &= -\mathbb{E}\left[\rho_{0}\left[\left\{\beta_A\alpha_0 + (1-\beta_A)c_A\right\} + \beta_Ab_0 + \beta_A\epsilon - \alpha_0 - \sum_{i = 1}^{M}\alpha_iX_i\right]^2\right] \\[6pt]
 &= -\rho_{0}\Bigl\{(1-\beta_A)^2(c_A - \alpha_0)^2 + 2(1-\beta_A)(c_A - \alpha_0)\beta_Ab_0 + \beta_A^2 b_0^2 \\
@@ -509,7 +509,7 @@ When $e_A=0$, the expected payoff is
 \end{align}
 When $e_A\neq0$, the player's prediction varies with their focal causal factor. The expected payoff is then
 \begin{align}
-\mathbb{E}(\pi_A)
+\mathbb{E}[\pi_A]
 &= -\mathbb{E}[\rho_{e_A}(Y_A^{re} - Y)^2] \\
 &= -\mathbb{E}\left[\rho_{e_A}\left[\left\{\beta_A\alpha_{e_A} + (1-\beta_A)c_A\right\} X_{e_A}\right.\right.\\
 &\left.\left.+ \beta_Ab_{e_A} + \beta_A\epsilon - \alpha_0 - \sum_{i = 1}^{M}\alpha_iX_i\right]^2\right] \\
@@ -523,9 +523,9 @@ The niche-expert weight $\rho_{e_A}$ scales these errors according to the freque
 
 Directly incentivizing or penalizing AI use adds the term $\lambda\beta_A$ to the player's payoff. Because this term is fixed conditional on the player's strategy, it can be taken outside the expectation. The expected payoffs are therefore
 \begin{align}
-\mathbb{E}(\pi_{A, Feedback}) &=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right]\\
+\mathbb{E}[\pi_{A, Feedback}] &=\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\right]\\
 &= \mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] + \lambda\beta_A,\\
-\mathbb{E}(\pi_{A, Niche-expert}) &= \mathbb{E}\left[-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] \\
+\mathbb{E}[\pi_{A, Niche-expert}] &= \mathbb{E}\left[-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A\right] \\
 &= -\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right] + \lambda\beta_A.
 \end{align}
 
@@ -533,13 +533,34 @@ Directly incentivizing or penalizing AI use adds the term $\lambda\beta_A$ to th
 
 Under the balanced structure, the payoff corresponds to the weighted mean of the feedback and niche-expert payoff components, with balancing weight $w$:
 \begin{align}
-\mathbb{E}(\pi_{A})&=\mathbb{E}\left[(1-w)Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - w\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]\\
+\mathbb{E}[\pi_{A}]&=\mathbb{E}\left[(1-w)Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) - w\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]\\
 &= (1-w)\mathbb{E}\left[Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})\right] - w\mathbb{E}\left[\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2\right]
 \end{align}
 The expected payoff under the balanced structure can therefore be calculated directly from the feedback and niche-expert payoffs derived above.
 
-\subsubsection*{Triple balanced}
+\subsubsection*{Unrevised balanced}
 
+The unrevised feedback and niche-expert components are identical to those in the model without AI assistance \citep{wang2025individual}. We therefore calculate their expected payoffs following the derivations in the original model and take their arithmetic mean:
+\begin{align}
+\mathbb{E}[\pi_A]
+&= \frac{1}{2}\mathbb{E}\left[Y_A(Y-\hat{Y})-\rho_{e_A}(Y_A-Y)^2\right].
+\end{align}
+
+\subsubsection*{Combined balanced}
+
+Under the combined balanced structure, the payoff is the arithmetic mean of the balanced and unrevised balanced payoffs, with $w=0.5$ for both balanced components. Its expected payoff is therefore
+\begin{align}
+\mathbb{E}[\pi_A]
+&= \frac{1}{4}\mathbb{E}\left[
+Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})
+-\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2
+\right.\\
+&\qquad\left.
++Y_A(Y-\hat{Y})
+-\rho_{e_A}(Y_A-Y)^2
+\right].
+\end{align}
+The expected payoff under the combined balanced structure can therefore be calculated directly from the revised and unrevised feedback and niche-expert payoffs derived above.
 \subsection*{Expected accuracy}
 
 Finally, we derive the expected collective accuracy under clustering aggregation. The intercept $\alpha_0$ serves as the baseline prediction. 
@@ -781,9 +802,44 @@ Hence,
 and consequently the stationary collective accuracy satisfies $R^*<1$.
 Thus, the niche-expert structure preserves interest diversity and allows the population to outperform AI, but averaging prevents the population from reaching perfect collective accuracy.
 
-\section*{Incentive structure incorproating unrevised predictions}
+\section*{AI models under alternative aggregation rules}
 
-\section*{Different }
+In the main analysis, we assume that collective predictions under the omniscient AI and chatbot AI models are generated using averaging and clustering aggregation, respectively.
+However, the aggregation rules can, in principle, be swapped between the two AI models.
+To examine the consequences of these alternative combinations, we investigate their behavior through mathematical derivation and simulation.
+
+\subsection*{Omniscient AI with clustering aggregation}
+
+Under clustering aggregation, the collective prediction based on individual predictions revised by the omniscient AI can be written as
+\begin{align}
+\hat{Y}^{re}
+&= \sum_{i \in \mathcal{I}}\frac{1}{n_i}\sum_{A \in \mathcal{A}_i}Y_A^{re}\\
+&= \sum_{i \in \mathcal{I}}\frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left\{\beta_AY_A^{AI} + (1-\beta_A)Y_A\right\}\\
+&= \sum_{i \in \mathcal{I}}\frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\left[\beta_A(Y+B+\epsilon_A) + (1-\beta_A)c_AX_{e_A}\right],
+\end{align}
+where $\mathcal{A}_i$ is the set of players interested in factor $i$, $n_i=|\mathcal{A}_i|$ is the number of players in that set, and $\mathcal{I}=\{i\in\{0,\ldots,M\}:n_i>0\}$ is the set of represented interests.
+
+To simplify the collective prediction, we define the effective human coefficient, mean AI reliance, and stochastic AI error associated with each interest group:
+\begin{align}
+c^{agg}_i &= \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}(1-\beta_A)c_A,\\
+\bar{\beta}_i &= \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_A,\\
+\beta^{agg} &= \sum_{i \in \mathcal{I}}\bar{\beta}_i,\\
+\tilde{\eta}_i &= \frac{1}{n_i}\sum_{A \in \mathcal{A}_i}\beta_A\epsilon_A,\\
+\bar{\eta} &= \sum_{i \in \mathcal{I}}\tilde{\eta}_i.
+\end{align}
+Thus, the collective prediction can be written as
+\begin{equation}
+\hat{Y}^{re}
+= \sum_{i\in\mathcal{I}}c^{agg}_iX_i
++ \beta^{agg}(Y+B)
++ \bar{\eta}.
+\end{equation}
+
+Because individual reliance on AI, $\beta_A$, is initialized independently from $U(0,1)$, the expected initial value of $\beta^{agg}$ is $|\mathcal{I}|/2$. When all $M+1$ interests are represented, this becomes $(M+1)/2$.
+Thus, clustering aggregation incorporates the omniscient AI prediction repeatedly across interest groups, scaling its contribution to the collective prediction by a factor of approximately $(M+1)/2$ at initialization.
+For a large number of factors, such as $M=50$, this produces an unrealistically large contribution of the AI prediction to the collective prediction.
+This problem arises from a structural mismatch between the omniscient AI model and clustering aggregation: the omniscient AI predicts the entire outcome $Y$, whereas clustering aggregation is designed to aggregate factor-specific contributions separately across interest groups.
+
 
 \pagebreak
 
