@@ -31,13 +31,13 @@ mean_delta <- rowMeans(abs_delta, na.rm = TRUE)
 accuracy <- Result$accuracy
 
 mean_delta_df <- data.frame(
-  Generation = seq(0, 200000, length.out = 100),
-  mean_abs_delta = mean_delta[1:100]
+  Generation = seq(1000, 200000, by = 1000),
+  mean_abs_delta = mean_delta
 )
 
 accuracy_df <- data.frame(
-  Generation = 0:200000,
-  accuracy = Result$accuracy[1:200001]
+  Generation = 1:200000,
+  accuracy = Result$accuracy[1:200000]
 )
 
 common_theme <- theme_classic(

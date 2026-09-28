@@ -4,8 +4,8 @@ project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-
 Chatbot_AI_triple <- new.env()
 
 source(
-  file.path(project_path, "Functions", "Chatbot_AI_triple_balanced.R"),
-  local = Chatbot_AI_triple
+  file.path(project_path, "Functions", "Chatbot_AI_combined_balanced.R"),
+  local = Chatbot_AI_combined
 )
 
 out_dir <- file.path(project_path, "Simulations", "FigureS9_simulation")
@@ -37,7 +37,7 @@ for(i in bias_list){
   AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
   
-  Result<- Chatbot_AI_triple$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Unrevised balanced')
+  Result<- Chatbot_AI_combined$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Unrevised balanced')
   
   filename <- sprintf("chatbot_unrevised_balanced_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)
@@ -68,7 +68,7 @@ for(i in bias_list){
   AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
   
-  Result<- Chatbot_AI_triple$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Combined balanced')
+  Result<- Chatbot_AI_combined$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Combined balanced')
   
   filename <- sprintf("chatbot_combined_balanced_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)
@@ -99,7 +99,7 @@ for(i in bias_list){
   AI_accuracy <- 1- (sum(bias_i)^2 + AI_error_sd^2)/denom
   cat("Accuracy:", AI_accuracy, "\n")
   
-  Result<- Chatbot_AI_triple$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced')
+  Result<- Chatbot_AI_combined$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced')
   
   filename <- sprintf("chatbot_balanced_i%02f.RData", i)
   filepath <- file.path(out_dir, filename)

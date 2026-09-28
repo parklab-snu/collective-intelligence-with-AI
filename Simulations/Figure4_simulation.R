@@ -1,58 +1,693 @@
-#Set your project path
-project_path <- "C:/Users/glaucous_winged_gull/Desktop/2026_Park_lab/Collective-intelligence-with-AI"
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("patchwork")) install.packages("patchwork")
+if (!require("here")) install.packages("here")
 
-Chatbot_AI <- new.env()
-  
-source(
-  file.path(project_path, "Functions", "Chatbot_AI.R"),
-  local = Chatbot_AI
-)
-
-out_dir <- file.path(project_path, "Simulations", "Figure4_simulation")
-if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(here)
 
 #=========================================================================
-#Clustering aggregation
-set.seed(42)  
-m <- 50
-alpha <- seq(5, -5, length = 51)
-sigma <- runif(m, min = 0, max = 3)
-sigma <- c(1, sigma)
-N <- 10000
-G <- 200000
-belief <- rnorm(N, mean = 0, sd = 5)
-#Sample initial interest (SRS form 0 to 50)
-interest <- sample(0:m, size = N, replace = TRUE)
-#Sample initial AI belief
-AI_belief <- runif(N, min = 0, max = 1)
-#AI_belief <- rep(1, N)
-#Build player
-players <- cbind(interest, belief, AI_belief)
+# Basic settings
+#=========================================================================
 
-bias_i <- rep(0.4, m+1)
-AI_error_sd <- 0.3
+n_rep <- 30
 
-#Chatbot AI under feedback structure
-Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Feedback')
+incentive_order <- c(
+  "Feedback",
+  "Niche-expert",
+  "Balanced"
+)
 
-filename <- sprintf("chatbot_feedback_0.4.RData")
-filepath <- file.path(out_dir, filename)
+incentive_colors <- c(
+  "Feedback" = "#3381a3",
+  "Niche-expert" = "#fc8644",
+  "Balanced" = "#c273c3"
+)
 
-save(Result, file = filepath)
+#=========================================================================
+# Read all 30 replicates for trajectory plots
+#=========================================================================
 
+read_trajectory_replicates <- function(prefix, incentive) {
+  
+  bind_rows(lapply(1:n_rep, function(r) {
+    
+    filename <- sprintf(
+      paste0(prefix, "_0.4_r%02d.RData"),
+      r
+    )
+    
+    env <- new.env()
+    
+    load(
+      here(
+        "Simulations",
+        "Figure4_simulation",
+        filename
+      ),
+      envir = env
+    )
+    
+    result <- env$Result
+    
+    data.frame(
+      Generation = seq_along(result$accuracy),
+      accuracy = result$accuracy,
+      human_accuracy = result$human_accuracy,
+      Incentive = incentive,
+      Replicate = r
+    )
+  }))
+}
 
-#Chatbot AI under niche-expert structure
-Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Niche expert')
+feedback_trajectory <- read_trajectory_replicates(
+  "chatbot_feedback",
+  "Feedback"
+)
 
-filename <- sprintf("chatbot_niche_0.4.RData")
-filepath <- file.path(out_dir, filename)
+niche_trajectory <- read_trajectory_replicates(
+  "chatbot_niche",
+  "Niche-expert"
+)
 
-save(Result, file = filepath)
+balanced_trajectory <- read_trajectory_replicates(
+  "chatbot_balanced",
+  "Balanced"
+)
 
-#Chatbot AI under balanced structure
-Result <- Chatbot_AI$main_opt(m, alpha, sigma, N, players, G, bias_i, AI_error_sd, agg_type = 'clustering', payoff_type = 'Balanced')
+df_trajectory_raw <- bind_rows(
+  feedback_trajectory,
+  niche_trajectory,
+  balanced_trajectory
+)
 
-filename <- sprintf("chatbot_balanced_0.4.RData")
-filepath <- file.path(out_dir, filename)
+#=========================================================================
+# Calculate generation-wise median and 2.5–97.5 percentile
+#=========================================================================
 
-save(Result, file = filepath)
+df_trajectory <- df_trajectory_raw %>%
+  group_by(
+    Generation,
+    Incentive
+  ) %>%
+  summarise(
+    accuracy = median(
+      accuracy,
+      na.rm = TRUE
+    ),
+    accuracy_lower = quantile(
+      accuracy,
+      0.025,
+      na.rm = TRUE
+    ),
+    accuracy_upper = quantile(
+      accuracy,
+      0.975,
+      na.rm = TRUE
+    ),
+    human_accuracy = median(
+      human_accuracy,
+      na.rm = TRUE
+    ),
+    human_accuracy_lower = quantile(
+      human_accuracy,
+      0.025,
+      na.rm = TRUE
+    ),
+    human_accuracy_upper = quantile(
+      human_accuracy,
+      0.975,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Incentive = factor(
+      Incentive,
+      levels = incentive_order
+    )
+  )
+
+#=========================================================================
+# Trajectory plot theme
+#=========================================================================
+
+trajectory_theme <- theme_classic(
+  base_family = "Arial",
+  base_size = 24
+) +
+  theme(
+    axis.line = element_blank(),
+    panel.background = element_rect(
+      fill = "white",
+      color = "black",
+      linewidth = 1.2
+    ),
+    panel.border = element_blank(),
+    axis.title.x = element_text(
+      size = 28,
+      margin = margin(t = 14)
+    ),
+    axis.title.y = element_text(
+      size = 28,
+      margin = margin(r = 14)
+    ),
+    axis.text = element_text(
+      size = 23,
+      color = "black"
+    ),
+    axis.ticks = element_line(
+      color = "black",
+      linewidth = 1
+    ),
+    axis.ticks.length = grid::unit(0.22, "cm"),
+    legend.position = "bottom",
+    legend.title = element_text(
+      size = 20,
+      face = "bold"
+    ),
+    legend.text = element_text(
+      size = 20
+    ),
+    legend.key.width = grid::unit(
+      2.1,
+      "cm"
+    ),
+    legend.spacing.x = grid::unit(
+      0.5,
+      "cm"
+    ),
+    legend.margin = margin(t = 12),
+    legend.key = element_blank(),
+    legend.background = element_blank(),
+    legend.box.background = element_blank()
+  )
+
+#=========================================================================
+# Function for trajectory plots
+#=========================================================================
+
+make_trajectory <- function(
+    variable,
+    y_label,
+    y_breaks,
+    y_limits
+) {
+  
+  lower_var <- paste0(
+    variable,
+    "_lower"
+  )
+  
+  upper_var <- paste0(
+    variable,
+    "_upper"
+  )
+  
+  ggplot(
+    df_trajectory,
+    aes(
+      x = Generation,
+      y = .data[[variable]],
+      color = Incentive,
+      fill = Incentive,
+      group = Incentive
+    )
+  ) +
+    geom_ribbon(
+      aes(
+        ymin = .data[[lower_var]],
+        ymax = .data[[upper_var]]
+      ),
+      alpha = 0.20,
+      color = NA
+    ) +
+    geom_line(
+      linewidth = 2.2,
+      lineend = "round"
+    ) +
+    scale_color_manual(
+      values = incentive_colors,
+      breaks = incentive_order
+    ) +
+    scale_fill_manual(
+      values = incentive_colors,
+      breaks = incentive_order
+    ) +
+    scale_x_continuous(
+      breaks = c(
+        0,
+        100000,
+        200000
+      ),
+      labels = c(
+        0,
+        10,
+        20
+      ),
+      limits = c(
+        0,
+        200000
+      ),
+      expand = expansion(
+        mult = c(
+          0,
+          0.005
+        )
+      )
+    ) +
+    scale_y_continuous(
+      breaks = y_breaks,
+      limits = y_limits,
+      expand = expansion(
+        mult = c(
+          0,
+          0
+        )
+      )
+    ) +
+    labs(
+      x = expression(
+        Generation~"(" * "\u00D7" * 10^4 * ")"
+      ),
+      y = y_label,
+      color = "Incentive",
+      fill = "Incentive"
+    ) +
+    guides(
+      color = guide_legend(
+        nrow = 1,
+        byrow = TRUE,
+        title.position = "left",
+        override.aes = list(
+          linewidth = 2.5
+        )
+      ),
+      fill = "none"
+    ) +
+    trajectory_theme
+}
+
+#=========================================================================
+# A and B: median trajectory + 2.5–97.5 percentile ribbon
+#=========================================================================
+
+trajectory_accuracy <- make_trajectory(
+  "accuracy",
+  "Collective accuracy",
+  c(
+    0.0,
+    0.5,
+    1.0
+  ),
+  c(
+    -0.05,
+    1.05
+  )
+)
+
+trajectory_human <- make_trajectory(
+  "human_accuracy",
+  "Counterfactual human CI",
+  c(
+    0.0,
+    0.5,
+    1.0
+  ),
+  c(
+    -0.05,
+    1.05
+  )
+)
+
+trajectory_row <- trajectory_accuracy +
+  trajectory_human +
+  plot_layout(
+    ncol = 2,
+    guides = "collect",
+    axis_titles = "collect_x"
+  ) &
+  theme(
+    legend.position = "bottom"
+  )
+
+#=========================================================================
+# Read replicate 1 for scatter plots
+#=========================================================================
+
+feedback_env <- new.env()
+niche_env <- new.env()
+balanced_env <- new.env()
+
+load(
+  here(
+    "Simulations",
+    "Figure4_simulation",
+    "chatbot_feedback_0.4_r01.RData"
+  ),
+  envir = feedback_env
+)
+
+load(
+  here(
+    "Simulations",
+    "Figure4_simulation",
+    "chatbot_niche_0.4_r01.RData"
+  ),
+  envir = niche_env
+)
+
+load(
+  here(
+    "Simulations",
+    "Figure4_simulation",
+    "chatbot_balanced_0.4_r01.RData"
+  ),
+  envir = balanced_env
+)
+
+feedback_result <- feedback_env$Result
+niche_result <- niche_env$Result
+balanced_result <- balanced_env$Result
+
+#=========================================================================
+# Extract final-state population from replicate 1
+#=========================================================================
+
+feedback_players <- as.data.frame(
+  feedback_result$players_intime[200, , ]
+)
+
+niche_players <- as.data.frame(
+  niche_result$players_intime[200, , ]
+)
+
+balanced_players <- as.data.frame(
+  balanced_result$players_intime[200, , ]
+)
+
+median_reliance_feedback <- feedback_result$median_AI_belief[200000]
+median_reliance_niche <- niche_result$median_AI_belief[200000]
+median_reliance_balanced <- balanced_result$median_AI_belief[200000]
+
+#=========================================================================
+# Scatter plot theme
+#=========================================================================
+
+scatter_theme <- theme_classic(
+  base_family = "Arial",
+  base_size = 23
+) +
+  theme(
+    panel.background = element_rect(
+      fill = "white",
+      color = "black",
+      linewidth = 1.2
+    ),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    axis.title.x = element_text(
+      size = 28,
+      margin = margin(t = 12)
+    ),
+    axis.title.y = element_text(
+      size = 28,
+      margin = margin(r = 12)
+    ),
+    axis.text = element_text(
+      size = 22,
+      color = "black"
+    ),
+    axis.ticks = element_line(
+      color = "black",
+      linewidth = 1.1
+    ),
+    axis.ticks.length = grid::unit(
+      0.24,
+      "cm"
+    ),
+    plot.title = element_text(
+      size = 28,
+      face = "bold",
+      hjust = 0.5,
+      margin = margin(b = 10)
+    )
+  )
+
+#=========================================================================
+# Belief scatter plot
+#=========================================================================
+
+make_belief_plot <- function(
+    data,
+    incentive,
+    y_label
+) {
+  
+  ggplot(
+    data,
+    aes(
+      x = V1,
+      y = V2
+    )
+  ) +
+    geom_point(
+      size = 2.4,
+      color = incentive_colors[incentive],
+      alpha = 0.3
+    ) +
+    geom_abline(
+      intercept = 5,
+      slope = -0.2,
+      linetype = "dashed",
+      linewidth = 2,
+      color = "black"
+    ) +
+    scale_x_continuous(
+      limits = c(
+        0,
+        50
+      ),
+      breaks = c(
+        0,
+        25,
+        50
+      ),
+      expand = expansion(
+        add = 1.5
+      )
+    ) +
+    scale_y_continuous(
+      limits = c(
+        -16,
+        16
+      ),
+      breaks = c(
+        -15,
+        0,
+        15
+      ),
+      expand = expansion(
+        add = 1
+      )
+    ) +
+    labs(
+      title = incentive,
+      x = NULL,
+      y = y_label
+    ) +
+    scatter_theme
+}
+
+#=========================================================================
+# AI reliance scatter plot
+#=========================================================================
+
+make_reliance_plot <- function(
+    data,
+    incentive,
+    median_reliance,
+    y_label
+) {
+  
+  ggplot(
+    data,
+    aes(
+      x = V1,
+      y = V3
+    )
+  ) +
+    geom_point(
+      size = 2.4,
+      color = incentive_colors[incentive],
+      alpha = 0.3
+    ) +
+    geom_hline(
+      yintercept = median_reliance,
+      linetype = "dashed",
+      linewidth = 2,
+      color = "black"
+    ) +
+    scale_x_continuous(
+      limits = c(
+        0,
+        50
+      ),
+      breaks = c(
+        0,
+        25,
+        50
+      ),
+      expand = expansion(
+        add = 1.5
+      )
+    ) +
+    scale_y_continuous(
+      limits = c(
+        0,
+        1
+      ),
+      breaks = c(
+        0,
+        0.5,
+        1
+      ),
+      labels = c(
+        "0.0",
+        "0.5",
+        "1.0"
+      ),
+      expand = expansion(
+        add = 0.04
+      )
+    ) +
+    labs(
+      x = "Interest",
+      y = y_label
+    ) +
+    scatter_theme
+}
+
+#=========================================================================
+# C–E: Belief
+#=========================================================================
+
+belief_feedback <- make_belief_plot(
+  feedback_players,
+  "Feedback",
+  "Belief"
+)
+
+belief_niche <- make_belief_plot(
+  niche_players,
+  "Niche-expert",
+  NULL
+)
+
+belief_balanced <- make_belief_plot(
+  balanced_players,
+  "Balanced",
+  NULL
+)
+
+#=========================================================================
+# F–H: Reliance on AI
+#=========================================================================
+
+reliance_feedback <- make_reliance_plot(
+  feedback_players,
+  "Feedback",
+  median_reliance_feedback,
+  "Reliance on AI"
+)
+
+reliance_niche <- make_reliance_plot(
+  niche_players,
+  "Niche-expert",
+  median_reliance_niche,
+  NULL
+)
+
+reliance_balanced <- make_reliance_plot(
+  balanced_players,
+  "Balanced",
+  median_reliance_balanced,
+  NULL
+)
+
+#=========================================================================
+# Combine scatter plots
+#=========================================================================
+
+belief_row <- belief_feedback +
+  belief_niche +
+  belief_balanced +
+  plot_layout(
+    ncol = 3
+  )
+
+reliance_row <- reliance_feedback +
+  reliance_niche +
+  reliance_balanced +
+  plot_layout(
+    ncol = 3,
+    axis_titles = "collect_x"
+  )
+
+#=========================================================================
+# Final figure
+#=========================================================================
+
+final_plot <- (
+  trajectory_row /
+    belief_row /
+    reliance_row +
+    plot_layout(
+      heights = c(
+        1.25,
+        1,
+        1
+      )
+    ) +
+    plot_annotation(
+      tag_levels = "A"
+    )
+) &
+  theme(
+    plot.background = element_rect(
+      fill = "white",
+      color = NA
+    ),
+    plot.tag = element_text(
+      family = "Arial",
+      size = 28,
+      face = "bold",
+      color = "black",
+      hjust = 0,
+      vjust = 1
+    ),
+    plot.tag.position = c(
+      0.02,
+      0.12
+    ),
+    plot.tag.location = "panel"
+  )
+
+#=========================================================================
+# Save
+#=========================================================================
+
+ggsave(
+  here(
+    "Figures",
+    "Figure 4.pdf"
+  ),
+  final_plot,
+  width = 16,
+  height = 16,
+  units = "in",
+  device = grDevices::cairo_pdf,
+  bg = "white"
+)

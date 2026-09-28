@@ -179,7 +179,7 @@ p_combined <- (
   )
 
 ggsave(
-  here("Figures", "Supplementary figure 9_new.pdf"),
+  here("Figures", "Supplementary figure 9.pdf"),
   p_combined,
   width = 13,
   height = 4.5,

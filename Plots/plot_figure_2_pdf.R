@@ -10,7 +10,6 @@ library(tidyr)
 library(patchwork)
 library(here)
 
-#Set your project path
 idx <- unique(c(seq(1, 200000, by = 100), 200000))
 
 trajectory_order <- c(
@@ -33,21 +32,32 @@ read_result <- function(file) {
   env$Result
 }
 
-make_panel_data <- function(original_file, ai_file, ai_model, incentive) {
-  original <- read_result(original_file)
-  ai <- read_result(ai_file)
+make_panel_data <- function(original_pattern, ai_pattern, ai_model, incentive) {
+  df <- bind_rows(lapply(1:30, function(i) {
+    original <- read_result(sprintf(original_pattern, i))
+    ai <- read_result(sprintf(ai_pattern, i))
+    data.frame(
+      Replicate = i,
+      Generation = idx,
+      `Without AI` = original$accuracy[idx],
+      `With AI` = ai$accuracy[idx],
+      `Counterfactual human CI` = ai$human_accuracy[idx],
+      check.names = FALSE
+    ) %>%
+      pivot_longer(
+        -c(Replicate, Generation),
+        names_to = "Trajectory",
+        values_to = "Accuracy"
+      )
+  }))
   
-  data.frame(
-    Generation = idx,
-    `Without AI` = original$accuracy[idx],
-    `With AI` = ai$accuracy[idx],
-    `Counterfactual human CI` = ai$human_accuracy[idx],
-    check.names = FALSE
-  ) %>%
-    pivot_longer(
-      -Generation,
-      names_to = "Trajectory",
-      values_to = "Accuracy"
+  df %>%
+    group_by(Generation, Trajectory) %>%
+    summarise(
+      Lower = quantile(Accuracy, 0.025, na.rm = TRUE),
+      Upper = quantile(Accuracy, 0.975, na.rm = TRUE),
+      Accuracy = median(Accuracy, na.rm = TRUE),
+      .groups = "drop"
     ) %>%
     mutate(
       Trajectory = factor(Trajectory, levels = trajectory_order),
@@ -58,26 +68,26 @@ make_panel_data <- function(original_file, ai_file, ai_model, incentive) {
 
 df_acc <- bind_rows(
   make_panel_data(
-    "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_avg.RData",
-    "Simulations/Figure2,S1,S3,S5_simulation/omni_feedback_0.4.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_avg_i%2d.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/omni_feedback_0.4_i%2d.RData",
     "AI knows all",
     "Feedback"
   ),
   make_panel_data(
-    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg.RData",
-    "Simulations/Figure2,S1,S3,S5_simulation/omni_niche_0.4.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_avg_i%2d.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/omni_niche_0.4_i%2d.RData",
     "AI knows all",
     "Niche-expert"
   ),
   make_panel_data(
-    "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_clu.RData",
-    "Simulations/Figure2,S1,S3,S5_simulation/chatbot_feedback_0.4.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_feedback_clu_i%2d.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/chatbot_feedback_0.4_i%2d.RData",
     "AI answers question",
     "Feedback"
   ),
   make_panel_data(
-    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_clu.RData",
-    "Simulations/Figure2,S1,S3,S5_simulation/chatbot_niche_0.4.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/without_niche_clu_i%2d.RData",
+    "Simulations/Figure2,S1,S3,S5_simulation/chatbot_niche_0.4_i%2d.RData",
     "AI answers question",
     "Niche-expert"
   )
@@ -86,12 +96,26 @@ df_acc <- bind_rows(
 make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
   p <- data %>%
     filter(Incentive == incentive_name) %>%
-    ggplot(aes(Generation, Accuracy, color = Trajectory)) +
+    ggplot(aes(
+      Generation,
+      Accuracy,
+      color = Trajectory,
+      fill = Trajectory
+    )) +
     geom_hline(
       yintercept = 1,
       linetype = "dashed",
       linewidth = 0.9,
       color = "black"
+    ) +
+    geom_ribbon(
+      aes(
+        ymin = Lower,
+        ymax = Upper,
+        group = Trajectory
+      ),
+      alpha = 0.18,
+      color = NA
     ) +
     geom_line(
       aes(group = factor(
@@ -102,13 +126,13 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
           "With AI"
         )
       )),
-      linewidth = 3,
+      linewidth = 2,
       lineend = "round"
     ) +
     annotate(
       "text",
       x = 5000,
-      y = -0.25,
+      y = -1.0,
       label = tag,
       hjust = 0,
       vjust = 0,
@@ -120,19 +144,26 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
       values = trajectory_colors,
       breaks = trajectory_order
     ) +
+    scale_fill_manual(
+      values = trajectory_colors,
+      breaks = trajectory_order
+    ) +
     scale_x_continuous(
       breaks = seq(0, 200000, by = 40000),
       labels = seq(0, 20, by = 4),
       expand = expansion(mult = c(0, 0.005))
     ) +
     scale_y_continuous(
-      breaks = c(-0.25, 0.0, 0.25, 0.5, 0.75, 1.0),
-      labels = sprintf("%.2f", c(-0.25, 0.0, 0.25, 0.5, 0.75, 1.0)),
+      breaks = c(-1, -0.5, 0, 0.5, 1),
+      labels = sprintf(
+        "%.2f",
+        c(-1, -0.5, 0, 0.5, 1)
+      ),
       expand = expansion(mult = c(0, 0))
     ) +
     coord_cartesian(
       xlim = c(0, 200000),
-      ylim = c(-0.3, 1.07)
+      ylim = c(-1.07, 1.07)
     ) +
     labs(
       x = NULL,
@@ -143,7 +174,8 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
       color = guide_legend(
         nrow = 1,
         override.aes = list(linewidth = 1.8)
-      )
+      ),
+      fill = "none"
     ) +
     theme_classic(
       base_family = "Arial",
@@ -186,6 +218,22 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
   p
 }
 
+plot_A <- df_acc %>%
+  filter(AI_model == "AI knows all") %>%
+  make_panel("Feedback", "A", TRUE)
+
+plot_B <- df_acc %>%
+  filter(AI_model == "AI knows all") %>%
+  make_panel("Niche-expert", "B")
+
+plot_C <- df_acc %>%
+  filter(AI_model == "AI answers question") %>%
+  make_panel("Feedback", "C", TRUE)
+
+plot_D <- df_acc %>%
+  filter(AI_model == "AI answers question") %>%
+  make_panel("Niche-expert", "D")
+
 make_box <- function(label, size, box_margin = margin()) {
   ggplot() +
     annotate(
@@ -209,22 +257,6 @@ make_box <- function(label, size, box_margin = margin()) {
       plot.margin = box_margin
     )
 }
-
-plot_A <- df_acc %>%
-  filter(AI_model == "AI knows all") %>%
-  make_panel("Feedback", "A", TRUE)
-
-plot_B <- df_acc %>%
-  filter(AI_model == "AI knows all") %>%
-  make_panel("Niche-expert", "B")
-
-plot_C <- df_acc %>%
-  filter(AI_model == "AI answers question") %>%
-  make_panel("Feedback", "C", TRUE)
-
-plot_D <- df_acc %>%
-  filter(AI_model == "AI answers question") %>%
-  make_panel("Niche-expert", "D")
 
 feedback_header <- make_box(
   "Feedback",
