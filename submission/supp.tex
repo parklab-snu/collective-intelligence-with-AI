@@ -183,7 +183,7 @@ Y_A^{\mathrm{AI}} = \alpha_{e_A} X_{e_A} + b_{e_A} + \epsilon.
 The revised individual predictions are aggregated to form a collective prediction. We use two aggregation rules proposed in previous work \citep{wang2025individual}, depending on the type of AI used by the group.
 First, when the group is assisted by the Omniscient AI, the AI component of each revised prediction contains information about all $M$ factors, even though the individual's own prediction is based on only one factor. Each revised prediction can therefore be treated as an estimate of the entire target. Accordingly, we calculate the collective prediction by taking the simple average of the revised individual predictions:
 \begin{equation}
-\hat{Y}^{\mathrm{re}} = \frac{Y_1^{\mathrm{re}} + Y_2^{\mathrm{re}} + \cdots + Y_n^{\mathrm{re}}}{N}.
+\hat{Y}^{\mathrm{re}} = \frac{Y_1^{\mathrm{re}} + Y_2^{\mathrm{re}} + \cdots + Y_N^{\mathrm{re}}}{N}.
 \end{equation}
 
 Second, when the group is assisted by the Chatbot AI, both the player's initial prediction and the AI's prediction are based on the same causal factor. Each revised prediction therefore contains information about only one factor and can be treated as an estimate of that factor's contribution to the target. We consequently use clustering aggregation.
@@ -200,7 +200,7 @@ When the group is not assisted by AI, collective predictions are computed from t
 \subsection*{Incentive structures}
 
 Players receive payoffs based on the underlying incentive structure. 
-We consider five incentive structures: feedback structure, niche-expert structure, direct intervention on AI use of these two structures, and a balanced structure.
+We consider seven incentive structures: feedback structure, niche-expert structure, direct intervention on AI use of these two structures, and three different balanced structures.
 
 The feedback structure does not directly reward individuals according to their own prediction accuracy. Instead, it rewards predictions that are aligned with the residual error of the collective prediction and therefore have the potential to move the collective prediction toward the true value. Given player $A$'s revised prediction $Y_A^{\mathrm{re}}$ and the collective prediction $\hat{Y}^{\mathrm{re}}$, the payoff is expressed as
 \begin{equation}
@@ -435,7 +435,6 @@ Y_A^{AI} = \alpha_{e_A}X_{e_A} + b_{e_A} +\epsilon,
 \end{equation}
 where $b_{e_A}$ represents factor-specific additive bias, and $\epsilon$ represents stochastic error. 
 The stochastic error follows a Gaussian distribution with mean zero and standard deviation $\tau$ and is generated independently across players and prediction events. 
-The player's initial and revised predictions are given by
 Player A's initial and revised predictions can be then written as follows:
 \begin{align}
 Y_A &= c_AX_{e_A}\\
@@ -469,7 +468,7 @@ Thus, the collective prediction can be written as:
 \begin{equation}
 \hat{Y}^{re} = \sum_{i\in\mathcal I}\tilde{c}_iX_i+\bar{B}+\bar{\eta},
 \end{equation}
-where $\mathcal I=\{i\in\{0,\ldots,M\}>0\}$ denotes the set of represented interests.
+where $\mathcal I=\{i\in\{0,\ldots,M\}|n_i>0\}$ denotes the set of represented interests.
 
 \subsection*{Expected payoffs}
 
@@ -929,7 +928,7 @@ Clustering aggregation repeatedly counts the full prediction target when paired 
 \textbf{Niche-expert structure with averaging aggregation cannot promote CI without AI.}
 Trajectories of the mean absolute error from true coefficients and collective accuracy under the niche-expert structure with averaging aggregation in the absence of AI.
 The mean absolute error from true coefficients is calculated by first taking, for each interest, the absolute difference between the true coefficient and the mean belief of individuals sharing that interest, and then averaging these differences across all $M+1$ interests.
-The mean absolute error decreases across generations, indicating that the mean beliefs converge toward their corresponding true coefficients.
+The mean absolute error decreases across generations, indicating that the mean beliefs move closer to their corresponding true coefficients.
 However, collective accuracy remains near zero, indicating that simply averaging individual predictions does not yield accurate collective predictions.
 Prediction target parameters: $M = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$.
@@ -1052,7 +1051,7 @@ AI parameters: $b_i = 0.4$, $\tau = 0.3$, Chatbot AI is used.
 Median reliance on AI across varying levels of AI bias.
 Thirty randomly initialized simulations were performed for each bias level.
 Each dot represents a single simulation, and the box plots show the median and interquartile range (IQR) for each bias level.
-The balanced structure shows well-calibrated reliance on AI, with reliance increasing as AI bias decreases.
+The balanced structure shows well-calibrated reliance on AI, with reliance increasing as absolute magnitude of AI bias decreases.
 Prediction target parameters: $M = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
 AI parameters: $\tau = 0.3$, Chatbot AI is used.
@@ -1069,7 +1068,7 @@ Evaluation metrics under the balanced, unrevised balanced, and combined balanced
 The unrevised balanced structure is defined as the arithmetic mean of the feedback and niche-expert structures based on unrevised predictions, whereas the combined balanced structure is defined as the arithmetic mean of the balanced and unrevised balanced structures.
 All evaluation metrics are averaged over generations 190,001--200,000.
 The unrevised balanced structure achieves near-perfect counterfactual human CI; however, median reliance on AI remains near 0.5 because the unrevised balanced incentive does not account for AI predictions and therefore imposes no selection on $\beta_A$.
-Consequently, collective accuracy directly inherits AI bias and decreases as AI bias increases.
+Consequently, collective accuracy directly inherits AI bias and decreases as the magnitude of AI bias increases.
 The combined balanced structure, which leverages both the balanced and unrevised balanced structures, achieves near-perfect counterfactual human CI without compromising collective accuracy.
 Prediction target parameters: $M = 50$, $s = 50$, $\mu = 0$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
 Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$.

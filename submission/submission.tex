@@ -28,7 +28,7 @@
 \\
 \normalsize{$^{1}$School of Biological Sciences, Seoul National University,}\\
 \normalsize{Seoul, Korea}\\
-\normalsize{$^{2}$Institute for Data Innovation in Science, Seoul National University, Seoul, Korea,}\\
+\normalsize{$^{2}$Institute for Data Innovation in Science, Seoul National University}\\
 \normalsize{Seoul, Korea}\\
 \\
 \normalsize{$^\ast$To whom correspondence should be addressed; E-mail: sangwoopark@snu.ac.kr.}
@@ -46,7 +46,7 @@
 Artificial intelligence (AI) assistants can improve individual performance but may weaken unaided performance and limit interest diversity, raising questions about their long-term effects on collective intelligence (CI). 
 Here, we consider an evolutionary model in which individuals predict, consult AI, and imitate better-performing peers. 
 Classic reward structures that promote CI without AI can fail under ``Chatbot AI'', whose predictions depend on users’ interests, by reducing interest diversity or propagating bias. 
-Directly rewarding or penalizing AI use does not mitigate these effects. 
+Directly rewarding or penalizing AI use does not reliably mitigate these effects. 
 Instead, a balanced incentive that preserves minority expertise and rewards collective contributions can promote CI, but an additional incentive is needed to restore unaided collective accuracy.
 Our framework offers an explanation for emerging evidence of AI’s societal impact and clarifies its long-term implications.
 \end{sciabstract}
@@ -79,14 +79,14 @@ These AI predictions can include both systematic biases and stochastic errors (F
 Then, these revised predictions are aggregated to form a collective prediction $\hat{Y}^{\mathrm{re}}$, which is then used to evaluate the collective accuracy of the population \cite{wang2025individual}: $1-\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathbb{E}[(Y-\alpha_0)^2]$.
 For Omniscient AI, we simply average revised predictions (namely, ``averaging''). 
 For Chatbot AI, we average within interests and sum across represented interests (namely, ``clustering'').
-Hereafter, we say that CI emerges when the collective accuracy reaches a near perfect level.
+Hereafter, we say that CI emerges when the collective accuracy reaches a near-perfect level.
 
 \begin{figure}[!th]
 \includegraphics[width=\textwidth]{../Figures/Figure 1.pdf}
 \caption{
 \textbf{A schematic diagram of the model for individual and collective prediction in the presence of AI assistants.}
-(A) The prediction target is modeled as a linear combination of causal factors.
-(B) Each player is characterized by three strategies: interest, belief, and reliance on AI.
+(A) The prediction target is modeled as a linear combination of causal factors, $X_1, X_2, \dots, X_M$: $Y = \alpha_0 + \sum_{i=1}^M \alpha_i X_i$.
+(B) Each player is characterized by three strategies: interest $e_A$, belief $c_A$, and reliance on AI $\beta_A$, where where $e_A\in\{0,\ldots,M\}$ and $X_0=1$.
 Players make predictions based on their interests and beliefs and subsequently revise them with AI assistance.
 We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the amount of information available for generating predictions.
 (C) Players receive payoffs according to the incentive structure, and the population evolves through imitation of peers with higher payoffs.
@@ -94,10 +94,10 @@ We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the a
 \end{figure}
 
 Individuals receive payoffs $\pi_A$ based on their performance and imitate the interests, beliefs, and AI reliance of peers with higher expected payoffs, allowing the population to evolve over time (Fig. 1C).
-Following previous work \cite{wang2025individual}, we consider two incentive structures, which allow CI to emerge in the absence of AI.
+Following previous work \cite{wang2025individual}, we consider two incentive structures that can promote CI in the absence of AI when paired with an appropriate aggregation rule.
 First, the feedback structure gives higher payoffs to individuals whose predictions are aligned with the collective prediction error, rather than directly rewarding individual predictive accuracy: $\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})$.
 Second, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest: $\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2$, where $\rho_{e_A}$ represents the proportion of individuals sharing the same interest.
-We assume that prediction events occur on a substantially faster timescale than social learning, which allow us to calculate the expected payoff $\mathbb{E}[\pi_A]$ of each player analytically and simulate social learning.
+We assume that prediction events occur on a substantially faster timescale than social learning, which allows us to calculate the expected payoff $\mathbb{E}[\pi_A]$ of each player analytically and simulate social learning.
 Full details of the model and derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Materials and Methods as well as Supplementary Text.
 
 We begin by characterizing the dynamics of CI with AI under two classic incentive structures from prior work \cite{wang2025individual}.
@@ -170,7 +170,7 @@ To investigate whether such direct incentives or penalties can promote CI, we mo
 \begin{equation}
 \mathrm{Feedback /} \mathrm{Niche\text{-}expert} + \lambda \beta_A
 \end{equation}
-where $\lambda$ represent the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$), and $\beta_A$ represent individual reliance on AI (Supplementary Text).
+where $\lambda$ represents the strength of intervention ($\lambda > 0$) or penalty ($\lambda < 0$), and $\beta_A$ represents individual reliance on AI (Supplementary Text).
 
 We find that direct incentives and penalties on AI use do not consistently improve collective accuracy (Fig. 3).
 When Omniscient AI is used under the feedback structure, the population retains collective intelligence regardless of the intervention strength (Fig. 3A), despite large changes in reliance on AI (Fig. 3B).
