@@ -238,7 +238,7 @@ Our analysis of counterfactual collective accuracy also raises an important conc
 while AI use may improve the apparent performance of individuals and, in some cases, the population as a whole, it can simultaneously reduce the population’s ability to make accurate predictions without AI. 
 These results echo findings from a recent field experiment, which demonstrated that students, who seemingly performed better in solving mathematics problems under AI assistance, performed worse on their own than those who did not have access \cite{bastani2025generative}.
 Our results, however, also suggest that this loss of counterfactual performance is not inevitable.
-Incorporating incentives based on individuals' predictions without AI assistance can improve counterfactual collective accuracy without loosing collective accuracy.
+Incorporating incentives based on individuals' predictions without AI assistance can improve counterfactual collective accuracy without losing overall collective accuracy.
 These findings highlight the need to evaluate AI tools not only by the performance gains they provide during use, but also by whether individuals and populations retain the ability to perform without them \cite{melumad2025experimental,ke2026ai}.
 Making this distinction clear will be particularly important for education, where AI may help students complete a task without helping them learn how to do it on their own \cite{bastani2025generative,melumad2025experimental}.
 
@@ -256,8 +256,8 @@ Second, we model AI errors using fixed, factor-specific additive biases and inde
 This assumption allows random errors to be reduced through aggregation, while systematic biases can still persist in the collective prediction.
 In reality, AI errors may have more complex structures, including biased estimates of factor effects and correlated errors across individuals, factors, or repeated interactions.
 Further empirical and theoretical work is therefore needed to understand how these error structures affect the emergence of CI.
-Third, in our main analyses, each AI model is paired with a specific aggregation rule, making it difficult to fully separate the effects of AI model from those of aggregation.
-Analyses of alternative pairings suggest that our primary aggregation choices are consistent with the distinct prediction structures of the two AI models, although the effects of AI assistance may also depend on how individual predictions are aggregated (Supplementary Text; Fig. S10).
+Third, in our main analyses, each AI model is paired with the aggregation rule that best matches its prediction structure, making it difficult to fully separate the effects of the AI model from those of aggregation. 
+However, analyses of alternative pairings suggest that our primary aggregation choices are consistent with the distinct prediction structures of the two AI models, although the effects of AI assistance may also depend on how individual predictions are aggregated  (Supplementary Text; Fig. S10).
 Finally, following established models of CI, we assume that the prediction target is a linear combination of independent causal factors.
 This assumption does not hold for many real-world tasks, where causal factors may be correlated or interact nonlinearly.
 Future studies should therefore investigate how nonlinear relationships between causal factors and prediction targets affect the interaction between AI assistance and the emergence of CI.
