@@ -119,17 +119,17 @@
 \begin{abstract} \bfseries \boldmath
 Artificial intelligence (AI) assistants can improve individual performance but may weaken unaided performance and limit interest diversity, raising questions about their long-term effects on collective intelligence (CI). 
 Here, we consider an evolutionary model in which individuals predict, consult AI, and imitate better-performing peers. 
-Classic reward structures that promote CI without AI can fail under ``Chatbot AI'', whose predictions depend on users’ interests, by reducing interest diversity or propagating bias. 
+Classic reward structures that promote CI without AI can fail under ``Chatbot AI'', whose predictions depend on users' interests, by reducing interest diversity or propagating bias. 
 Directly rewarding or penalizing AI use does not reliably mitigate these effects. 
 Instead, a balanced incentive that preserves minority expertise and rewards collective contributions can promote CI, but an additional incentive is needed to restore unaided collective accuracy.
-Our framework offers an explanation for emerging evidence of AI’s societal impact and clarifies its long-term implications.
+Our framework offers an explanation for emerging evidence of AI's societal impact and clarifies its long-term implications.
 \end{abstract}
 
 
 % The first paragraph of any Science paper does NOT have a heading
 % Nor is it indented
 \noindent
-Collective intelligence (CI) describes a phenomenon in which a group’s ability to solve problems, make decisions, or adapt to changing environments exceeds each member’s ability \cite{galton1907vox,lorge1958survey,yaniv2007using,woolley2010evidence,hommes2005coordination}.
+Collective intelligence (CI) describes a phenomenon in which a group's ability to solve problems, make decisions, or adapt to changing environments exceeds each member's ability \cite{galton1907vox,lorge1958survey,yaniv2007using,woolley2010evidence,hommes2005coordination}.
 This phenomenon, also referred to as wisdom of crowds, has thus served as a central mechanism underlying the success of diverse organizations, ranging from animal groups \cite{dreyer2025comparing,simons2004many,berdahl2013emergent} and human societies \cite{woolley2010evidence, riedl2021quantifying} to machine-learning systems \cite{breiman1996bagging,breiman2001random}.
 Understanding the conditions that promote and maintain CI therefore remains a fundamental question across social sciences \cite{mann2017optimal}, evolutionary biology \cite{wang2025individual}, and computer science \cite{werfel2026fluid}.
 Addressing this question has become particularly timely as artificial intelligence (AI) has begun to reshape how individuals acquire information, make decisions, and contribute to collective outcomes \cite{cui2024ai}.
@@ -168,7 +168,7 @@ We begin by characterizing the dynamics of CI with AI under two classic incentiv
 We show that the outcome depends on the information available to AI: Omniscient AI can preserve or improve collective accuracy, whereas Chatbot AI can undermine CI by limiting interest diversity or propagating systematic AI bias.
 Directly incentivizing or penalizing AI use fails to correct these effects and can further reduce collective accuracy.
 Finally, we leverage these findings to propose a balanced incentive structure that preserves minority expertise while rewarding contributions to collective accuracy, thereby restoring CI under Chatbot AI. 
-However, even when AI-assisted CI is restored, the population’s unaided collective accuracy remains suboptimal, requiring additional incentives that explicitly reward unaided predictive ability.
+However, even when AI-assisted CI is restored, the population's unaided collective accuracy remains suboptimal, requiring additional incentives that explicitly reward unaided predictive ability.
 
 \section*{Classic incentive structures for collective intelligence can fail under Chatbot AI}
 
@@ -188,9 +188,9 @@ Interestingly, the niche-expert structure can instead reduce reliance on AI when
 In this case, the population reduces its reliance on AI assistance, allowing CI to emerge eventually. 
 However, the emergence of CI can be substantially delayed compared with the population without AI (Fig. S5).
 
-To investigate whether the group can retain its predictive ability when AI assistance suddenly becomes unavailable, we quantify counterfactual collective accuracy based on unrevised predictions, retaining the population’s evolved interests and beliefs. 
+To investigate whether the group can retain its predictive ability when AI assistance suddenly becomes unavailable, we quantify counterfactual collective accuracy based on unrevised predictions, retaining the population's evolved interests and beliefs. 
 Across all scenarios, counterfactual collective accuracy is lower than the accuracy of the corresponding AI-assisted population and the accuracy of populations that evolved without AI (Fig. 2).
-Thus, the accuracy achieved with AI assistance does not necessarily reflect the population’s ability to make equally accurate predictions without it.
+Thus, the accuracy achieved with AI assistance does not necessarily reflect the population's ability to make equally accurate predictions without it.
 
 \section*{Direct incentives and penalties for AI do not reliably improve collective accuracy}
 
@@ -244,7 +244,7 @@ Thus, preserving the diversity of ideas will not be sufficient to promote CI.
 Instead, AI use need to be calibrated to prevent systematic AI biases from becoming collective biases \cite{buccinca2021trust}.
 
 Our analysis of counterfactual collective accuracy also raises an important concern for future AI use:
-while AI use may improve the apparent performance of individuals and, in some cases, the population as a whole, it can simultaneously reduce the population’s ability to make accurate predictions without AI. 
+while AI use may improve the apparent performance of individuals and, in some cases, the population as a whole, it can simultaneously reduce the population's ability to make accurate predictions without AI. 
 These results echo findings from a recent field experiment, which demonstrated that students, who seemingly performed better in solving mathematics problems under AI assistance, performed worse on their own than those who did not have access \cite{bastani2025generative}.
 Our results, however, also suggest that this loss of unaided performance is not inevitable.
 Incorporating incentives based on individuals' predictions without AI assistance can improve counterfactual collective accuracy without losing overall collective accuracy.
@@ -303,7 +303,7 @@ Trajectories of collective accuracy when the group is assisted by the Omniscient
 Here, feedback (A,C) and niche-expert (B,D) incentive structures are considered.
 Blue lines represent trajectories of collective accuracy without AI assistance.
 Orange lines represent trajectories of collective accuracy with AI assistance.
-Gray lines represent trajectories of counterfactual collective accuracy, computed from players’ unrevised predictions, indicating the group’s predictive accuracy if AI assistance were unavailable at the given generation.
+Gray lines represent trajectories of counterfactual collective accuracy, computed from players' unrevised predictions, indicating the group's predictive accuracy if AI assistance were unavailable at the given generation.
 Each condition was simulated for 30 independent replicates with randomly initialized player populations.
 Lines show the median across replicates, and shaded areas indicate the 95\% simulation interval.
 Intervals extending below $-1$ are truncated by the y-axis limits for visual clarity.
