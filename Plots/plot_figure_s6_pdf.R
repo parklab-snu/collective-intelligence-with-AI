@@ -118,7 +118,8 @@ single_theme <- theme_classic() +
     legend.key.height = grid::unit(0.7, "cm"),
     plot.title = element_text(
       size = 18,
-      hjust = 0.5
+      hjust = 0.5,
+      lineheight = 0.9
     )
   )
 
@@ -174,20 +175,20 @@ make_metric_plot <- function(
 
 p_accuracy <- make_metric_plot(
   "accuracy",
-  "Collective accuracy",
+  "\nCollective accuracy",
   ylim = c(0, 1),
   hide_x = TRUE
 )
 
 p_hacc <- make_metric_plot(
   "human_accuracy",
-  "Counterfactual human CI",
+  "Counterfactual\ncollective accuracy",
   hide_x = TRUE
 )
 
 p_belief <- make_metric_plot(
   "median_AI_belief",
-  "Median reliance on AI",
+  "\nMedian reliance on AI",
   ylim = c(0, 1),
   hide_x = TRUE
 )

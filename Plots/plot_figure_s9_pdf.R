@@ -152,18 +152,18 @@ make_metric_plot <- function(metric, title, ylim = NULL) {
 
 p_accuracy <- make_metric_plot(
   "accuracy",
-  "Collective accuracy",
+  "\nCollective accuracy",
   ylim = c(0, 1)
 )
 
 p_hacc <- make_metric_plot(
   "human_accuracy",
-  "Counterfactual human CI"
+  "Counterfactual\ncollective accuracy"
 )
 
 p_belief <- make_metric_plot(
   "median_AI_belief",
-  "Median reliance on AI",
+  "\nMedian reliance on AI",
   ylim = c(0, 1)
 )
 

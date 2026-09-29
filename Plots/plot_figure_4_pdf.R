@@ -229,10 +229,6 @@ trajectory_theme <- theme_classic(
     legend.box.background = element_blank()
   )
 
-#=========================================================================
-# Trajectory plot function
-#=========================================================================
-
 make_trajectory <- function(
     variable,
     y_label,
@@ -350,7 +346,7 @@ trajectory_accuracy <- make_trajectory(
 
 trajectory_human <- make_trajectory(
   "human_accuracy",
-  "Counterfactual human CI",
+  "Counterfactual\ncollective accuracy",
   c(
     0.0,
     0.5,
@@ -648,10 +644,6 @@ reliance_row <- reliance_feedback +
     ncol = 3,
     axis_titles = "collect_x"
   )
-
-#=========================================================================
-# Final figure
-#=========================================================================
 
 final_plot <- (
   trajectory_row /

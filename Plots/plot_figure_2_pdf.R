@@ -15,7 +15,7 @@ idx <- unique(c(seq(1, 200000, by = 100), 200000))
 trajectory_order <- c(
   "Without AI",
   "With AI",
-  "Counterfactual human CI"
+  "Counterfactual collective accuracy"
 )
 
 incentive_order <- c("Feedback", "Niche-expert")
@@ -23,7 +23,7 @@ incentive_order <- c("Feedback", "Niche-expert")
 trajectory_colors <- c(
   "Without AI" = "#0072B2",
   "With AI" = "#D55E00",
-  "Counterfactual human CI" = "#999999"
+  "Counterfactual collective accuracy" = "#999999"
 )
 
 read_result <- function(file) {
@@ -41,7 +41,7 @@ make_panel_data <- function(original_pattern, ai_pattern, ai_model, incentive) {
       Generation = idx,
       `Without AI` = original$accuracy[idx],
       `With AI` = ai$accuracy[idx],
-      `Counterfactual human CI` = ai$human_accuracy[idx],
+      `Counterfactual collective accuracy` = ai$human_accuracy[idx],
       check.names = FALSE
     ) %>%
       pivot_longer(
@@ -121,7 +121,7 @@ make_panel <- function(data, incentive_name, tag, show_y_axis = FALSE) {
       aes(group = factor(
         Trajectory,
         levels = c(
-          "Counterfactual human CI",
+          "Counterfactual collective accuracy",
           "Without AI",
           "With AI"
         )

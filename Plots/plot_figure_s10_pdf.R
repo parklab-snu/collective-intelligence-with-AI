@@ -3,6 +3,7 @@ if (!require("dplyr")) install.packages("dplyr")
 if (!require("patchwork")) install.packages("patchwork")
 if (!require("tidyr")) install.packages("tidyr")
 if (!require("ggh4x")) install.packages("ggh4x")
+
 library(ggh4x)
 library(ggplot2)
 library(dplyr)
@@ -15,9 +16,9 @@ simulation_path <- here("Simulations", "FigureS10_simulation")
 bias_list <- seq(-0.6, 0.6, by = 0.1)
 
 metric_order <- c(
-  "Collective accuracy",
-  "Counterfactual human CI",
-  "Median reliance on AI",
+  "\nCollective accuracy",
+  "Counterfactual\ncollective accuracy",
+  "\nMedian reliance on AI",
   "Collective variance",
   "Collective bias",
   "Interest Diversity"
@@ -67,9 +68,9 @@ read_stationary <- function(path, filename) {
 to_long <- function(data) {
   data %>%
     rename(
-      `Collective accuracy` = accuracy,
-      `Counterfactual human CI` = human_accuracy,
-      `Median reliance on AI` = median_AI_belief,
+      `\nCollective accuracy` = accuracy,
+      `Counterfactual\ncollective accuracy` = human_accuracy,
+      `\nMedian reliance on AI` = median_AI_belief,
       `Collective variance` = variance,
       `Collective bias` = bias_sq,
       `Interest Diversity` = interest_diversity
@@ -121,8 +122,8 @@ make_plot <- function(
       data = data.frame(
         Metric = factor(
           c(
-            "Collective accuracy",
-            "Counterfactual human CI"
+            "\nCollective accuracy",
+            "Counterfactual\ncollective accuracy"
           ),
           levels = metric_order
         ),
@@ -154,19 +155,19 @@ make_plot <- function(
     ) +
     facetted_pos_scales(
       y = list(
-        Metric == "Collective accuracy" ~
+        Metric == "\nCollective accuracy" ~
           scale_y_continuous(
             limits = c(0, 1),
             breaks = c(0, 0.25, 0.5, 0.75, 1)
           ),
         
-        Metric == "Counterfactual human CI" ~
+        Metric == "Counterfactual\ncollective accuracy" ~
           scale_y_continuous(
             limits = c(0, 1),
             breaks = c(0, 0.25, 0.5, 0.75, 1)
           ),
         
-        Metric == "Median reliance on AI" ~
+        Metric == "\nMedian reliance on AI" ~
           scale_y_continuous(
             limits = c(0, 1),
             breaks = c(0, 0.25, 0.5, 0.75, 1)
