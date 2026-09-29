@@ -71,7 +71,10 @@
 % Please DO NOT import additional external packages or .sty files.
 % Those are unlikely to work with our conversion software and will cause problems later.
 % Don't add any more \usepackage{} commands.
-
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
 
 %%%%%%%%%%%%%%%% TITLE AND AUTHORS %%%%%%%%%%%%%%%%
 
@@ -89,7 +92,7 @@
 \author{
 	% You can write out first names or use initials - either way is acceptable, but be consistent
 	Jaeseung~Kim$^{1}$,
-	Sang~Woo~Park$^{1,2,\ast}$\\
+	Sang~Woo~Park$^{1,2,\ast}$\and
 	% Additional lines of authors should be inserted using the \and command (not \\)
 	% Institution list, in a slightly smaller font
 	\small$^{1}$School of Biological Sciences, Seoul National University, Seoul, Korea.\and\
@@ -149,7 +152,7 @@ Previous work modeled the prediction target $Y$ as a linear combination of under
 Here, we further allow each individual to independently consult with AI assistants, which can also make their own predictions $Y_A^{AI}$, and revise their predictions by taking the weighted average according to their reliance on AI $\beta_A$: $Y_A^{\mathrm{re}} = \beta_A Y_A^{\mathrm{AI}} + (1-\beta_A)Y_A$ (Fig. 1B).
 In doing so, we consider two forms of AI: Omniscient AI constructs predictions using all causal factors, whereas Chatbot AI responds only about the factor that the user is interested in (Fig. 1B).
 These AI predictions can include both systematic biases and stochastic errors (Fig. 1B).
-Then, these revised predictions are aggregated to form a collective prediction $\hat{Y}^{\mathrm{re}}$, which is then used to evaluate the collective accuracy of the population \cite{wang2025individual}: $1-\mathrm{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathrm{E}[(Y-\alpha_0)^2]$.
+Then, these revised predictions are aggregated to form a collective prediction $\hat{Y}^{\mathrm{re}}$, which is then used to evaluate the collective accuracy of the population \cite{wang2025individual}: $1-\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]/\mathbb{E}[(Y-\alpha_0)^2]$.
 For Omniscient AI, we simply average revised predictions (namely, ``averaging''). 
 For Chatbot AI, we average within interests and sum across represented interests (namely, ``clustering'').
 Hereafter, we say that CI emerges when the collective accuracy reaches a near-perfect level.
@@ -158,7 +161,7 @@ Individuals receive payoffs $\pi_A$ based on their performance and imitate the i
 Following previous work \cite{wang2025individual}, we consider two incentive structures that can promote CI in the absence of AI when paired with an appropriate aggregation rule.
 First, the feedback structure gives higher payoffs to individuals whose predictions are aligned with the collective prediction error, rather than directly rewarding individual predictive accuracy: $\pi_A = Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}})$.
 Second, the niche-expert structure gives higher payoff to individuals who have both better predictive accuracy and a minority interest: $\pi_A = -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2$, where $\rho_{e_A}$ represents the proportion of individuals sharing the same interest.
-We assume that prediction events occur on a substantially faster timescale than social learning, which allows us to calculate the expected payoff $\mathrm{E}[\pi_A]$ of each player analytically and simulate social learning.
+We assume that prediction events occur on a substantially faster timescale than social learning, which allows us to calculate the expected payoff $\mathbb{E}[\pi_A]$ of each player analytically and simulate social learning.
 Full details of the model and derivations of the collective prediction, expected payoffs, and collective accuracy under the two AI models are provided in Materials and Methods as well as Supplementary Text.
 
 We begin by characterizing the dynamics of CI with AI under two classic incentive structures from prior work \cite{wang2025individual}.
@@ -434,7 +437,7 @@ Table S1\\
 % Indicate the corresponding authors, but do NOT include institutions here
 % It would be nice if the template auto-generated this, but doing so is complicated...
 Jaeseung~Kim$^{1}$,
-Sang~Woo~Park$^{1,2,\ast}$\\
+Sang~Woo~Park$^{1,2,\ast}$\and
 	% Additional lines of authors should be inserted using the \and command (not \\)
 	% Institution list, in a slightly smaller font
 	\small$^{1}$School of Biological Sciences, Seoul National University, Seoul, Korea.\and\
@@ -547,12 +550,10 @@ The niche-expert structure assigns higher payoffs to individuals who make accura
 Previous research has shown that these two incentive structures can produce near perfect collective accuracy through social learning, except when the niche-expert incentive is combined with simple averaging \cite{wang2025individual}. They are therefore used as baseline structures for examining how AI assistance affects the emergence of CI.
 
 To examine the effects of directly encouraging or discouraging AI use, we modify the feedback and niche-expert structures by adding a term proportional to the player's reliance on AI:
-\begin{equation}
-\begin{array}{r@{\;}c@{\;}l}
+\begin{align}
 \pi_A &= Y_A^{\mathrm{re}}(Y-\hat{Y}^{\mathrm{re}}) + \lambda\beta_A\\
 \pi_A &= -\rho_{e_A}(Y_A^{\mathrm{re}}-Y)^2 + \lambda\beta_A.
-\end{array}
-\end{equation}
+\end{align}
 Here, $\lambda$ represents the strength of the direct incentive or penalty applied to AI use. A positive value of $\lambda$ rewards AI reliance, whereas a negative value penalizes it. When $\lambda=0$, no direct incentive or penalty is applied, and the payoff functions reduce to the original feedback and niche-expert structures.
 
 The balanced structure is defined as the weighted mean of the feedback and niche-expert payoff components, with balancing weight $w$:
@@ -1438,42 +1439,42 @@ AI parameters: $\tau = 0.3$.
 \caption{Evaluation metrics used to analyze collective prediction dynamics.}
 \label{tab:evaluation_metrics}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}L{0.28\textwidth} C{0.27\textwidth} Y@{}}
-\toprule
+\begin{tabular}{@{}p{0.27\textwidth}p{0.27\textwidth}p{0.40\textwidth}@{}}
+\hline
 Metric & Definition & Interpretation \\
-\midrule
+\hline
 
 Collective accuracy &
 \(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y}^{\mathrm{re}})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
 Accuracy of the revised collective prediction relative to the baseline prediction $\alpha_0$. \\
-\addlinespace
+\\
 
 Collective bias &
 \(\displaystyle \left(\mathbb{E}[Y-\hat{Y}^{\mathrm{re}}]\right)^2\) &
 Squared expected deviation of the revised collective prediction from the true target. \\
-\addlinespace
+\\
 
 Collective variance &
 \(\displaystyle \operatorname{Var}(Y-\hat{Y}^{\mathrm{re}})\) &
 Variability of the revised collective prediction error across prediction events. \\
-\addlinespace
+\\
 
 Counterfactual collective accuracy &
 \(\displaystyle 1-\frac{\mathbb{E}[(Y-\hat{Y})^2]}{\mathbb{E}[(Y-\alpha_0)^2]}\) &
 Accuracy obtained after removing AI use from the current population while retaining its evolved interests and beliefs. \\
-\addlinespace
+\\
 
 Interest diversity &
 \(\displaystyle \exp\left(-\sum_{i=0}^{M}\rho_i\ln\rho_i\right)\) &
 Effective number of interests represented in the population. \\
-\addlinespace
+\\
 
 Median reliance on AI &
 \(\displaystyle \operatorname{median}_{A\in N}(\beta_A)\) &
 Median reliance on AI in the population. \\
 
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 
