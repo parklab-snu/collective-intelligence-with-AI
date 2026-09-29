@@ -89,6 +89,9 @@ Hereafter, we say that CI emerges when the collective accuracy reaches a near-pe
 (B) Each player is characterized by three strategies: interest $e_A$, belief $c_A$, and reliance on AI $\beta_A$, where where $e_A\in\{0,\ldots,M\}$ and $X_0=1$.
 Players make predictions based on their interests and beliefs and subsequently revise them with AI assistance.
 We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the amount of information available for generating predictions.
+Chatbot AI makes predictions based on user's interest: $Y_A^{\mathrm{AI}} = \alpha_{e_A} X_{e_A} + b_{e_A} + \epsilon_A$.
+Omniscient AI makes predictions based on all causal factors: $Y_A^{\mathrm{AI}} = \sum_{i=0}^M (\alpha_i X_i + b_i)+ \epsilon_A$, where $X_0 = 0$.
+For both cases, we assume $\epsilon_A \sim \mathcal{N}(0, \tau)$.
 (C) Players receive payoffs according to the incentive structure, and the population evolves through imitation of peers with higher payoffs.
 }
 \end{figure}
