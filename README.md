@@ -36,6 +36,14 @@ Contains R scripts for running the simulations and the resulting simulation outp
 
 Contains functions for simulations using the chatbot AI model. In-place updating and periodic resynchronization are implemented to reduce computational cost.
 
+### `Chatbot_AI_avg.R`
+
+Contains functions for simulations using the chatbot AI model with averaging aggregation. In-place updating and periodic resynchronization are implemented to reduce computational cost. These functions are used for supplementary analyses.
+
+### `Chatbot_AI_combined_balanced.R`
+
+Contains functions for simulations using the chatbot AI model with unrevised balanced and combined balanced incentive structures. In-place updating and periodic resynchronization are implemented to reduce computational cost.
+
 ### `Omniscient_AI.R`
 
 Contains functions for simulations using the omniscient AI model. In-place updating and periodic resynchronization are implemented to reduce computational cost.
@@ -50,23 +58,23 @@ Contains functions for simulations without AI. In-place updating and periodic re
 
 ### `Figure2,S1,S3,S5_simulation.R`
 
-Runs the simulations for Figures 2, S1, S3, and S5. The script performs eight simulations using different combinations of AI models and incentive structures.
+Runs the simulations for Figures 2, S1, S3, and S5. The script performs simulations using different combinations of AI models and incentive structures. For each combination, 30 replicate simulations are performed with random initialization.
 
 ### `Figure3_simulation.R`
 
-Runs the simulations for Figure 3. The script performs 144 simulation runs across different values of lambda (the strength of the incentive and penalty associated with AI use) and AI bias.
+Runs the simulations for Figure 3. The script performs simulations across different values of lambda (the strength of the incentive and penalty associated with AI use) and AI bias. For each bias level, 30 replicate simulations are performed with random initialization.
 
 ### `Figure4_simulation.R`
 
-Runs the simulations for Figure 4. The script performs one simulation for each of the three incentive structures—feedback, niche-expert, and balanced—using the chatbot AI model.
+Runs the simulations for Figure 4. The script performs simulations for each of the three incentive structures—feedback, niche-expert, and balanced—using the chatbot AI model. For each incentive structure, 30 replicate simulations are performed with random initialization.
 
 ### `FigureS2,S5_simulation.R`
 
-Runs the simulations for Figures S2 and S5. The script performs 52 simulation runs across AI bias values ranging from -0.6 to 0.6 under four combinations of AI models and incentive structures.
+Runs the simulations for Figures S2 and S5. The script performs simulations across AI bias values ranging from -0.6 to 0.6 under four combinations of AI models and incentive structures.
 
 ### `FigureS4_simulation.R`
 
-Runs the simulations for Figure S4. The script performs 228 simulation runs: four simulations for the trajectory plots and 224 simulations for the interest diversity heatmaps. Simulations vary the mutation rate, initial belief standard deviation, and AI bias.
+Runs the simulations for Figure S4. The script performs 228 simulation runs: four simulations for the trajectory plots and 224 simulations for the interest diversity heatmaps. The simulations vary in mutation rate, initial belief standard deviation, and AI bias.
 
 ### `FigureS6_simulation.R`
 
@@ -79,3 +87,11 @@ Runs the simulations for Figure S7. The script performs nine simulation runs und
 ### `FigureS8_simulation.R`
 
 Runs the simulations for Figure S8. The script performs 390 simulation runs under the balanced incentive structure, with AI bias varying from -0.6 to 0.6. For each bias level, 30 replicate simulations are performed with random initialization.
+
+### `FigureS9_simulation.R`
+
+Runs the simulations for Figure S9. The script performs simulations under the balanced, unrevised balanced, and combined balanced incentive structures, with AI bias varying from -0.6 to 0.6. For each bias level, 30 replicate simulations are performed with random initialization.
+
+### `FigureS10_simulation.R`
+
+Runs the simulations for Figure S10. The script performs simulations using the chatbot AI model with averaging aggregation, with AI bias varying from -0.6 to 0.6.
