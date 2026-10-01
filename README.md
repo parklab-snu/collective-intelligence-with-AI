@@ -1,4 +1,4 @@
-# Code and Data Repository for "The Potential Impact of Personalized AI Assistants on Collective Intelligence"
+# Code and Data Repository for "Predicting the long-term impact of AI assistants on collective intelligence"
 
 This repository contains the code and data required to reproduce the analyses presented in the manuscript.
 
