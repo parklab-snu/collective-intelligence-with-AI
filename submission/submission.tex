@@ -117,12 +117,12 @@
 % Consult the journal instructions to authors for details.
 % Do not cite any references in the abstract.
 \begin{abstract} \bfseries \boldmath
-Artificial intelligence (AI) assistants can improve individual performance but may weaken unaided performance and limit interest diversity, raising questions about their long-term effects on collective intelligence (CI). 
-Here, we consider an evolutionary model in which individuals predict, consult AI, and imitate better-performing peers. 
-Classic reward structures that promote CI without AI can fail under ``Chatbot AI'', whose predictions depend on users' interests, by reducing interest diversity or propagating bias. 
+Artificial intelligence (AI) assistants can improve individual performance but may weaken unaided performance and limit interest diversity, raising questions about their long-term effects on collective intelligence. 
+Here, we consider an evolutionary model in which individuals participate in a prediction task, consult AI, and imitate better-performing peers. 
+Classic reward structures that promote collective intelligence without AI can fail under ``Chatbot AI'', whose predictions depend on users' interests, either by reducing interest diversity or propagating bias.
 Directly rewarding or penalizing AI use does not reliably mitigate these effects. 
-Instead, a balanced incentive that preserves minority expertise and rewards collective contributions can promote CI, but an additional incentive is needed to restore unaided collective accuracy.
-Our framework offers an explanation for emerging evidence of AI's societal impact and clarifies its long-term implications.
+Instead, a balanced incentive that preserves minority expertise and rewards collective contributions can promote collective intelligence, but an additional incentive for rewarding unaided performance is needed to restore unaided collective accuracy.
+Our framework offers a quantitative explanation for emerging evidence of AI's societal impact and clarifies its long-term implications.
 \end{abstract}
 
 
@@ -166,7 +166,7 @@ Full details of the model and derivations of the collective prediction, expected
 
 We begin by characterizing the dynamics of CI with AI under two classic incentive structures from prior work \cite{wang2025individual}.
 We show that the outcome depends on the information available to AI: Omniscient AI can preserve or improve collective accuracy, whereas Chatbot AI can undermine CI by limiting interest diversity or propagating systematic AI bias.
-Directly incentivizing or penalizing AI use fails to correct these effects and can further reduce collective accuracy.
+Directly incentivizing or penalizing AI use do not reliably correct these effects and can further reduce collective accuracy.
 Finally, we leverage these findings to propose a balanced incentive structure that preserves minority expertise while rewarding contributions to collective accuracy, thereby restoring CI under Chatbot AI. 
 However, even when AI-assisted CI is restored, the population's unaided collective accuracy remains suboptimal, requiring additional incentives that explicitly reward unaided predictive ability.
 
@@ -277,192 +277,9 @@ Our results further underline the importance of designing reward structures that
 A detailed empirical understanding of how AI assistance reshapes diversity, expertise, and reliance at the population level will therefore be critical for predicting the dynamics of future of human collective intelligence.
 
 
-%%%%%%%%%%%%%%%% MAIN TEXT FIGURES %%%%%%%%%%%%%%%
-
-
-\begin{figure}[!th]
-\includegraphics[width=\textwidth]{../Figures/Figure 1.pdf}
-\caption{
-\textbf{A schematic diagram of the model for individual and collective prediction in the presence of AI assistants.}
-(A) The prediction target is modeled as a linear combination of causal factors, $X_1, X_2, \dots, X_M$: $Y = \alpha_0 + \sum_{i=1}^M \alpha_i X_i$.
-(B) Each player is characterized by three strategies: interest $e_A$, belief $c_A$, and reliance on AI $\beta_A$, where where $e_A\in\{0,\ldots,M\}$ and $X_0=1$.
-Players make predictions based on their interests and beliefs and subsequently revise them with AI assistance.
-We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the amount of information available for generating predictions.
-Chatbot AI makes predictions based on user's interest: $Y_A^{\mathrm{AI}} = \alpha_{e_A} X_{e_A} + b_{e_A} + \epsilon_A$.
-Omniscient AI makes predictions based on all causal factors: $Y_A^{\mathrm{AI}} = \sum_{i=0}^M (\alpha_i X_i + b_i)+ \epsilon_A$, where $X_0 = 1$.
-For both cases, we assume $\epsilon_A \sim \mathcal{N}(0, \tau)$.
-(C) Players receive payoffs according to the incentive structure, and the population evolves through imitation of peers with higher payoffs.
-}
-\end{figure}
-
-\begin{figure}[!htbp]
-\includegraphics[width=\textwidth]{../Figures/Figure 2.pdf}
-\caption{
-\textbf{Comparison of collective accuracy with and without AI.} 
-Trajectories of collective accuracy when the group is assisted by the Omniscient AI (A,B) and Chatbot AI (C,D).
-Here, feedback (A,C) and niche-expert (B,D) incentive structures are considered.
-Blue lines represent trajectories of collective accuracy without AI assistance.
-Orange lines represent trajectories of collective accuracy with AI assistance.
-Gray lines represent trajectories of counterfactual collective accuracy, computed from players' unrevised predictions, indicating the group's predictive accuracy if AI assistance were unavailable at the given generation.
-Each condition was simulated for 30 independent replicates with randomly initialized player populations.
-Lines show the median across replicates, and shaded areas indicate the 95\% simulation interval.
-Intervals extending below $-1$ are truncated by the y-axis limits for visual clarity.
-Prediction target parameters: $M = 50$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
-Evolutionary parameters: $s = 50$ and $\mu = 0$.
-Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A, B), $c_A \sim \mathcal{N}(0, 5^2)$ for (C, D), and $\beta_A \sim U(0, 1)$. 
-AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
-}
-\end{figure}
-
-\begin{figure}[!th]
-\includegraphics[width=\textwidth]{../Figures/Figure 3.pdf}
-\caption{
-\textbf{Collective accuracy under the influence of direct intervention on AI use.}
-Collective accuracy and median reliance on AI under varying strengths of intervention ($\lambda$) across different AI types (Omniscient AI, A--D and Chatbot AI, E--H) and incentive structures (Feedback, A,B,E,F, and Niche expert, C,D,G,H).
-Positive $\lambda$ represents an incentive for AI use, whereas negative $\lambda$ represents a penalty for AI use.
-Four AI bias levels are shown: $b_i = \pm 0.2$, representing higher-accuracy AI, and $b_i = \pm 0.4$, representing lower-accuracy AI.
-Each condition was simulated for 30 independent replicates with randomly initialized player populations.
-Collective accuracy (A,C,E,G) and median reliance on AI (B,D,F,H) are averaged over generations 190,001--200,000 within each replicate, and points represent the median across replicates.
-Prediction target parameters: $M = 50$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
-Evolutionary parameters: $s = 50$ and $\mu = 0$.
-Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A--D), $c_A \sim \mathcal{N}(0, 5^2)$ for (E--H), and $\beta_A \sim U(0, 1)$. 
-AI parameter: $\tau = 0.3$.
-}
-\end{figure}
-
-\begin{figure}[!htbp]
-\begin{center}
-\includegraphics[width=0.8\textwidth]{../Figures/Figure 4.pdf}
-\caption{
-\textbf{Balanced structure can promote collective intelligence.} 
-Trajectories of collective accuracy (A) and counterfactual collective accuracy (B) under three incentive structures (feedback, niche-expert, and balanced) with Chatbot AI.
-Each incentive structure was simulated for 30 independent replicates with randomly initialized player populations.
-Lines show the median across replicates, and shaded areas indicate the 95\% simulation interval.
-Distributions of individual interest and belief (C-E) and of interest and reliance on AI (F-H) after 200,000 generations in one representative replicate. 
-Each point represents an individual.
-Dashed lines in panels C-E represent the true coefficients ($\alpha_i$) of the prediction target.
-Dashed horizontal lines in panels F-H indicate the median reliance on AI.
-Prediction target parameters: $M = 50$, $\alpha_i = 5 - 0.2i$, and $\sigma_i \sim U(0, 3)$. 
-Evolutionary parameters: $s = 50$ and $\mu = 0$.
-Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
-AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
-}
-\end{center}
-\end{figure}
-
-%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%
-
-\clearpage % Clear all remaining figures and tables then start a new page
-
-% The list of references goes after the main text and before the acknowledgements
-% When preparing an initial submission, we recommend you use BibTeX, like this:
-%
-\bibliography{references} % for a file named science_template.bib
-\bibliographystyle{sciencemag}
-
-% After the paper has completed peer review and been revised ready for acceptance,
-% you should comment out the lines above and copy-paste the contents of your .bbl
-% file here instead. This will help ensure that our conversion software works correctly.
-% Remember to re-run BibTeX first - check the timestamp!
-%
-% Example of the first three entries copy-pasted from science_template.bbl:
-%
-%\begin{thebibliography}{1}
-%
-%\bibitem{example}
-%A.~N. {Author}, An example reference. \emph{Journal of Improbable Research}
-%  \textbf{1}, 67 (2020).
-%
-%\bibitem{example2}
-%F.~M. {Surname}, S.~{Author}, A second example. \emph{Interesting Research
-%  Letters} \textbf{32}, 897 (2019).
-%
-%\bibitem{example_preprint}
-%P.~{One}, P.~{Two}, P.~{Three}, {An unpublished preprint}. \emph{preprint}
-%  (2021), arXiv:2101.12345.
-%
-%\end{thebibliography}
-
-\section*{Acknowledgments}
-
-\paragraph*{Funding:}
-S.W.P. was supported by the New Faculty Startup Fund from Seoul National University,
-and the Global-LAMP Program of the National Research Foundation of Korea (NRF) grant funded by the Ministry of Education (No. RS-2023-00301976).
-\paragraph*{Author contributions:}
-Jaeseung Kim: Conceptualization, Formal Analysis, Investigation, Methodology, Software, Visualization, Writing - Original Draft Preparation, Writing - Review \& Editing.
-Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writing - Original Draft Preparation, Writing - Review \& Editing.
-\paragraph*{Competing interests:}
-There are no competing interests to declare.
-\paragraph*{Data, code and materials availability:}
-All data are stored in a publicly available GitHub repository (https://github.com/parklab-snu/collective-intelligence-with-AI).
-\paragraph*{Artificial Intelligence (AI) Disclosure:}
-ChatGPT-5.6 was used for assistance with ggplot2 coding for figure formatting and organization.
-
-%%%%%%%%%%%%%%%% SUPPLEMENT LIST %%%%%%%%%%%%%%%
-
-% List the contents of your Supplementary Materials, including the numbers of any
-% supplementary figures, tables, external data files etc. and any references that are
-% cited only in the supplement. In this example, refs. 7-8 are cited only in the supplement.
-% Fill out your numbers accordingly and delete any lines that aren't applicable.
-\subsection*{Supplementary materials}
-Materials and Methods\\
-Supplementary Text\\
-Figures S1 to S10\\
-Table S1\\
-
-%%%%%%%%%%%%%%%% END OF MAIN TEXT %%%%%%%%%%%%%%%
-
-\newpage
-
-%%%%%%%%%%%%%%%% START OF SUPPLEMENT %%%%%%%%%%%%%%%
-
-% Figures, tables, equations and pages in the supplement are numbered S1, S2 etc.
-\renewcommand{\thefigure}{S\arabic{figure}}
-\renewcommand{\thetable}{S\arabic{table}}
-\renewcommand{\theequation}{S\arabic{equation}}
-\renewcommand{\thepage}{S\arabic{page}}
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{equation}{0}
-\setcounter{page}{1} % not 0 as \newpage already started a supplementary page
-% References continue the numbering from the main text.
-
-
-%%%%%%%%%%%%%%%% SUPPLEMENT TITLE PAGE %%%%%%%%%%%%%%%
-
-\begin{center}
-\section*{Supplementary Materials for\\ \scititle}
-
-% Author list for the supplement
-% Indicate the corresponding authors, but do NOT include institutions here
-% It would be nice if the template auto-generated this, but doing so is complicated...
-Jaeseung~Kim$^{1}$,
-Sang~Woo~Park$^{1,2,\ast}$\\
-	% Additional lines of authors should be inserted using the \and command (not \\)
-	% Institution list, in a slightly smaller font
-	\small$^{1}$School of Biological Sciences, Seoul National University, Seoul, Korea.\and\
-	\small$^{2}$Institute for Data Innovation in Science, Seoul National University, Seoul, Korea.\and\\
-	% Do not include street addresses, postal codes etc.
-	%
-	% Identify at least one corresponding author, with contact email address
-	\small$^\ast$Corresponding author. Email: sangwoopark@snu.ac.kr
-\end{center}
-
-% Fill out the numbers for each type of supplementary material,
-% and delete any lines that aren't applicable.
-% These are just example numbers that don't match the rest of this template.
-\subsubsection*{This PDF file includes:}
-Materials and Methods\\
-Supplementary Text\\
-Figures S1 to S10\\
-Table S1\\
-
-\newpage
-
 %%%%%%%%%%%%%%%% MATERIALS AND METHODS %%%%%%%%%%%%%%%
 
 \subsection*{Materials and Methods}
-
 
 \subsubsection*{Prediction target}
 
@@ -616,6 +433,186 @@ Collective accuracy is normalized relative to the baseline prediction $\alpha_0$
 A negative value indicates that the collective prediction performs worse than the baseline. 
 Counterfactual collective accuracy is evaluated by setting $\beta_A=0$ while retaining the evolved interests and beliefs of the AI-assisted population. 
 In calculating interest diversity, we use the convention that $\rho_i\ln\rho_i=0$ when $\rho_i=0$ (Table~\ref{tab:evaluation_metrics}).
+
+%%%%%%%%%%%%%%%% MAIN TEXT FIGURES %%%%%%%%%%%%%%%
+
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 1.pdf}
+\caption{
+\textbf{A schematic diagram of the model for individual and collective prediction in the presence of AI assistants.}
+(A) The prediction target is modeled as a linear combination of causal factors, $X_1, X_2, \dots, X_M$: $Y = \alpha_0 + \sum_{i=1}^M \alpha_i X_i$.
+(B) Each player is characterized by three strategies: interest $e_A$, belief $c_A$, and reliance on AI $\beta_A$, where where $e_A\in\{0,\ldots,M\}$ and $X_0=1$.
+Players make predictions based on their interests and beliefs and subsequently revise them with AI assistance.
+We consider two types of AI, Chatbot AI and Omniscient AI, which differ in the amount of information available for generating predictions.
+Chatbot AI makes predictions based on user's interest: $Y_A^{\mathrm{AI}} = \alpha_{e_A} X_{e_A} + b_{e_A} + \epsilon_A$.
+Omniscient AI makes predictions based on all causal factors: $Y_A^{\mathrm{AI}} = \sum_{i=0}^M (\alpha_i X_i + b_i)+ \epsilon_A$, where $X_0 = 1$.
+For both cases, we assume $\epsilon_A \sim \mathcal{N}(0, \tau)$.
+(C) Players receive payoffs according to the incentive structure, and the population evolves through imitation of peers with higher payoffs.
+}
+\end{figure}
+
+\begin{figure}[!htbp]
+\includegraphics[width=\textwidth]{../Figures/Figure 2.pdf}
+\caption{
+\textbf{Comparison of collective accuracy with and without AI.} 
+Trajectories of collective accuracy when the group is assisted by the Omniscient AI (A,B) and Chatbot AI (C,D).
+Here, feedback (A,C) and niche-expert (B,D) incentive structures are considered.
+Blue lines represent trajectories of collective accuracy without AI assistance.
+Orange lines represent trajectories of collective accuracy with AI assistance.
+Gray lines represent trajectories of counterfactual collective accuracy, computed from players' unrevised predictions, indicating the group's predictive accuracy if AI assistance were unavailable at the given generation.
+Each condition was simulated for 30 independent replicates with randomly initialized player populations.
+Lines show the median across replicates, and shaded areas indicate the 95\% simulation interval.
+Intervals extending below $-1$ are truncated by the y-axis limits for visual clarity.
+Prediction target parameters: $M = 50$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Evolutionary parameters: $s = 50$ and $\mu = 0$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A, B), $c_A \sim \mathcal{N}(0, 5^2)$ for (C, D), and $\beta_A \sim U(0, 1)$. 
+AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
+}
+\end{figure}
+
+\begin{figure}[!th]
+\includegraphics[width=\textwidth]{../Figures/Figure 3.pdf}
+\caption{
+\textbf{Collective accuracy under the influence of direct intervention on AI use.}
+Collective accuracy and median reliance on AI under varying strengths of intervention ($\lambda$) across different AI types (Omniscient AI, A--D and Chatbot AI, E--H) and incentive structures (Feedback, A,B,E,F, and Niche expert, C,D,G,H).
+Positive $\lambda$ represents an incentive for AI use, whereas negative $\lambda$ represents a penalty for AI use.
+Four AI bias levels are shown: $b_i = \pm 0.2$, representing higher-accuracy AI, and $b_i = \pm 0.4$, representing lower-accuracy AI.
+Each condition was simulated for 30 independent replicates with randomly initialized player populations.
+Collective accuracy (A,C,E,G) and median reliance on AI (B,D,F,H) are averaged over generations 190,001--200,000 within each replicate, and points represent the median across replicates.
+Prediction target parameters: $M = 50$, $\alpha_i \sim U(-5, 5)$, and $\sigma_i \sim U(0, 3)$.
+Evolutionary parameters: $s = 50$ and $\mu = 0$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 100^2)$ for (A--D), $c_A \sim \mathcal{N}(0, 5^2)$ for (E--H), and $\beta_A \sim U(0, 1)$. 
+AI parameter: $\tau = 0.3$.
+}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{../Figures/Figure 4.pdf}
+\caption{
+\textbf{Balanced structure can promote collective intelligence.} 
+Trajectories of collective accuracy (A) and counterfactual collective accuracy (B) under three incentive structures (feedback, niche-expert, and balanced) with Chatbot AI.
+Each incentive structure was simulated for 30 independent replicates with randomly initialized player populations.
+Lines show the median across replicates, and shaded areas indicate the 95\% simulation interval.
+Distributions of individual interest and belief (C-E) and of interest and reliance on AI (F-H) after 200,000 generations in one representative replicate. 
+Each point represents an individual.
+Dashed lines in panels C-E represent the true coefficients ($\alpha_i$) of the prediction target.
+Dashed horizontal lines in panels F-H indicate the median reliance on AI.
+Prediction target parameters: $M = 50$, $\alpha_i = 5 - 0.2i$, and $\sigma_i \sim U(0, 3)$. 
+Evolutionary parameters: $s = 50$ and $\mu = 0$.
+Population parameters: $N = 10{,}000$, $c_A \sim \mathcal{N}(0, 5^2)$, and $\beta_A \sim U(0, 1)$. 
+AI parameters: $b_i = 0.4$ and $\tau = 0.3$.
+}
+\end{center}
+\end{figure}
+
+%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%
+
+\clearpage % Clear all remaining figures and tables then start a new page
+
+% The list of references goes after the main text and before the acknowledgements
+% When preparing an initial submission, we recommend you use BibTeX, like this:
+%
+\bibliography{references} % for a file named science_template.bib
+\bibliographystyle{sciencemag}
+
+% After the paper has completed peer review and been revised ready for acceptance,
+% you should comment out the lines above and copy-paste the contents of your .bbl
+% file here instead. This will help ensure that our conversion software works correctly.
+% Remember to re-run BibTeX first - check the timestamp!
+%
+% Example of the first three entries copy-pasted from science_template.bbl:
+%
+%\begin{thebibliography}{1}
+%
+%\bibitem{example}
+%A.~N. {Author}, An example reference. \emph{Journal of Improbable Research}
+%  \textbf{1}, 67 (2020).
+%
+%\bibitem{example2}
+%F.~M. {Surname}, S.~{Author}, A second example. \emph{Interesting Research
+%  Letters} \textbf{32}, 897 (2019).
+%
+%\bibitem{example_preprint}
+%P.~{One}, P.~{Two}, P.~{Three}, {An unpublished preprint}. \emph{preprint}
+%  (2021), arXiv:2101.12345.
+%
+%\end{thebibliography}
+
+\section*{Acknowledgments}
+
+\paragraph*{Funding:}
+S.W.P. was supported by the New Faculty Startup Fund from Seoul National University,
+and the Global-LAMP Program of the National Research Foundation of Korea (NRF) grant funded by the Ministry of Education (No. RS-2023-00301976).
+\paragraph*{Author contributions:}
+Jaeseung Kim: Conceptualization, Formal Analysis, Investigation, Methodology, Software, Visualization, Writing - Original Draft Preparation, Writing - Review \& Editing.
+Sang Woo Park: Conceptualization, Investigation, Methodology, Supervision, Writing - Original Draft Preparation, Writing - Review \& Editing.
+\paragraph*{Competing interests:}
+There are no competing interests to declare.
+\paragraph*{Data, code and materials availability:}
+All data are stored in a publicly available GitHub repository (https://github.com/parklab-snu/collective-intelligence-with-AI).
+\paragraph*{Artificial Intelligence (AI) Disclosure:}
+ChatGPT-5.6 was used for assistance with ggplot2 coding for figure formatting and organization.
+
+%%%%%%%%%%%%%%%% SUPPLEMENT LIST %%%%%%%%%%%%%%%
+
+% List the contents of your Supplementary Materials, including the numbers of any
+% supplementary figures, tables, external data files etc. and any references that are
+% cited only in the supplement. In this example, refs. 7-8 are cited only in the supplement.
+% Fill out your numbers accordingly and delete any lines that aren't applicable.
+\subsection*{Supplementary materials}
+Supplementary Text\\
+Figures S1 to S10\\
+Table S1\\
+
+%%%%%%%%%%%%%%%% END OF MAIN TEXT %%%%%%%%%%%%%%%
+
+\newpage
+
+%%%%%%%%%%%%%%%% START OF SUPPLEMENT %%%%%%%%%%%%%%%
+
+% Figures, tables, equations and pages in the supplement are numbered S1, S2 etc.
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thepage}{S\arabic{page}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{equation}{0}
+\setcounter{page}{1} % not 0 as \newpage already started a supplementary page
+% References continue the numbering from the main text.
+
+
+%%%%%%%%%%%%%%%% SUPPLEMENT TITLE PAGE %%%%%%%%%%%%%%%
+
+\begin{center}
+\section*{Supplementary Materials for\\ \scititle}
+
+% Author list for the supplement
+% Indicate the corresponding authors, but do NOT include institutions here
+% It would be nice if the template auto-generated this, but doing so is complicated...
+Jaeseung~Kim$^{1}$,
+Sang~Woo~Park$^{1,2,\ast}$\\
+	% Additional lines of authors should be inserted using the \and command (not \\)
+	% Institution list, in a slightly smaller font
+	\small$^{1}$School of Biological Sciences, Seoul National University, Seoul, Korea.\and\
+	\small$^{2}$Institute for Data Innovation in Science, Seoul National University, Seoul, Korea.\and\\
+	% Do not include street addresses, postal codes etc.
+	%
+	% Identify at least one corresponding author, with contact email address
+	\small$^\ast$Corresponding author. Email: sangwoopark@snu.ac.kr
+\end{center}
+
+% Fill out the numbers for each type of supplementary material,
+% and delete any lines that aren't applicable.
+% These are just example numbers that don't match the rest of this template.
+\subsubsection*{This PDF file includes:}
+Supplementary Text\\
+Figures S1 to S10\\
+Table S1\\
+
+\newpage
 
 %%%%%%%%%%%%%%%% SUPPLEMENTARY TEXT %%%%%%%%%%%%%%%
 
